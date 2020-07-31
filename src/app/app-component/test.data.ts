@@ -1,9 +1,11 @@
-import {IImage} from '../../../projects/ngx-lightbox/src/lib/interfacecs/ngx-lightbox.interfaces';
+import {IImage} from '../../../projects/ngx-lightbox/src/lib/gallery/interfacecs/ngx-lightbox.interfaces';
 
 export const testData: IImage[] = [{
   caption: 'Test caption',
   description: 'Test description',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814785/photostream-photos/DSC05466_kwlv0n.jpg',
+  height: 1024,
+  width: 683,
 }, {
   caption: 'Test caption',
   description: 'Test description',

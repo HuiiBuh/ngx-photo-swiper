@@ -12,10 +12,12 @@ import {AppRoutingModule} from './app-routing.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxLightboxModule,
+    NgxLightboxModule
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {
 }
+
+

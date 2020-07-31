@@ -25,12 +25,12 @@ $image-margin: .5rem !default;
     max-height: 100%;
     min-width: 100%;
     object-fit: cover;
-    transition: scale 300ms ease-in-out;
+    transition: transform 300ms ease-in-out;
     vertical-align: bottom;
   }
 
   img:hover {
-    scale: 1.1;
+    transform: scale(1.1);
   }
 
   @media (max-aspect-ratio: 1 / 1) {

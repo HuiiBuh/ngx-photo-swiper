@@ -1,7 +1,8 @@
 <div class="lightbox-grid">
 
   <ul>
-    <li *ngFor="let image of images">
+    <li *ngFor="let image of imageList">
+
       <img [src]="image.imageSRC" loading="lazy" alt="Image">
     </li>
     <!--  Prevent stretching  -->
@@ -9,3 +10,4 @@
   </ul>
 
 </div>
+
