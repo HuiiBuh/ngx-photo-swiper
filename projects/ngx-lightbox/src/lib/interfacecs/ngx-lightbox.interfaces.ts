@@ -4,8 +4,6 @@ export interface ILightboxConfig {
 
 export interface IImage {
   imageSRC: string;
-  width: number;
-  height: number;
   caption?: string;
   description?: string;
   imagePreview?: string;

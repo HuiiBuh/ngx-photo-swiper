@@ -1,0 +1,11 @@
+<div class="lightbox-grid">
+
+  <ul>
+    <li *ngFor="let image of images">
+      <img [src]="image.imageSRC" loading="lazy" alt="Image">
+    </li>
+    <!--  Prevent stretching  -->
+    <li></li>
+  </ul>
+
+</div>
