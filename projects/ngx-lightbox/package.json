@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "node-sass": "^4.14.1",
-    "rxjs-observable-store": "^3.0.3",
     "tslib": "^2.0.0"
   }
 }

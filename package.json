@@ -20,8 +20,7 @@
     "@angular/platform-browser-dynamic": "~10.0.7",
     "@angular/router": "~10.0.7",
     "node-sass": "^4.14.1",
-    "rxjs": "~6.5.5",
-    "rxjs-observable-store": "^3.0.3",
+    "rxjs": "~6.6.2",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },

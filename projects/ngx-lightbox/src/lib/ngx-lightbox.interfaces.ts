@@ -1,6 +1,6 @@
 export class Slider {
   imageIndex: number = 0;
-  gridID: number = 0;
+  gridID: string = '';
   active: boolean = false;
 }
 

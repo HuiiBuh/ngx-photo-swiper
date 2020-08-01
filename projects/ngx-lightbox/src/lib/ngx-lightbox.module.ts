@@ -1,13 +1,13 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {GalleryModule} from './gallery/gallery.module';
-import {LightboxState} from './lightbox.state';
+import {LightboxStore} from './store/lightbox.store';
 
 
 @NgModule({
   declarations: [],
   imports: [BrowserModule, GalleryModule],
-  providers: [LightboxState],
+  providers: [LightboxStore],
   exports: [BrowserModule, GalleryModule],
 })
 export class NgxLightboxModule {
