@@ -1,14 +1,14 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {NgxLightboxComponent} from './main-component/ngx-lightbox.component';
+import {NgxGalleryComponent} from './gallery-component/ngx-gallery.component';
 
 
 @NgModule({
-  declarations: [NgxLightboxComponent],
+  declarations: [NgxGalleryComponent],
   imports: [
     CommonModule
   ],
-  exports: [NgxLightboxComponent]
+  exports: [NgxGalleryComponent]
 })
 export class GalleryModule {
 }
