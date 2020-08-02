@@ -7,7 +7,8 @@ import {SliderComponent} from './slider/slider.component';
   declarations: [SliderComponent],
   imports: [
     CommonModule
-  ]
+  ],
+  exports: [SliderComponent]
 })
 export class SliderModule {
 }

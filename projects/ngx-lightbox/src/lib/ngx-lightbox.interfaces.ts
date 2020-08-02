@@ -14,7 +14,7 @@ export interface IImage {
 }
 
 
-export type TGallery = { string?: IImage[] };
+export type TGallery = Record<string, IImage[]> ;
 
 export class GalleryState {
   gallery: TGallery = {};

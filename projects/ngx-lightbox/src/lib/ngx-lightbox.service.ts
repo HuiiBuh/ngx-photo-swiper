@@ -1,3 +1,4 @@
+import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {IImage} from './ngx-lightbox.interfaces';
@@ -8,7 +9,8 @@ import {LightboxStore} from './store/lightbox.store';
 })
 export class NgxLightboxService {
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: LightboxStore) {
+  constructor(private router: Router, private route: ActivatedRoute, private store: LightboxStore, private location: Location) {
+    this.loadImageFromURL();
   }
 
   public loadImageInSlider(imageIndex: number, image: IImage, gridID: string): void {
@@ -29,8 +31,11 @@ export class NgxLightboxService {
   }
 
   private loadImageFromURL(): void {
-    const gridID = this.route.snapshot.paramMap.get('gridID');
-    const imageIndex = this.route.snapshot.paramMap.get('imageNumber') as string;
+    const params: URLSearchParams = new URLSearchParams(this.location.path());
+
+    const gridID = params.get('gridID');
+    const imageIndex = params.get('imageIndex');
+
 
     // @ts-ignore
     if (imageIndex && !isNaN(imageIndex) && gridID) {

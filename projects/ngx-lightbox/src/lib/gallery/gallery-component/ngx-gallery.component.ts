@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LightboxStore} from '../../store/lightbox.store';
 import {IImage} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
+import {LightboxStore} from '../../store/lightbox.store';
 
 @Component({
   selector: 'lib-gallery-component[imageList][lightboxID]',
@@ -11,14 +11,14 @@ import {NgxLightboxService} from '../../ngx-lightbox.service';
 export class NgxGalleryComponent implements OnInit {
 
   constructor(private ngxLightboxService: NgxLightboxService, private store: LightboxStore) {
-    store.addGallery({[this.lightboxID]: this.imageList});
   }
 
   @Input() imageList!: IImage[];
   @Input() lightboxID!: string;
 
   ngOnInit(): void {
-    this.store.onChanges('gallery', this.lightboxID);
+    this.store.addGallery({[this.lightboxID]: this.imageList});
+    this.store.onChanges<IImage[]>('gallery', this.lightboxID).subscribe(value => this.imageList = value);
   }
 
   public loadSlider(imageIndex: number, image: IImage): void {

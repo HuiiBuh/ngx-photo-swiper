@@ -11,24 +11,22 @@ import {distinctUntilChanged, map} from 'rxjs/operators';
 type Index = string | number | symbol;
 
 export class Store<S extends object> {
-  state$: Observable<S>;
-  private _state$: BehaviorSubject<S>;
+  public state$: BehaviorSubject<S>;
 
   protected constructor(initialState: S) {
-    this._state$ = new BehaviorSubject(initialState);
-    this.state$ = this._state$.asObservable();
+    this.state$ = new BehaviorSubject(initialState);
   }
 
   get state(): S {
-    return this._state$.getValue();
+    return this.state$.getValue();
   }
 
   setState(nextState: S): void {
-    this._state$.next(nextState);
+    this.state$.next(nextState);
   }
 
-  // tslint:disable-next-line:no-any
-  onChanges(...path: Index[]): any {
+  onChanges<T>(...path: Index[]): Observable<T> {
+    // @ts-ignore
     return this.state$.pipe(
       map(state =>
         path.reduce((result, part) => {
