@@ -1,0 +1,28 @@
+@import "../../../../lightbox-config.scss";
+
+.lightbox-slider-container {
+  position         : fixed;
+  bottom           : 0;
+  top              : 0;
+  left             : 0;
+  right            : 0;
+
+  background-color : $backdrop-color;
+}
+
+.image-large {
+  width               : 100%;
+  height              : 100%;
+  background-repeat   : no-repeat;
+  background-size     : contain;
+  background-position : center;
+
+  object-fit          : cover;
+}
+
+.all-center {
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  height          : 100%;
+}

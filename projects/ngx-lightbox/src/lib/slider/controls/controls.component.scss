@@ -1,0 +1,53 @@
+@import "icons.scss";
+
+.top-control {
+  position         : absolute;
+  left             : 0;
+  top              : 0;
+  height           : 44px;
+  width            : 100%;
+
+  background-color : rgba(0, 0, 0, 0.3);
+
+  text-align       : right;
+}
+
+.counter {
+  position    : absolute;
+  left        : 0;
+  top         : 0;
+  height      : 44px;
+  line-height : 44px;
+  color       : #fff;
+  opacity     : 0.75;
+  padding     : 0 10px;
+}
+
+.right {
+  position  : fixed;
+  right     : 0;
+  top       : 50%;
+  transform : translateY(-50%);
+}
+
+.left {
+  position  : fixed;
+  left      : 0;
+  top       : 50%;
+  transform : translateY(-50%);
+}
+
+
+.icon-right {
+  @include icons;
+
+  height : 30px;
+  width  : 32px;
+
+  &:before {
+    background-position : -94px -44px;
+
+    height              : 30px;
+    width               : 32px;
+  }
+}

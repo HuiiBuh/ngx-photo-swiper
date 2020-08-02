@@ -1,0 +1,47 @@
+@import "../../../../lightbox-config.scss";
+
+.icon-left {
+  @include icons;
+
+  height : 30px;
+  width  : 32px;
+
+  &:before {
+    background-position : -138px -44px;
+
+    height              : 30px;
+    width               : 32px;
+  }
+}
+
+.icon-close {
+  @include icons;
+
+  &:before {
+    background-position : 0 -44px;
+  }
+}
+
+.icon-share {
+  @include icons;
+
+  &:before {
+    background-position : -44px -44px;
+  }
+}
+
+.icon-maximize {
+  @include icons;
+
+  &:before {
+    background-position : 0 0;
+  }
+}
+
+.icon-zoom {
+  @include icons;
+
+  &:before {
+    background-position : -88px 0;
+  }
+}

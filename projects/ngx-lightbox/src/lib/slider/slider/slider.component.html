@@ -1,5 +1,10 @@
-<div *ngIf="sliderState">
+<div *ngIf="sliderState.active" class="lightbox-slider-container" (click)="hideSlider($event)">
 
-  <p>{{sliderState | json}}</p>
 
+  <div class="all-center">
+    <div class="image-large" [ngStyle]="{backgroundImage: 'url('+imageList[sliderState.imageIndex].imageSRC+')'}"></div>
+  </div>
+
+  <lib-controls></lib-controls>
 </div>
+
