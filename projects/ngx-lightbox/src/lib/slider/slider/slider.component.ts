@@ -1,8 +1,9 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {IImage, Slider} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
 import {LightboxStore} from '../../store/lightbox.store';
+import {SliderService} from '../slider.service';
 
 @Component({
   selector: 'lib-slider',
@@ -12,11 +13,11 @@ import {LightboxStore} from '../../store/lightbox.store';
 export class SliderComponent implements OnInit, OnDestroy {
 
 
-  constructor(private lightboxService: NgxLightboxService, private store: LightboxStore) {
+  constructor(private lightboxService: NgxLightboxService, private store: LightboxStore, public sliderService: SliderService) {
   }
 
   private storeChangeSubscription!: Subscription;
-  private gallerySubscription: Subscription | undefined;
+  private gallerySubscription!: Subscription;
 
   public imageList: IImage[] = [];
   public sliderState!: Slider;
@@ -32,7 +33,6 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   subscribeToNewGallery(): void {
-
     if (this.gallerySubscription) {
       this.gallerySubscription.unsubscribe();
     }
@@ -46,20 +46,6 @@ export class SliderComponent implements OnInit, OnDestroy {
 
     if (this.gallerySubscription) {
       this.gallerySubscription.unsubscribe();
-    }
-  }
-
-
-  hideSlider(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.lightboxService.removeSlider();
-    }
-  }
-
-  @HostListener('window:keyup', ['$event.key'])
-  bindEscape(key: string): void {
-    if (key === 'Escape') {
-      this.lightboxService.removeSlider();
     }
   }
 

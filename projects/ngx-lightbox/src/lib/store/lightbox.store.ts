@@ -8,21 +8,35 @@ export class LightboxStore extends Store<GalleryState> {
     super(new GalleryState());
   }
 
-  addGallery(gallery: TGallery): void {
-    this.setState({
-      slider: this.state.slider,
-      gallery: {
-        ...this.state.gallery,
-        ...gallery
-      }
-    });
+  public addGallery(gallery: TGallery): void {
+    this.patchState<TGallery>({
+      ...this.state.gallery,
+      ...gallery
+    }, 'gallery');
   }
 
-  updateSlider(slider: Slider): void {
-    this.setState({
-        ...this.state,
-        slider
-      }
-    );
+  public updateSlider(slider: Slider): void {
+    this.patchState<Slider>(slider, 'slider');
+  }
+
+  public closeSlider(): void {
+    this.patchState<Slider>({
+      ...this.state.slider,
+      active: false
+    }, 'slider');
+  }
+
+  public moveImageIndex(moveCount: number): void {
+    const newPosition = this.state.slider.imageIndex + moveCount;
+
+    if (newPosition >= this.state.gallery[this.state.slider.gridID].length
+      || newPosition < 0) {
+      return;
+    }
+
+    this.patchState<Slider>({
+      ...this.state.slider,
+      imageIndex: newPosition
+    }, 'slider');
   }
 }

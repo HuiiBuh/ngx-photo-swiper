@@ -30,11 +30,19 @@
   }
 }
 
-.icon-maximize {
+.icon-fullscreen {
   @include icons;
 
   &:before {
     background-position : 0 0;
+  }
+}
+
+.icon-exit-fullscreen {
+  @include icons;
+
+  &:before {
+    background-position : -44px 0;
   }
 }
 

@@ -16,9 +16,12 @@ export class NgxGalleryComponent implements OnInit {
   @Input() imageList!: IImage[];
   @Input() lightboxID!: string;
 
+  public sliderActive!: boolean;
+
   ngOnInit(): void {
     this.store.addGallery({[this.lightboxID]: this.imageList});
     this.store.onChanges<IImage[]>('gallery', this.lightboxID).subscribe(value => this.imageList = value);
+    this.store.onChanges<boolean>('slider', 'active').subscribe(value => this.sliderActive = value);
   }
 
   public loadSlider(imageIndex: number, image: IImage): void {

@@ -110,9 +110,5 @@ export const testData: IImage[] = [{
   caption: 'Test caption',
   description: 'Test description',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814782/photostream-photos/DSC05482_dtrj02.jpg',
-}, {
-  caption: 'Test caption',
-  description: 'Test description',
-  imageSRC: '',
 },
 ];

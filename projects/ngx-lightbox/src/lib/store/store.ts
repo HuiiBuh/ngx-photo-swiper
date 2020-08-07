@@ -93,8 +93,7 @@ export class Store<S extends object> {
     };
   }
 
-  // tslint:disable-next-line:no-any
-  patchState(value: any, ...path: Index[]): void {
+  patchState<T>(value: T, ...path: Index[]): void {
     if (path.length < 1) {
       return;
     }

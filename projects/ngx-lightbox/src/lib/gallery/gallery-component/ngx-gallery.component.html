@@ -1,4 +1,4 @@
-<div class="lightbox-grid">
+<div class="lightbox-grid" [style]="sliderActive ? 'pointer-events: none':''">
 
   <ul>
     <li *ngFor="let image of imageList; index as i">
@@ -10,3 +10,5 @@
   </ul>
 
 </div>
+
+<lib-slider></lib-slider>

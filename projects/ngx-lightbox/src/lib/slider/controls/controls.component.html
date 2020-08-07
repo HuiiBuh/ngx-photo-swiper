@@ -1,15 +1,18 @@
 <div *ngIf="visible">
 
   <div class="top-control">
-    <div class="counter">5 / 5</div>
+    <div class="counter">
+      {{galleryState.slider.imageIndex + 1}} /
+      {{galleryState.gallery[galleryState.slider.gridID].length}}
+    </div>
 
     <button class="icon-zoom"></button>
-    <button class="icon-maximize"></button>
+    <button [class]="fullscreen ? 'icon-exit-fullscreen':'icon-fullscreen'" (click)="toggleFullscreen()"></button>
     <button class="icon-share"></button>
-    <button class="icon-close" (click)="hideControls()"></button>
+    <button class="icon-close" (click)="sliderService.closeSlider()"></button>
   </div>
 
-  <button class="icon-right right"></button>
-  <button class="icon-left left"></button>
+  <button class="icon-right right" (click)="sliderService.nextPicture()"></button>
+  <button class="icon-left left" (click)="sliderService.previousPicture()"></button>
 
 </div>
