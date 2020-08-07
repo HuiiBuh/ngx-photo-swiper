@@ -9,7 +9,7 @@ import { ControlsComponent } from './controls/controls.component';
   imports: [
     CommonModule
   ],
-  exports: [SliderComponent]
+  exports: [SliderComponent, ControlsComponent]
 })
 export class SliderModule {
 }

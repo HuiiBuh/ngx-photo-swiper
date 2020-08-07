@@ -38,21 +38,19 @@ export class ControlsComponent implements OnInit {
 
   @HostListener('document:mouseleave')
   hideControls(): void {
-    this.visibleTimeout = setTimeout(() => this.visible = false, 1000);
+    this.visibleTimeout = setTimeout(() => this.visible = false, 500);
   }
 
-  @HostListener('document:keydown', ['$event'])
-  movePicture(event: KeyboardEvent): void {
+  @HostListener('document:keyup', ['$event'])
+  catchKeyboardEvents(event: KeyboardEvent): void {
+
+    // Prevent event from registering twice
+    event.stopImmediatePropagation();
     if (event.key === 'ArrowRight') {
       this.sliderService.nextPicture();
     } else if (event.key === 'ArrowLeft') {
       this.sliderService.previousPicture();
-    }
-  }
-
-  @HostListener('window:keyup', ['$event.key'])
-  bindEscape(key: string): void {
-    if (key === 'Escape') {
+    } else if (event.key === 'Escape') {
       this.store.closeSlider();
     }
   }
