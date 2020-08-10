@@ -1,18 +1,38 @@
-<div class="control-wrapper" *ngIf="visible && galleryState.slider.gridID">
+<div class="control-wrapper" *ngIf="galleryState.slider.gridID">
 
-  <div class="top-control">
-    <div class="counter">
-      {{galleryState.slider.imageIndex + 1}} /
-      {{galleryState.gallery[galleryState.slider.gridID].length}}
+  <ng-template [ngIf]="controlsVisible">
+
+    <div class="top-control">
+      <div *ngIf="position" class="counter">
+        {{galleryState.slider.imageIndex + 1}} /
+        {{galleryState.gallery[galleryState.slider.gridID].length}}
+      </div>
+
+      <button *ngIf="zoom" class="icon-zoom"></button>
+      <button *ngIf="fullscreen" [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"
+              (click)="toggleFullscreen()"></button>
+      <button *ngIf="share" class="icon-share"></button>
+
+      <span class="share-popup">
+        <ng-content></ng-content>
+      </span>
+      <button *ngIf="close" class="icon-close" (click)="sliderService.closeSlider()"></button>
     </div>
 
-    <button class="icon-zoom"></button>
-    <button [class]="fullscreen ? 'icon-exit-fullscreen':'icon-fullscreen'" (click)="toggleFullscreen()"></button>
-    <button class="icon-share"></button>
-    <button class="icon-close" (click)="sliderService.closeSlider()"></button>
-  </div>
+    <ng-template [ngIf]="arrows">
+      <button *ngIf="galleryState.slider.imageIndex !== 0"
+              class="icon-left left" (click)="sliderService.previousPicture()"></button>
 
-  <button class="icon-right right" (click)="sliderService.nextPicture()"></button>
-  <button class="icon-left left" (click)="sliderService.previousPicture()"></button>
+      <button *ngIf="galleryState.slider.imageIndex !== galleryState.gallery[galleryState.slider.gridID].length - 1"
+              class="icon-right right" (click)="sliderService.nextPicture()"></button>
+    </ng-template>
+
+  </ng-template>
+
+  <div class="bottom-control">
+    <span>
+      {{galleryState.gallery[galleryState.slider.gridID][galleryState.slider.imageIndex].caption}}
+    </span>
+  </div>
 
 </div>

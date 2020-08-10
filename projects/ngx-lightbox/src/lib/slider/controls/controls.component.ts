@@ -1,5 +1,5 @@
 import {DOCUMENT} from '@angular/common';
-import {Component, HostListener, Inject, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, Input, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {GalleryState} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
@@ -9,15 +9,26 @@ import {SliderService} from '../slider.service';
 @Component({
   selector: 'lib-controls',
   templateUrl: './controls.component.html',
-  styleUrls: ['./controls.component.scss']
+  styleUrls: ['./controls.component.scss'],
 })
 export class ControlsComponent implements OnInit {
-  private visibleTimeout: number = 0;
-  private sliderSubscription!: Subscription;
 
-  public visible: boolean = true;
-  public galleryState!: GalleryState;
-  public fullscreen: boolean = false;
+  @Input() position = true;
+  @Input() zoom = true;
+  @Input() fullscreen = true;
+  @Input() share = true;
+  @Input() close = true;
+  @Input() arrows = true;
+
+  // Should the controls be visible
+  public controlsVisible: boolean = true;
+  // Is the website in fullscreen mode
+  public fullscreenEnabled: boolean = false;
+  // State values
+  public galleryState: GalleryState | undefined;
+  // Timeout for the controls
+  private controlsVisibleTimeout: number = 0;
+  private gallerySubscription!: Subscription;
 
   constructor(
     public lightboxService: NgxLightboxService,
@@ -26,19 +37,23 @@ export class ControlsComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document) {
   }
 
+
   ngOnInit(): void {
-    this.sliderSubscription = this.store.state$.subscribe(value => this.galleryState = value);
+    this.gallerySubscription = this.store.state$.subscribe(value => this.galleryState = value);
+    console.log(this.arrows);
   }
 
   @HostListener('document:mouseenter')
   showControls(): void {
-    this.visible = true;
-    clearTimeout(this.visibleTimeout);
+    this.controlsVisible = true;
+    clearTimeout(this.controlsVisibleTimeout);
   }
 
   @HostListener('document:mouseleave')
   hideControls(): void {
-    this.visibleTimeout = setTimeout(() => this.visible = false, 500);
+    if (!this.isMobile()) {
+      this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, 500);
+    }
   }
 
   @HostListener('document:keyup', ['$event'])
@@ -57,14 +72,23 @@ export class ControlsComponent implements OnInit {
 
   @HostListener('window:fullscreenchange', ['$event'])
   fullscreenChange(): void {
-    this.fullscreen = !!this.document.fullscreenElement;
+    this.fullscreenEnabled = !!this.document.fullscreenElement;
   }
 
   public async toggleFullscreen(): Promise<void> {
-    if (!this.fullscreen) {
+    if (!this.fullscreenEnabled) {
       await this.document.body.requestFullscreen();
     } else {
       await this.document.exitFullscreen();
     }
   }
+
+  public isMobile(): boolean {
+    if (this.document.defaultView) {
+      return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.document.defaultView.navigator.userAgent));
+    } else {
+      return false;
+    }
+  }
+
 }
