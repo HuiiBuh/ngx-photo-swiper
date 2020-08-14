@@ -13,6 +13,13 @@
 }
 
 img {
+
+  // Touch devices only
+  @media (hover: none) and (pointer: coarse) {
+    width      : calc(100%); /*width of parent container*/
+    height     : calc(100% - 3rem); /*height of parent container*/
+  }
+
   width      : calc(100% - 6rem); /*width of parent container*/
   height     : calc(100% - 6rem); /*height of parent container*/
   object-fit : contain;

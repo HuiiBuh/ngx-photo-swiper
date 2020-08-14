@@ -1,5 +1,9 @@
 @import "lightbox-config.scss";
 
+* {
+  -webkit-tap-highlight-color : transparent;
+}
+
 .lightbox-grid {
 
   ul {

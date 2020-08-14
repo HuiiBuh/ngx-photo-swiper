@@ -22,6 +22,7 @@ export class ControlsComponent {
   public fullscreenEnabled: boolean = false;
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
+  public sharePopupVisible: boolean = false;
 
   constructor(
     public sliderService: SliderService,

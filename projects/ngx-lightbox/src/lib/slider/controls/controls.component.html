@@ -13,7 +13,7 @@
 
       <button *ngIf="share" class="icon-share"></button>
 
-      <span class="share-popup">
+      <span *ngIf="sharePopupVisible" class="share-popup">
         <ng-content></ng-content>
       </span>
 
@@ -21,7 +21,7 @@
 
     </div>
 
-    <ng-template [ngIf]="arrows">
+    <ng-template [ngIf]="arrows && !isMobile()">
 
       <button *ngIf="sliderService.isFirstImage()" class="icon-left left"
               (click)="sliderService.previousPicture()"></button>
