@@ -1,12 +1,4 @@
 <lib-gallery-component [imageList]="data" lightboxID="test"></lib-gallery-component>
 <lib-slider>
-  <lib-controls [fadeoutTime]="50000">
-    <div class="share-options">
-      <a href="https://google.com" target="_blank">Google</a>
-      <a href="https://amazon.com" target="_blank">Amazon</a>
-      <a href="https://youtube.com" target="_blank">YouTube</a>
-      <a href="https://twitter.com" target="_blank">Twitter</a>
-      <a href="">Looooooooooooooooooooong</a>
-    </div>
-  </lib-controls>
+  <lib-controls [fadeoutTime]="50000" [shareOptionList]="shareOptions"></lib-controls>
 </lib-slider>

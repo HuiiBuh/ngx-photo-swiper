@@ -1,5 +1,6 @@
 import {DOCUMENT} from '@angular/common';
 import {Component, HostListener, Inject, Input} from '@angular/core';
+import {TShareOptionList} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
 
 @Component({
@@ -15,6 +16,8 @@ export class ControlsComponent {
   @Input() share = true;
   @Input() close = true;
   @Input() arrows = true;
+
+  @Input() shareOptionList: TShareOptionList;
 
   @Input() fadeoutTime: number = 300;
 
