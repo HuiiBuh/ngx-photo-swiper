@@ -1,16 +1,16 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {ControlsComponent} from './controls/controls.component';
 import {SliderComponent} from './slider/slider.component';
-import { ControlsComponent } from './controls/controls.component';
-import { ShareComponent } from './share/share.component';
+import { HotkeyListenerComponent } from './hotkey-listener/hotkey-listener.component';
 
 
 @NgModule({
-  declarations: [SliderComponent, ControlsComponent, ShareComponent],
+  declarations: [SliderComponent, ControlsComponent, HotkeyListenerComponent],
   imports: [
-    CommonModule
+    CommonModule,
   ],
-  exports: [SliderComponent, ControlsComponent]
+  exports: [SliderComponent, ControlsComponent],
 })
 export class SliderModule {
 }

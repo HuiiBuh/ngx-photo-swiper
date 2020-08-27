@@ -13,14 +13,13 @@ import {SliderService} from '../slider.service';
 export class SliderComponent implements OnInit, OnDestroy {
 
 
-  constructor(private lightboxService: NgxLightboxService, private store: LightboxStore, public sliderService: SliderService) {
-  }
-
+  public imageList: IImage[] = [];
+  public sliderState!: Slider;
   private storeChangeSubscription!: Subscription;
   private gallerySubscription!: Subscription;
 
-  public imageList: IImage[] = [];
-  public sliderState!: Slider;
+  constructor(private lightboxService: NgxLightboxService, private store: LightboxStore, public sliderService: SliderService) {
+  }
 
   public ngOnInit(): void {
     this.storeChangeSubscription = this.store.onChanges<Slider>('slider')
@@ -32,6 +31,9 @@ export class SliderComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Unsubscribe to the current library and subscribe to the new one
+   */
   subscribeToNewGallery(): void {
     if (this.gallerySubscription) {
       this.gallerySubscription.unsubscribe();

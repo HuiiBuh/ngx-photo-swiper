@@ -22,8 +22,9 @@
   }
 }
 
-.icon-share {
+.icon-social-share {
   @include icons;
+  position : relative;
 
   &:before {
     background-position : -44px -44px;

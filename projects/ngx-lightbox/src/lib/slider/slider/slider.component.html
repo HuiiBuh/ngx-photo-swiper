@@ -1,7 +1,6 @@
 <div *ngIf="sliderState.active" class="lightbox-slider-container">
 
   <img [src]="imageList[sliderState.imageIndex].imageSRC" alt="Fullscreen Image">
-
-  <lib-share><ng-content></ng-content></lib-share>
+  <ng-content></ng-content>
 </div>
 

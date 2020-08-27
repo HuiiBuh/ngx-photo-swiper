@@ -11,11 +11,11 @@
       <button *ngIf="fullscreen" (click)="toggleFullscreen()"
               [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-      <button *ngIf="share" class="icon-share"></button>
-
-      <span *ngIf="sharePopupVisible" class="share-popup">
+      <button *ngIf="share" (click)="sharePopupVisible = !sharePopupVisible" class="icon-social-share"></button>
+      <span *ngIf="sharePopupVisible" class="social-share-popup">
         <ng-content></ng-content>
       </span>
+
 
       <button *ngIf="close" class="icon-close" (click)="sliderService.closeSlider()"></button>
 
@@ -35,5 +35,7 @@
   <div class="bottom-control">
     <span>{{sliderService.imageCaption}}</span>
   </div>
+
+  <lib-hotkey-listener></lib-hotkey-listener>
 
 </div>

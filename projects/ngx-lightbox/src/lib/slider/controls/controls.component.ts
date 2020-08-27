@@ -16,13 +16,16 @@ export class ControlsComponent {
   @Input() close = true;
   @Input() arrows = true;
 
+  @Input() fadeoutTime: number = 300;
+
+
   // Should the controls be visible
   public controlsVisible: boolean = true;
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
   // Timeout for the controls
-  private controlsVisibleTimeout: number = 0;
   public sharePopupVisible: boolean = false;
+  private controlsVisibleTimeout: number = 0;
 
   constructor(
     public sliderService: SliderService,
@@ -45,25 +48,7 @@ export class ControlsComponent {
   @HostListener('document:mouseleave')
   hideControls(): void {
     if (!this.isMobile()) {
-      this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, 500);
-    }
-  }
-
-  /**
-   * Listen for the key events and adapt the slider
-   * @param event The key events
-   */
-  @HostListener('document:keyup', ['$event'])
-  catchKeyboardEvents(event: KeyboardEvent): void {
-
-    // Prevent event from registering twice
-    event.stopImmediatePropagation();
-    if (event.key === 'ArrowRight') {
-      this.sliderService.nextPicture();
-    } else if (event.key === 'ArrowLeft') {
-      this.sliderService.previousPicture();
-    } else if (event.key === 'Escape') {
-      this.sliderService.closeSlider();
+      this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, this.fadeoutTime);
     }
   }
 
@@ -96,6 +81,4 @@ export class ControlsComponent {
       return false;
     }
   }
-
-
 }

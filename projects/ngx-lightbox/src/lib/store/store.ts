@@ -45,14 +45,21 @@ export class Store<S extends object> {
           }
           // @ts-ignore
           return result[part];
-        }, state)
+        }, state),
       ),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     ).subscribe(v => {
       partialChange.next(v);
     });
 
     return partialChange as unknown as BehaviorSubject<T>;
+  }
+
+  patchState<T>(value: T, ...path: Index[]): void {
+    if (path.length < 1) {
+      return;
+    }
+    this.setState(this.getUpdatedState(value, this.state, path));
   }
 
   // tslint:disable-next-line:no-any
@@ -75,7 +82,7 @@ export class Store<S extends object> {
       [key]: this.getUpdatedState(
         value,
         stateSubtree[key],
-        path.slice(1)
+        path.slice(1),
       ),
     };
   }
@@ -91,12 +98,5 @@ export class Store<S extends object> {
     return {
       [key]: this.createStateSubtree(value, path.slice(1)),
     };
-  }
-
-  patchState<T>(value: T, ...path: Index[]): void {
-    if (path.length < 1) {
-      return;
-    }
-    this.setState(this.getUpdatedState(value, this.state, path));
   }
 }
