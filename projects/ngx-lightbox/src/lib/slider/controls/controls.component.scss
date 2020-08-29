@@ -1,22 +1,46 @@
 @import "../icons.scss";
+@import "../../../../lightbox-config.scss";
 
 .control-wrapper {
-  display : contents
+  opacity : 0;
+  display : contents;
+
+  &.controls-visible {
+    opacity : 0.75;
+  }
 }
 
+%change-opacity {
+  transition  : opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
+  will-change : opacity;
+  opacity     : inherit;
+}
+
+
 .top-control {
-  position         : absolute;
-  left             : 0;
-  top              : 0;
-  height           : 44px;
-  width            : 100%;
+  @extend %change-opacity;
 
-  background-color : rgba(0, 0, 0, 0.3);
+  position   : absolute;
+  left       : 0;
+  top        : 0;
+  height     : 44px;
+  width      : 100%;
+  text-align : right;
 
-  text-align       : right;
+  .counter {
+    position    : absolute;
+    left        : 0;
+    top         : 0;
+    height      : 44px;
+    line-height : 44px;
+    color       : #fff;
+    padding     : 0 10px;
+  }
 }
 
 .bottom-control {
+  @extend %change-opacity;
+
   position         : absolute;
   left             : 0;
   bottom           : 0;
@@ -34,18 +58,10 @@
   }
 }
 
-.counter {
-  position    : absolute;
-  left        : 0;
-  top         : 0;
-  height      : 44px;
-  line-height : 44px;
-  color       : #fff;
-  opacity     : 0.75;
-  padding     : 0 10px;
-}
 
 .right {
+  @extend %change-opacity;
+
   position  : fixed;
   right     : 0;
   top       : 50%;
@@ -53,6 +69,8 @@
 }
 
 .left {
+  @extend %change-opacity;
+
   position  : fixed;
   left      : 0;
   top       : 50%;

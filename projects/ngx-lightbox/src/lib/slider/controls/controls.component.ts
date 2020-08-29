@@ -18,14 +18,14 @@ export class ControlsComponent {
   @Input() close = true;
   @Input() arrows = true;
   @Input() shareOptionList: TShareOptionList = [];
-  @Input() fadeoutTime: number = 300;
+  @Input() fadeoutTime: number = 1000;
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
 
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
-
+  public displayState: string = 'block';
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
 

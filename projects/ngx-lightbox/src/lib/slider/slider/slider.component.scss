@@ -13,7 +13,6 @@
 }
 
 img {
-
   // Touch devices only
   @media (hover : none) and (pointer : coarse) {
     width  : calc(100%); /*width of parent container*/

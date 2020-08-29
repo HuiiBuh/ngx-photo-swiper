@@ -1,35 +1,32 @@
-<div class="control-wrapper" *ngIf="sliderService.active">
+<div class="control-wrapper" *ngIf="sliderService.active"
+     [class.controls-visible]="controlsVisible">
+  <div class="top-control">
 
-  <ng-template [ngIf]="controlsVisible">
+    <div *ngIf="position" class="counter">{{sliderService.currentImageIndex}} / {{sliderService.sliderLength}}</div>
 
-    <div class="top-control">
+    <button *ngIf="zoom" class="icon-zoom"></button>
 
-      <div *ngIf="position" class="counter">{{sliderService.currentImageIndex}} / {{sliderService.sliderLength}}</div>
+    <button *ngIf="fullscreen" (click)="toggleFullscreen()"
+            [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-      <button *ngIf="zoom" class="icon-zoom"></button>
+    <button *ngIf="share && shareOptionList.length !==0"
+            (click)="toggleShareView($event)" class="icon-social-share"></button>
 
-      <button *ngIf="fullscreen" (click)="toggleFullscreen()"
-              [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
+    <lib-share [shareOptionList]="shareOptionList"></lib-share>
 
-      <button *ngIf="share && shareOptionList.length !==0"
-              (click)="toggleShareView($event)" class="icon-social-share"></button>
+    <button *ngIf="close" class="icon-close" (click)="closeSlider()"></button>
 
-      <lib-share [shareOptionList]="shareOptionList"></lib-share>
+  </div>
 
-      <button *ngIf="close" class="icon-close" (click)="closeSlider()"></button>
+  <ng-template [ngIf]="arrows && !isMobile()">
 
-    </div>
-
-    <ng-template [ngIf]="arrows && !isMobile()">
-
-      <button *ngIf="sliderService.isFirstImage()" class="icon-left left"
-              (click)="sliderService.previousPicture()"></button>
-      <button *ngIf="sliderService.isLastImage()" class="icon-right right"
-              (click)="sliderService.nextPicture()"></button>
-
-    </ng-template>
+    <button *ngIf="sliderService.isFirstImage()" class="icon-left left"
+            (click)="sliderService.previousPicture()"></button>
+    <button *ngIf="sliderService.isLastImage()" class="icon-right right"
+            (click)="sliderService.nextPicture()"></button>
 
   </ng-template>
+
 
   <div class="bottom-control">
     <span>{{sliderService.imageCaption}}</span>
