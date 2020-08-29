@@ -17,7 +17,7 @@ export class ControlsComponent {
   @Input() close = true;
   @Input() arrows = true;
 
-  @Input() shareOptionList: TShareOptionList;
+  @Input() shareOptionList: TShareOptionList = [];
 
   @Input() fadeoutTime: number = 300;
 
@@ -35,6 +35,38 @@ export class ControlsComponent {
     @Inject(DOCUMENT) private document: Document) {
   }
 
+  /**
+   * Toggle fullscreen of the gallery
+   */
+  public async toggleFullscreen(): Promise<void> {
+    if (!this.fullscreenEnabled) {
+      await this.document.body.requestFullscreen();
+    } else {
+      await this.document.exitFullscreen();
+    }
+  }
+
+  /**
+   * Close the slider after exiting the fullscreen
+   */
+  async closeSlider(): Promise<void> {
+    if (this.fullscreenEnabled) {
+      await this.document.exitFullscreen();
+    }
+
+    this.sliderService.closeSlider();
+  }
+
+  /**
+   * Check if the browser is a mobile browser
+   */
+  public isMobile(): boolean {
+    if (this.document.defaultView) {
+      return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.document.defaultView.navigator.userAgent));
+    } else {
+      return false;
+    }
+  }
 
   /**
    * Show the controls if the mouse is in the window
@@ -63,25 +95,13 @@ export class ControlsComponent {
     this.fullscreenEnabled = !!this.document.fullscreenElement;
   }
 
-  /**
-   * Toggle fullscreen of the gallery
-   */
-  public async toggleFullscreen(): Promise<void> {
-    if (!this.fullscreenEnabled) {
-      await this.document.body.requestFullscreen();
-    } else {
-      await this.document.exitFullscreen();
-    }
-  }
+  @HostListener('document:keyup.arrowRight')
+  r = () => this.sliderService.nextPicture();
 
-  /**
-   * Check if the browser is a mobile browser
-   */
-  public isMobile(): boolean {
-    if (this.document.defaultView) {
-      return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.document.defaultView.navigator.userAgent));
-    } else {
-      return false;
-    }
-  }
+  @HostListener('document:keyup.arrowLeft')
+  l = () => this.sliderService.previousPicture();
+
+  @HostListener('document:keyup.escape')
+  e = async () => await this.closeSlider();
+
 }

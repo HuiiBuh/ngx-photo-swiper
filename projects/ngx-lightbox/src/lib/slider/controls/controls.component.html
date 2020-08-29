@@ -18,7 +18,7 @@
         <lib-share [shareOptionList]="shareOptionList"></lib-share>
       </span>
 
-      <button *ngIf="close" class="icon-close" (click)="sliderService.closeSlider()"></button>
+      <button *ngIf="close" class="icon-close" (click)="closeSlider()"></button>
 
     </div>
 
@@ -36,7 +36,5 @@
   <div class="bottom-control">
     <span>{{sliderService.imageCaption}}</span>
   </div>
-
-  <lib-hotkey-listener></lib-hotkey-listener>
 
 </div>
