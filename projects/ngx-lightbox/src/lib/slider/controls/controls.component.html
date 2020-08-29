@@ -11,12 +11,10 @@
       <button *ngIf="fullscreen" (click)="toggleFullscreen()"
               [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-      <button *ngIf="share && shareOptionList && shareOptionList.length !==0"
-              (click)="sharePopupVisible = !sharePopupVisible" class="icon-social-share"></button>
+      <button *ngIf="share && shareOptionList.length !==0"
+              (click)="toggleShareView($event)" class="icon-social-share"></button>
 
-      <span *ngIf="sharePopupVisible && shareOptionList && shareOptionList.length !==0" class="social-share-popup">
-        <lib-share [shareOptionList]="shareOptionList"></lib-share>
-      </span>
+      <lib-share [shareOptionList]="shareOptionList"></lib-share>
 
       <button *ngIf="close" class="icon-close" (click)="closeSlider()"></button>
 

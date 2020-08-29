@@ -1,5 +1,6 @@
 import {DOCUMENT} from '@angular/common';
 import {Component, HostListener, Inject, Input} from '@angular/core';
+import {ShareService} from '../share/share.service';
 import {TShareOptionList} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
 
@@ -16,22 +17,21 @@ export class ControlsComponent {
   @Input() share = true;
   @Input() close = true;
   @Input() arrows = true;
-
   @Input() shareOptionList: TShareOptionList = [];
-
   @Input() fadeoutTime: number = 300;
-
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
+
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
+
   // Timeout for the controls
-  public sharePopupVisible: boolean = false;
   private controlsVisibleTimeout: number = 0;
 
   constructor(
     public sliderService: SliderService,
+    private shareService: ShareService,
     @Inject(DOCUMENT) private document: Document) {
   }
 
@@ -68,10 +68,16 @@ export class ControlsComponent {
     }
   }
 
+  public toggleShareView(event: MouseEvent): void {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    this.shareService.shareVisible.next(!this.shareService.shareVisible.value);
+  }
+
   /**
    * Show the controls if the mouse is in the window
    */
-  @HostListener('document:mouseenter')
+  @HostListener('body:mouseenter')
   showControls(): void {
     this.controlsVisible = true;
     clearTimeout(this.controlsVisibleTimeout);
@@ -80,9 +86,9 @@ export class ControlsComponent {
   /**
    * Hide the controls if the mouse leaves
    */
-  @HostListener('document:mouseleave')
+  @HostListener('body:mouseleave')
   hideControls(): void {
-    if (!this.isMobile()) {
+    if (!this.isMobile() && !this.shareService.shareVisible.value) {
       this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, this.fadeoutTime);
     }
   }

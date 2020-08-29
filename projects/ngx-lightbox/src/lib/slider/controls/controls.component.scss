@@ -1,4 +1,4 @@
-@import "icons.scss";
+@import "../icons.scss";
 
 .control-wrapper {
   display : contents
@@ -57,42 +57,4 @@
   left      : 0;
   top       : 50%;
   transform : translateY(-50%);
-}
-
-
-.icon-right {
-  @include icons;
-
-  height : 30px;
-  width  : 32px;
-
-  &:before {
-    background-position : -94px -44px;
-
-    height              : 30px;
-    width               : 32px;
-  }
-}
-
-.social-share-popup {
-  min-width        : 150px;
-  position         : fixed;
-  top              : 50px;
-  right            : 44px;
-  border-radius    : 2px;
-  background-color : white;
-
-
-  &::before {
-    content             : "";
-    display             : block;
-    width               : 0;
-    height              : 0;
-    position            : absolute;
-    top                 : -12px;
-    right               : 15px;
-    border              : 6px solid transparent;
-    border-bottom-color : #fff;
-    pointer-events      : none;
-  }
 }

@@ -1,3 +1,5 @@
-<div class="share-options">
-  <a *ngFor="let share of shareOptionList" [href]="share.url" target="_blank">{{share.name}}</a>
-</div>
+<span *ngIf="shareService.shareVisible.value" class="social-share-popup">
+  <span class="share-options">
+    <a *ngFor="let share of shareOptionList" [href]="share.url" target="_blank">{{share.name}}</a>
+  </span>
+</span>
