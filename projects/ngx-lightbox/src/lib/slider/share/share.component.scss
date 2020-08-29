@@ -1,4 +1,4 @@
-.share-options {
+.gallery-share-options {
   a {
     text-align      : left;
     display         : block;
@@ -25,14 +25,15 @@
 }
 
 
-.social-share-popup {
+.gallery-share-popup {
+  will-change      : opacity, transition;
+
   min-width        : 150px;
   position         : fixed;
   top              : 50px;
   right            : 44px;
   border-radius    : 2px;
   background-color : white;
-
 
   &::before {
     content             : "";
@@ -46,4 +47,5 @@
     border-bottom-color : #fff;
     pointer-events      : none;
   }
+
 }
