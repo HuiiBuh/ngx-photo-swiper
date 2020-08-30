@@ -7,7 +7,7 @@ import {LightboxStore} from '../store/lightbox.store';
 @Injectable({
   providedIn: 'root'
 })
-export class UrlSliderHandlerService {
+export class UrlHandlerService {
 
   constructor(
     private store: LightboxStore,

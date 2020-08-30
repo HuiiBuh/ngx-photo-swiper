@@ -1,5 +1,5 @@
-<div *ngIf="sliderState.active" class="lightbox-slider-container">
-
+<div *ngIf="sliderState.active" class="lightbox-slider-container"
+     libTouchmove>
   <img [src]="imageList[sliderState.imageIndex].imageSRC" alt="Fullscreen Image">
   <ng-content></ng-content>
 </div>
