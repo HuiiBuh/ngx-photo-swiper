@@ -1,4 +1,4 @@
-import {Directive, DoCheck, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
 
 
 export interface Point {
@@ -7,19 +7,26 @@ export interface Point {
 }
 
 export interface TouchMove {
-  start: Point;
-  current: Point;
+  start: {
+    x: number,
+    y: number
+  };
+  current: {
+    x: number,
+    y: number
+  };
+  finished: boolean;
 }
 
 @Directive({
   selector: '[libTouchmove]',
 })
-export class TouchmoveDirective implements OnInit, OnDestroy, DoCheck {
+export class TouchmoveDirective implements OnInit, OnDestroy {
 
-  private static touchThreshold: number = 20;
+  private static touchThreshold: number = 10;
 
-  @Output() hSwipe: EventEmitter<TouchMove> = new EventEmitter();
   @Output() vSwipe: EventEmitter<TouchMove> = new EventEmitter();
+  @Output() hSwipe: EventEmitter<TouchMove> = new EventEmitter();
 
   // The element
   private readonly element: ElementRef;
@@ -33,7 +40,7 @@ export class TouchmoveDirective implements OnInit, OnDestroy, DoCheck {
   private touchEndUnsubscribe: () => void;
 
   // Handler placeholder which handles the touches if it is clear what type they have
-  private touchHandler: (e: TouchEvent) => void;
+  private touchHandler: (e: TouchEvent, b?: boolean) => void;
 
   constructor(
     el: ElementRef,
@@ -57,10 +64,6 @@ export class TouchmoveDirective implements OnInit, OnDestroy, DoCheck {
       this.touchStartUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchstart', this.handleTouchStart.bind(this));
       this.touchEndUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchend', this.handleTouchEnd.bind(this));
     });
-  }
-
-  public ngDoCheck(): void {
-    console.log('change detection');
   }
 
   /**
@@ -119,34 +122,41 @@ export class TouchmoveDirective implements OnInit, OnDestroy, DoCheck {
    */
   private handleTouchEnd(e: TouchEvent): void {
     e.preventDefault();
-    this.touchMoveUnsubscribe();
-    this.touchStartUnsubscribe = () => null;
-  }
 
+    const customEvent = {
+      touches: [{
+        clientX: e.changedTouches[0].clientX,
+        clientY: e.changedTouches[0].clientY,
+      }],
+    };
+    this.touchHandler(customEvent as unknown as TouchEvent, true);
+    this.touchHandler = () => null;
+    this.touchMoveUnsubscribe();
+  }
 
   /**
    * Handle the vertical touch event
    */
-  private handleVertical(e: TouchEvent): void {
-    this.hSwipe.emit({
-      current: {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      },
-      start: {...this.touchStart},
-    });
+  private handleVertical(e: TouchEvent, finished = false): void {
+    this.vSwipe.emit(this.createEventObject(e, finished));
   }
 
   /**
    * Handle the horizontal touch event
    */
-  private handleHorizontal(e: TouchEvent): void {
-    this.vSwipe.emit({
+  private handleHorizontal(e: TouchEvent, finished = false): void {
+    this.hSwipe.emit(this.createEventObject(e, finished));
+  }
+
+  private createEventObject(e: TouchEvent, finished: boolean): TouchMove {
+    return {
       current: {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
       },
       start: {...this.touchStart},
-    });
+      finished,
+    };
   }
+
 }

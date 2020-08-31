@@ -12,19 +12,30 @@
   background-color : $backdrop-color;
 }
 
-img {
-  // Touch devices only
-  @media (hover : none) and (pointer : coarse) {
-    width  : calc(100%); /*width of parent container*/
-    height : calc(100% - 3rem); /*height of parent container*/
+.slider {
+  display               : inline-grid;
+
+  grid-template-columns :repeat(3, 100vw);
+  grid-template-areas   : "first second third";
+  column-gap            : 10vw;
+
+
+  position              : absolute;
+  left                  : -110vw;
+
+  height                : 100%;
+
+  .index-0 {
+    grid-area : first;
   }
 
-  width      : calc(100% - 6rem); /*width of parent container*/
-  height     : calc(100% - 6rem); /*height of parent container*/
-  object-fit : contain;
-  position   : relative;
-  top        : 50%;
-  transform  : translateY(-50%);
+  .index-1 {
+    grid-area : second;
+  }
+
+  .index-2 {
+    grid-area : third;
+  }
 }
 
 .all-center {
@@ -33,3 +44,18 @@ img {
   justify-content : center;
   height          : 100%;
 }
+
+//img {
+//  // Touch devices only
+//  @media (hover : none) and (pointer : coarse) {
+//    width  : calc(100%); /*width of parent container*/
+//    height : calc(100% - 3rem); /*height of parent container*/
+//  }
+//
+//  width      : calc(100% - 6rem); /*width of parent container*/
+//  height     : calc(100% - 6rem); /*height of parent container*/
+//  object-fit : contain;
+//  position   : relative;
+//  top        : 50%;
+//  transform  : translateY(-50%);
+//}

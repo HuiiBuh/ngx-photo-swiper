@@ -18,14 +18,16 @@
 
 
 .top-control {
+  background-color : $icons-background-color;
+
   @extend %change-opacity;
 
-  position   : absolute;
-  left       : 0;
-  top        : 0;
-  height     : 44px;
-  width      : 100%;
-  text-align : right;
+  position         : absolute;
+  left             : 0;
+  top              : 0;
+  height           : 44px;
+  width            : 100%;
+  text-align       : right;
 
   .counter {
     position    : absolute;
