@@ -23,7 +23,7 @@ export interface TouchMove {
 })
 export class TouchmoveDirective implements OnInit, OnDestroy {
 
-  private static touchThreshold: number = 10;
+  private static touchThreshold: number = 5;
 
   @Output() vSwipe: EventEmitter<TouchMove> = new EventEmitter();
   @Output() hSwipe: EventEmitter<TouchMove> = new EventEmitter();
@@ -80,7 +80,6 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    */
   private handleTouchStart(e: TouchEvent): void {
     if (e.touches.length === 1) {
-      e.preventDefault();
       this.touchMoveUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchmove', this.handleTouchMove.bind(this));
       this.touchStart.x = e.touches[0].clientX;
       this.touchStart.y = e.touches[0].clientY;
@@ -93,7 +92,6 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    */
   private handleTouchMove(e: TouchEvent): void {
     e.preventDefault();
-
     // Get the fist touch
     const touch = e.touches[0];
     const xDiff: number = Math.abs(touch.clientX - this.touchStart.x);
@@ -121,8 +119,6 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    * Remove the touch move subscription
    */
   private handleTouchEnd(e: TouchEvent): void {
-    e.preventDefault();
-
     const customEvent = {
       touches: [{
         clientX: e.changedTouches[0].clientX,

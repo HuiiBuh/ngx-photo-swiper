@@ -1,6 +1,7 @@
 <span [@openClose]="shareService.shareVisible.value ? 'open':'closed'"
       (@openClose.start)="display = 'block'"
       (@openClose.done)="shareService.shareVisible.value ? display = 'block': display = 'none'"
+      [ngStyle]="{display:display}"
       class="gallery-share-popup">
   <span class="gallery-share-options">
     <a *ngFor="let share of shareOptionList" [href]="share.url" target="_blank">{{share.name}}</a>

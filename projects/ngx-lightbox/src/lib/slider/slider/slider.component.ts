@@ -11,6 +11,8 @@ interface IImageIndex extends IImage {
   index: number;
 }
 
+// TODO move the image swipe handling into a service and user a event emitter to get notified when the swipe animation has ended
+// TODO provide option to stop the swipe animation and handle the user input
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
@@ -25,6 +27,7 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
   public currentImageIndex: number = 0;
   private galleryStateSubscription!: Subscription;
   private blockingChange: boolean = false;
+  private hSwipeOffset: number = 0;
 
   constructor(
     private lightboxService: NgxLightboxService,
@@ -50,25 +53,6 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     console.log('change detection');
   }
 
-  /**
-   * Handle the horizontal swipe and hide the image
-   * @param $event The horizontal swipe event
-   */
-  public horizontalSwipe($event: TouchMove): void {
-    if (!$event.finished) {
-      this.timeAnimation(this.moveImage.bind(this, $event.start.x - $event.current.x));
-    } else {
-      this.transitionToImage($event);
-    }
-  }
-
-  /**
-   * Handle the vertical swipe and hide the image
-   * @param $event The vertical swipe event
-   */
-  public verticalSwipe($event: TouchMove): void {
-    console.log($event);
-  }
 
   /**
    * Get the index of the image
@@ -82,8 +66,8 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
    * @param value The new gallery state
    */
   private populateData(value: GalleryState): void {
-    if (value.slider.active) {
 
+    if (value.slider.active) {
       const images = value.gallery[value.slider.gridID];
       this.currentImageIndex = value.slider.imageIndex;
 
@@ -105,14 +89,48 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.galleryState = value;
+    this.hSwipeOffset = 0;
+    this.moveImage();
   }
 
   /**
-   * Move the image according to the touch
-   * @param translatePixel How many pixel the image should be moved
+   * Handle the horizontal swipe and hide the image
+   * @param $event The horizontal swipe event
    */
-  private moveImage(translatePixel: number): void {
-    this.renderer2.setStyle(this.slider?.nativeElement, 'transform', `translate(${-translatePixel}px, -50%)`);
+  public async horizontalSwipe($event: TouchMove): Promise<void> {
+    this.hSwipeOffset = $event.start.x - $event.current.x;
+    if (!$event.finished) {
+      this.timeAnimation(this.moveImage.bind(this));
+    } else {
+      await this.transitionToImage($event);
+    }
+  }
+
+  public getImageModulo(x: number): IImageIndex | null {
+    for (const image of this.imageRange) {
+      if (image && image.index % 3 === x) {
+        return image;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Handle the vertical swipe and hide the image
+   * @param $event The vertical swipe event
+   */
+  public verticalSwipe($event: TouchMove): void {
+    console.log($event);
+  }
+
+
+  /**
+   * Move the image according to the touch
+   */
+  private moveImage(): void {
+    if (this.slider?.nativeElement) {
+      this.renderer2.setStyle(this.slider.nativeElement, 'transform', `translate3d(${-this.hSwipeOffset}px,0 ,0)`);
+    }
     this.blockingChange = false;
   }
 
@@ -120,20 +138,104 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
    * Transition to an image
    * @param touchMove The touch with the start and the current position
    */
-  private transitionToImage(touchMove: TouchMove): void {
+  private async transitionToImage(touchMove: TouchMove): Promise<void> {
     const difference = touchMove.start.x - touchMove.current.x;
 
     // Percentage of the touch
     const movePercentage = Math.abs(difference) / this.document.body.clientWidth;
-    if (movePercentage > .3) {
+    if (movePercentage > .2 || Math.abs(difference) > 100) {
       if (difference > 0) {
-        this.ngZone.run(this.sliderService.nextPicture.bind(this));
+        this.animateNext(() => {
+          this.ngZone.run(this.sliderService.nextPicture.bind(this));
+        });
       } else {
-        this.ngZone.run(this.sliderService.previousPicture.bind(this));
+        this.animatePrevious(() => {
+          this.ngZone.run(this.sliderService.previousPicture.bind(this));
+        });
+
       }
     } else {
-      // If you move the whole slider you have to move it back with requestAnimationFrame() until the left is back to zero
+      await this.animateResetPosition();
     }
+  }
+
+  animatePrevious(callback: () => void): void {
+    const movementSpeed = 100;
+
+    const bodyWidth = this.document.body.clientWidth + 46;
+
+    const getNewPosition = () => {
+      const newPosition = this.hSwipeOffset - movementSpeed;
+      if (newPosition <= -bodyWidth) {
+        return -bodyWidth;
+      }
+      return newPosition;
+    };
+
+    const previousAnimation = () => {
+      if (this.hSwipeOffset > -bodyWidth) {
+        this.hSwipeOffset = getNewPosition();
+        this.moveImage();
+        requestAnimationFrame(previousAnimation.bind(this));
+      } else {
+        callback();
+      }
+    };
+
+    previousAnimation();
+  }
+
+  animateNext(callback: () => void): void {
+    const movementSpeed = 100;
+
+    const bodyWidth = this.document.body.clientWidth + 46;
+
+    const getNewPosition = () => {
+      const newPosition = this.hSwipeOffset + movementSpeed;
+      if (newPosition > bodyWidth) {
+        return bodyWidth;
+      }
+      return newPosition;
+    };
+
+    const nextAnimation = () => {
+      if (this.hSwipeOffset < bodyWidth) {
+        this.hSwipeOffset = getNewPosition();
+        this.moveImage();
+        requestAnimationFrame(nextAnimation.bind(this));
+      } else {
+        callback();
+      }
+    };
+
+    nextAnimation();
+  }
+
+  /**
+   * Reset the image slider to its original position
+   * TODO reset if you swipe to wide at the first or last image
+   */
+  private async animateResetPosition(): Promise<void> {
+    const movementSpeed = 20;
+    const factor = this.hSwipeOffset > 0 ? -1 : 1;
+
+    const getNewPosition = () => {
+      const newPosition = this.hSwipeOffset + factor * movementSpeed;
+      if (newPosition * factor > 0) {
+        return 0;
+      }
+      return newPosition;
+    };
+
+    const resetAnimation = () => {
+      if (this.hSwipeOffset * factor < 0) {
+        this.hSwipeOffset = getNewPosition();
+        this.moveImage();
+        requestAnimationFrame(resetAnimation.bind(this));
+      }
+    };
+
+    resetAnimation();
   }
 
   /**
@@ -145,5 +247,9 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
       requestAnimationFrame(callback);
     }
     this.blockingChange = true;
+  }
+
+  private async sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

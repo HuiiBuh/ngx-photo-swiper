@@ -1,20 +1,19 @@
-<div *ngIf="galleryState.slider.active" class="lightbox-slider-container"
+<div *ngIf="galleryState && galleryState.slider.active" class="lightbox-slider-container"
      libTouchmove
      (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
 >
+
   <div class="slider" #slider>
-    <ng-template ngFor let-image [ngForOf]="imageRange">
-      <span *ngIf="image && image.index % 3 === 0" class="index-{{getImageIndex(image.index)}}">
-        <img [src]="image.imageSRC" alt="image">
+      <span *ngIf="getImageModulo(0)" class="index-{{getImageIndex($any(getImageModulo(0)?.index))}}">
+        <img [src]="getImageModulo(0)?.imageSRC" alt="image">
       </span>
-      <span *ngIf="image && image.index % 3 === 1" class="index-{{getImageIndex(image.index)}}">
-        <img [src]="image.imageSRC" alt="image">
+    <span *ngIf="getImageModulo(1)" class="index-{{getImageIndex($any(getImageModulo(1)?.index))}}">
+        <img [src]="getImageModulo(1)?.imageSRC" alt="image">
       </span>
-      <span *ngIf="image && image.index % 3 === 2" class="index-{{getImageIndex(image.index)}}">
-        <img [src]="image.imageSRC" alt="image">
+    <span *ngIf="getImageModulo(2)" class="index-{{getImageIndex($any(getImageModulo(2)?.index))}}">
+        <img [src]="getImageModulo(2)?.imageSRC" alt="image">
       </span>
-    </ng-template>
   </div>
 
   <ng-content></ng-content>

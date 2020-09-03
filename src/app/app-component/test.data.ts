@@ -9,7 +9,19 @@ export const testData: IImage[] = [{
 }, {
   caption: 'Test caption',
   description: 'Test description',
-  imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814785/photostream-photos/DSC05621_zgtcco.jpg',
+  imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
+}, {
+  caption: 'Test caption',
+  description: 'Test description',
+  imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
+}, {
+  caption: 'Test caption',
+  description: 'Test description',
+  imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
+}, {
+  caption: 'Test caption',
+  description: 'Test description',
+  imageSRC: 'https://farm6.staticflickr.com/5591/15008867125_b61960af01_h.jpg',
 }, {
   caption: 'Test caption',
   description: 'Test description',

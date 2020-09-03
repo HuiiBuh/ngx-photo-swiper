@@ -26,7 +26,6 @@ import {ShareService} from './share.service';
 })
 export class ShareComponent implements OnInit, OnDestroy {
 
-
   @Input() shareOptionList: TShareOptionList = [];
   public display: 'block' | 'none' = 'none';
   private unsubscribable: () => void;
