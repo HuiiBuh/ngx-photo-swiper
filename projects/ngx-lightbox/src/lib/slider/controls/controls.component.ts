@@ -1,3 +1,4 @@
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
 import {Component, HostListener, Inject, Input} from '@angular/core';
 import {ShareService} from '../share/share.service';
@@ -8,6 +9,19 @@ import {SliderService} from '../slider.service';
   selector: 'lib-controls',
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      state('visible', style({
+        opacity: 1,
+      })),
+      state('hidden', style({
+        opacity: 0,
+      })),
+      transition('visible <=> hidden', [
+        animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
+      ]),
+    ]),
+  ],
 })
 export class ControlsComponent {
 

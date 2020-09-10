@@ -11,8 +11,7 @@ interface IImageIndex extends IImage {
   index: number;
 }
 
-// TODO move the image swipe handling into a service and user a event emitter to get notified when the swipe animation has ended
-// TODO provide option to stop the swipe animation and handle the user input
+// TODO move the slider animation into a angular animation
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
@@ -20,10 +19,10 @@ interface IImageIndex extends IImage {
 })
 export class SliderComponent implements OnInit, OnDestroy, DoCheck {
 
-  @ViewChild('slider') slider: ElementRef | undefined;
+  private static readonly movementSpeed = 50;
+  private static _slider: ElementRef | undefined;
   public galleryState!: GalleryState;
   public imageRange: (IImageIndex | null)[] = [];
-
   public currentImageIndex: number = 0;
   private galleryStateSubscription!: Subscription;
   private blockingChange: boolean = false;
@@ -36,6 +35,17 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     @Inject(DOCUMENT) private document: Document) {
+  }
+
+  get slider(): ElementRef | undefined {
+    return SliderComponent._slider;
+  }
+
+  @ViewChild('slider')
+  set slider(value: ElementRef | undefined) {
+    if (value) {
+      SliderComponent._slider = value;
+    }
   }
 
   public ngOnInit(): void {
@@ -59,6 +69,84 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
    */
   public getImageIndex(x: number): number {
     return ((x - (this.currentImageIndex % 3) + 1) % 3);
+  }
+
+  /**
+   * Handle the horizontal swipe and hide the image
+   * @param $event The horizontal swipe event
+   */
+  public async horizontalSwipe($event: TouchMove): Promise<void> {
+    this.hSwipeOffset = $event.start.x - $event.current.x;
+    if (!$event.finished) {
+      this.timeAnimation(this.moveImage.bind(this));
+    } else {
+      await this.transitionToImage($event);
+    }
+  }
+
+  public getImageModulo(x: number): IImageIndex | null {
+    for (const image of this.imageRange) {
+      if (image && image.index % 3 === x) {
+        return image;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Handle the vertical swipe and hide the image
+   * @param $event The vertical swipe event
+   */
+  public verticalSwipe($event: TouchMove): void {
+    console.log($event);
+  }
+
+  animatePrevious(callback: () => void): void {
+    const bodyWidth = this.document.body.clientWidth + 46;
+
+    const getNewPosition = () => {
+      const newPosition = this.hSwipeOffset - SliderComponent.movementSpeed;
+      if (newPosition <= -bodyWidth) {
+        return -bodyWidth;
+      }
+      return newPosition;
+    };
+
+    const previousAnimation = () => {
+      if (this.hSwipeOffset > -bodyWidth) {
+        this.hSwipeOffset = getNewPosition();
+        this.moveImage();
+        requestAnimationFrame(previousAnimation.bind(this));
+      } else {
+        callback();
+      }
+    };
+
+    previousAnimation();
+  }
+
+  animateNext(callback: () => void): void {
+    const bodyWidth = this.document.body.clientWidth + 46;
+
+    const getNewPosition = () => {
+      const newPosition = this.hSwipeOffset + SliderComponent.movementSpeed;
+      if (newPosition > bodyWidth) {
+        return bodyWidth;
+      }
+      return newPosition;
+    };
+
+    const nextAnimation = () => {
+      if (this.hSwipeOffset < bodyWidth) {
+        this.hSwipeOffset = getNewPosition();
+        this.moveImage();
+        requestAnimationFrame(nextAnimation.bind(this));
+      } else {
+        callback();
+      }
+    };
+
+    nextAnimation();
   }
 
   /**
@@ -92,37 +180,6 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     this.hSwipeOffset = 0;
     this.moveImage();
   }
-
-  /**
-   * Handle the horizontal swipe and hide the image
-   * @param $event The horizontal swipe event
-   */
-  public async horizontalSwipe($event: TouchMove): Promise<void> {
-    this.hSwipeOffset = $event.start.x - $event.current.x;
-    if (!$event.finished) {
-      this.timeAnimation(this.moveImage.bind(this));
-    } else {
-      await this.transitionToImage($event);
-    }
-  }
-
-  public getImageModulo(x: number): IImageIndex | null {
-    for (const image of this.imageRange) {
-      if (image && image.index % 3 === x) {
-        return image;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Handle the vertical swipe and hide the image
-   * @param $event The vertical swipe event
-   */
-  public verticalSwipe($event: TouchMove): void {
-    console.log($event);
-  }
-
 
   /**
    * Move the image according to the touch
@@ -159,68 +216,15 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
-  animatePrevious(callback: () => void): void {
-    const movementSpeed = 100;
-
-    const bodyWidth = this.document.body.clientWidth + 46;
-
-    const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset - movementSpeed;
-      if (newPosition <= -bodyWidth) {
-        return -bodyWidth;
-      }
-      return newPosition;
-    };
-
-    const previousAnimation = () => {
-      if (this.hSwipeOffset > -bodyWidth) {
-        this.hSwipeOffset = getNewPosition();
-        this.moveImage();
-        requestAnimationFrame(previousAnimation.bind(this));
-      } else {
-        callback();
-      }
-    };
-
-    previousAnimation();
-  }
-
-  animateNext(callback: () => void): void {
-    const movementSpeed = 100;
-
-    const bodyWidth = this.document.body.clientWidth + 46;
-
-    const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset + movementSpeed;
-      if (newPosition > bodyWidth) {
-        return bodyWidth;
-      }
-      return newPosition;
-    };
-
-    const nextAnimation = () => {
-      if (this.hSwipeOffset < bodyWidth) {
-        this.hSwipeOffset = getNewPosition();
-        this.moveImage();
-        requestAnimationFrame(nextAnimation.bind(this));
-      } else {
-        callback();
-      }
-    };
-
-    nextAnimation();
-  }
-
   /**
    * Reset the image slider to its original position
    * TODO reset if you swipe to wide at the first or last image
    */
   private async animateResetPosition(): Promise<void> {
-    const movementSpeed = 20;
     const factor = this.hSwipeOffset > 0 ? -1 : 1;
 
     const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset + factor * movementSpeed;
+      const newPosition = this.hSwipeOffset + factor * SliderComponent.movementSpeed;
       if (newPosition * factor > 0) {
         return 0;
       }
@@ -247,9 +251,5 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
       requestAnimationFrame(callback);
     }
     this.blockingChange = true;
-  }
-
-  private async sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
