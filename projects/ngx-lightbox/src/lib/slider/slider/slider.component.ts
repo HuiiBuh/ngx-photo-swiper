@@ -77,7 +77,7 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
    */
   public async horizontalSwipe($event: TouchMove): Promise<void> {
     this.hSwipeOffset = $event.start.x - $event.current.x;
-    if (!$event.finished) {
+    if ($event.state !== 'end') {
       this.timeAnimation(this.moveImage.bind(this));
     } else {
       await this.transitionToImage($event);
