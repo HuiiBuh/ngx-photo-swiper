@@ -41,16 +41,17 @@
 }
 
 
+.right, .left {
+  background-color : rgba(0, 0, 0, 0.3);
+  position         : fixed;
+  top              : 50%;
+  transform        : translateY(-50%);
+}
+
 .right {
-  position  : fixed;
-  right     : 0;
-  top       : 50%;
-  transform : translateY(-50%);
+  right : 0;
 }
 
 .left {
-  position  : fixed;
-  left      : 0;
-  top       : 50%;
-  transform : translateY(-50%);
+  left : 0;
 }

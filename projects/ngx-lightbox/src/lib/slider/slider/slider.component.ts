@@ -1,5 +1,6 @@
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
-import {Component, DoCheck, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {GalleryState, IImage} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
@@ -16,17 +17,37 @@ interface IImageIndex extends IImage {
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  animations: [
+    trigger('toNext', [
+      state('current', style({
+        transform: 'translate3D({{ startPosition }},0,0)',
+      }), {params: {startPosition: '0'}}),
+      state('next', style({
+        transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
+      })),
+      transition('current => next', [
+        animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
+      ]),
+    ]),
+  ],
 })
-export class SliderComponent implements OnInit, OnDestroy, DoCheck {
 
-  private static readonly movementSpeed = 50;
-  private static _slider: ElementRef | undefined;
-  public galleryState!: GalleryState;
-  public imageRange: (IImageIndex | null)[] = [];
-  public currentImageIndex: number = 0;
+export class SliderComponent implements OnInit, OnDestroy {
+
+  @ViewChild('slider')
+  private slider: ElementRef | undefined;
+
   private galleryStateSubscription!: Subscription;
-  private blockingChange: boolean = false;
-  private hSwipeOffset: number = 0;
+
+  public galleryState!: GalleryState;
+  public currentImageIndex: number = 0;
+  public imageRange: (IImageIndex | null)[] = [];
+  private swipeEvent: TouchMove | undefined;
+  public animateNext: 'current' | 'next' = 'current';
+
+  public animationInProgress: boolean = false;
+  private startPosition: string = '0px';
+
 
   constructor(
     private lightboxService: NgxLightboxService,
@@ -35,17 +56,7 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     @Inject(DOCUMENT) private document: Document) {
-  }
-
-  get slider(): ElementRef | undefined {
-    return SliderComponent._slider;
-  }
-
-  @ViewChild('slider')
-  set slider(value: ElementRef | undefined) {
-    if (value) {
-      SliderComponent._slider = value;
-    }
+    console.log('fuck');
   }
 
   public ngOnInit(): void {
@@ -59,11 +70,6 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     this.galleryStateSubscription.unsubscribe();
   }
 
-  public ngDoCheck(): void {
-    console.log('change detection');
-  }
-
-
   /**
    * Get the index of the image
    */
@@ -72,18 +78,9 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   /**
-   * Handle the horizontal swipe and hide the image
-   * @param $event The horizontal swipe event
+   * Get always the same image
+   * @param x The modulo solution
    */
-  public async horizontalSwipe($event: TouchMove): Promise<void> {
-    this.hSwipeOffset = $event.start.x - $event.current.x;
-    if ($event.state !== 'end') {
-      this.timeAnimation(this.moveImage.bind(this));
-    } else {
-      await this.transitionToImage($event);
-    }
-  }
-
   public getImageModulo(x: number): IImageIndex | null {
     for (const image of this.imageRange) {
       if (image && image.index % 3 === x) {
@@ -94,6 +91,40 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   /**
+   * Handle the horizontal swipe and hide the image
+   * @param $event The horizontal swipe event
+   */
+  public async horizontalSwipe($event: TouchMove): Promise<void> {
+    switch ($event.state) {
+      case 'start':
+        this.swipeEvent = $event;
+        this.followTouchGesture();
+        break;
+      case 'move':
+        this.swipeEvent = $event;
+        break;
+      case 'end':
+        this.swipeEvent = undefined;
+        this.ngZone.run(() => this.animateNext = 'next');
+        break;
+    }
+  }
+
+  private followTouchGesture(): void {
+    if (!this.swipeEvent || this.swipeEvent.state === 'end') {
+      return;
+    }
+
+    this.setTranslate(this.swipeEvent.current.x - this.swipeEvent.start.x, 0);
+
+    requestAnimationFrame(this.followTouchGesture.bind(this));
+  }
+
+  private setTranslate(x: number, y: number): void {
+    this.renderer2.setStyle(this.slider?.nativeElement, 'transform', `translate3d(${x}px,${y}px,0)`);
+  }
+
+  /**
    * Handle the vertical swipe and hide the image
    * @param $event The vertical swipe event
    */
@@ -101,53 +132,6 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     console.log($event);
   }
 
-  animatePrevious(callback: () => void): void {
-    const bodyWidth = this.document.body.clientWidth + 46;
-
-    const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset - SliderComponent.movementSpeed;
-      if (newPosition <= -bodyWidth) {
-        return -bodyWidth;
-      }
-      return newPosition;
-    };
-
-    const previousAnimation = () => {
-      if (this.hSwipeOffset > -bodyWidth) {
-        this.hSwipeOffset = getNewPosition();
-        this.moveImage();
-        requestAnimationFrame(previousAnimation.bind(this));
-      } else {
-        callback();
-      }
-    };
-
-    previousAnimation();
-  }
-
-  animateNext(callback: () => void): void {
-    const bodyWidth = this.document.body.clientWidth + 46;
-
-    const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset + SliderComponent.movementSpeed;
-      if (newPosition > bodyWidth) {
-        return bodyWidth;
-      }
-      return newPosition;
-    };
-
-    const nextAnimation = () => {
-      if (this.hSwipeOffset < bodyWidth) {
-        this.hSwipeOffset = getNewPosition();
-        this.moveImage();
-        requestAnimationFrame(nextAnimation.bind(this));
-      } else {
-        callback();
-      }
-    };
-
-    nextAnimation();
-  }
 
   /**
    * Fill in the important data from the gallery state
@@ -177,79 +161,22 @@ export class SliderComponent implements OnInit, OnDestroy, DoCheck {
     }
 
     this.galleryState = value;
-    this.hSwipeOffset = 0;
-    this.moveImage();
   }
 
-  /**
-   * Move the image according to the touch
-   */
-  private moveImage(): void {
-    if (this.slider?.nativeElement) {
-      this.renderer2.setStyle(this.slider.nativeElement, 'transform', `translate3d(${-this.hSwipeOffset}px,0 ,0)`);
-    }
-    this.blockingChange = false;
+  public end(): void {
+    this.animationInProgress = false;
+    this.ngZone.run(() => this.animateNext = 'current');
   }
 
-  /**
-   * Transition to an image
-   * @param touchMove The touch with the start and the current position
-   */
-  private async transitionToImage(touchMove: TouchMove): Promise<void> {
-    const difference = touchMove.start.x - touchMove.current.x;
-
-    // Percentage of the touch
-    const movePercentage = Math.abs(difference) / this.document.body.clientWidth;
-    if (movePercentage > .2 || Math.abs(difference) > 100) {
-      if (difference > 0) {
-        this.animateNext(() => {
-          this.ngZone.run(this.sliderService.nextPicture.bind(this));
-        });
-      } else {
-        this.animatePrevious(() => {
-          this.ngZone.run(this.sliderService.previousPicture.bind(this));
-        });
-
+  public getSliderPosition(): string {
+    if (!this.animationInProgress) {
+      if (this.slider?.nativeElement) {
+        const transform = getComputedStyle(this.slider?.nativeElement).transform;
+        this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
       }
-    } else {
-      await this.animateResetPosition();
     }
-  }
 
-  /**
-   * Reset the image slider to its original position
-   * TODO reset if you swipe to wide at the first or last image
-   */
-  private async animateResetPosition(): Promise<void> {
-    const factor = this.hSwipeOffset > 0 ? -1 : 1;
-
-    const getNewPosition = () => {
-      const newPosition = this.hSwipeOffset + factor * SliderComponent.movementSpeed;
-      if (newPosition * factor > 0) {
-        return 0;
-      }
-      return newPosition;
-    };
-
-    const resetAnimation = () => {
-      if (this.hSwipeOffset * factor < 0) {
-        this.hSwipeOffset = getNewPosition();
-        this.moveImage();
-        requestAnimationFrame(resetAnimation.bind(this));
-      }
-    };
-
-    resetAnimation();
-  }
-
-  /**
-   * Time the animation
-   * @param callback The callback which should be timed
-   */
-  private timeAnimation(callback: () => void): void {
-    if (!this.blockingChange) {
-      requestAnimationFrame(callback);
-    }
-    this.blockingChange = true;
+    console.log(this.startPosition);
+    return this.startPosition;
   }
 }

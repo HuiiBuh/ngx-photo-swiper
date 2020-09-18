@@ -20,6 +20,8 @@
   grid-template-areas   : "first second third";
   column-gap            : 30px;
 
+  transform             : translateY(0);
+
   position              : absolute;
   left                  : calc(-100vw - 30px);
   top                   : 0;

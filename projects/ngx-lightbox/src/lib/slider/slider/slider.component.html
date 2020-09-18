@@ -4,7 +4,10 @@
      (vSwipe)="verticalSwipe($event)"
 >
 
-  <div class="slider" #slider>
+  <div class="slider" #slider
+       [@toNext]="{value: animateNext, params: {startPosition: getSliderPosition()}}"
+       (@toNext.start)="animationInProgress = true"
+       (@toNext.done)="end()">
       <span *ngIf="getImageModulo(0)" class="index-{{getImageIndex($any(getImageModulo(0)?.index))}}">
         <img [src]="getImageModulo(0)?.imageSRC" alt="image">
       </span>
