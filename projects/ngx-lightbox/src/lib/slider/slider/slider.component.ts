@@ -1,16 +1,16 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   Inject,
   Input,
   NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
   Renderer2,
-  SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -20,13 +20,12 @@ import {NgxLightboxService} from '../../ngx-lightbox.service';
 import {LightboxStore} from '../../store/lightbox.store';
 import {ControlsComponent} from '../controls/controls.component';
 import {SliderService} from '../slider.service';
-import {TouchMove} from './touchmove.directive';
+import {TouchMove} from './touchmove/touchmove.event';
 
 interface IImageIndex extends IImage {
   index: number;
 }
 
-// TODO move the slider animation into a angular animation
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
@@ -36,16 +35,39 @@ interface IImageIndex extends IImage {
       state('current', style({
         transform: 'translate3D({{ startPosition }},0,0)',
       }), {params: {startPosition: '0'}}),
-      state('next', style({
+      state('right', style({
         transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
       })),
-      transition('current => next', [
-        animate('10s cubic-bezier(0.4, 0, 0.22, 1)'),
+      state('left', style({
+        transform: 'translate3d(calc(100vw + 30px), 0px, 0px)',
+      })),
+      state('none', style({
+        transform: 'translate3d(0, 0px, 0px)',
+      })),
+      transition('current => right', [
+        animate('333ms cubic-bezier(0, 0, 0, 1)'),
       ]),
-    ]),
+      transition('current => left', [
+        animate('333ms cubic-bezier(0, 0, 0, 1)'),
+      ]),
+      transition('current => none', [
+        animate('333ms cubic-bezier(0, 0, 0, 1)'),
+      ]),
+    ])
   ],
 })
-export class SliderComponent implements OnInit, OnDestroy, OnChanges {
+export class SliderComponent implements OnInit, OnDestroy {
+
+
+  constructor(
+    private lightboxService: NgxLightboxService,
+    public sliderService: SliderService,
+    private store: LightboxStore,
+    private renderer2: Renderer2,
+    private ngZone: NgZone,
+    private changeDetectorRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document) {
+  }
 
   @Input()
   controls: TemplateRef<ControlsComponent> | null = null;
@@ -58,21 +80,10 @@ export class SliderComponent implements OnInit, OnDestroy, OnChanges {
   public galleryState!: GalleryState;
   public currentImageIndex: number = 0;
   public imageRange: (IImageIndex | null)[] = [];
-  private swipeEvent!: TouchMove;
-  public animateNext: 'current' | 'next' = 'current';
+  public animate: 'current' | 'left' | 'right' | 'none' = 'current';
 
-  public animationInProgress: boolean = false;
   public startPosition: string = '0';
-
-
-  constructor(
-    private lightboxService: NgxLightboxService,
-    public sliderService: SliderService,
-    private store: LightboxStore,
-    private renderer2: Renderer2,
-    private ngZone: NgZone,
-    @Inject(DOCUMENT) private document: Document) {
-  }
+  private inTranslate = false;
 
   public ngOnInit(): void {
     this.galleryStateSubscription = this.store.state$.subscribe(this.populateData.bind(this));
@@ -110,36 +121,23 @@ export class SliderComponent implements OnInit, OnDestroy, OnChanges {
    * @param $event The horizontal swipe event
    */
   public async horizontalSwipe($event: TouchMove): Promise<void> {
-    switch ($event.state) {
-      case 'start':
-        this.swipeEvent = $event;
-        this.scheduleAnimation(this.animate);
-        break;
-      case 'move':
-        this.scheduleAnimation(this.animate);
-        this.swipeEvent = $event;
-        break;
-      case 'end':
-        this.swipeEvent = $event;
-        this.animateNext = 'next';
-        break;
+    if ($event.state === 'start' || $event.state === 'move') {
+      this.scheduleAnimation(() => {
+        this.setTranslate($event.current.x - $event.start.x, 0);
+        this.inTranslate = false;
+      });
+    } else {
+      this.ngZone.run(() => {
+        this.updateStartPosition();
+        this.changeDetectorRef.detectChanges();
+        this.animateTransition($event.getDirection() as 'left' | 'right' | 'none');
+      });
     }
   }
 
-  private animate = () => {
-    this.setTranslate(this.swipeEvent.current.x - this.swipeEvent.start.x, 0);
-    this.inTranslate = false;
-  };
-
-  private inTranslate = false;
-
-  private scheduleAnimation(callback: () => void): void {
-    if (!this.inTranslate) {
-      this.inTranslate = true;
-      requestAnimationFrame(callback);
-    }
-  }
-
+  /**
+   * Set the translate of the slider
+   */
   private setTranslate(x: number, y: number): void {
     this.renderer2.setStyle(this.slider?.nativeElement, 'transform', `translate3d(${x}px,${y}px,0)`);
   }
@@ -150,6 +148,16 @@ export class SliderComponent implements OnInit, OnDestroy, OnChanges {
    */
   public verticalSwipe($event: TouchMove): void {
     console.log($event);
+  }
+
+  private animateTransition(direction: 'left' | 'right' | 'none'): void {
+    if (this.currentImageIndex === 0 && direction === 'left' ||
+      this.currentImageIndex === this.galleryState.gallery[this.galleryState.slider.gridID].length - 1 && direction === 'right') {
+      this.animate = 'none';
+      this.animate = 'none';
+    } else {
+      this.animate = direction;
+    }
   }
 
 
@@ -193,10 +201,46 @@ export class SliderComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
+  /**
+   * Animate to the next image
+   */
+  public changeImage(): void {
+    if (this.animate !== 'current') {
+      if (this.animate === 'left') {
+        this.sliderService.previousPicture();
+      } else if (this.animate === 'right') {
+        this.sliderService.nextPicture();
+      }
+      this.startPosition = '0px';
+      this.animate = 'current';
+    }
   }
 
-  public test(): void {
 
+  /**
+   * Schedule the animation with request animation frame
+   * @param callback The function which should be called if the time is right
+   */
+  private scheduleAnimation(callback: () => void): void {
+    if (!this.inTranslate) {
+      this.inTranslate = true;
+      requestAnimationFrame(callback);
+    }
+  }
+
+
+  @HostListener('document:keyup.arrowRight')
+  private r(): void {
+    this.animateTransition('right');
+  }
+
+  @HostListener('document:keyup.arrowLeft')
+  private l(): void {
+    this.animateTransition('left');
+  }
+
+  @HostListener('document:keyup.escape')
+  private async e(): Promise<void> {
+    await this.sliderService.closeSlider();
   }
 }

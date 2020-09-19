@@ -1,16 +1,6 @@
 import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {Point, TouchMove} from './touchmove.event';
 
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface TouchMove {
-  start: Point;
-  current: Point;
-  state: 'start' | 'move' | 'end';
-}
 
 @Directive({
   selector: '[libTouchmove]',
@@ -33,6 +23,8 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
   private touchStartUnsubscribe: () => void;
   private touchMoveUnsubscribe: () => void;
   private touchEndUnsubscribe: () => void;
+
+  private touchHistory: Point[] = [];
 
   // Handler placeholder which handles the touches if it is clear what type they have
   private touchHandler: (e: TouchEvent, b?: undefined | 'end') => void;
@@ -110,6 +102,7 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
       // Pass the current event to the touch handler
       this.touchHandler(e);
       this.touchState = 'move';
+      this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
       // And add the handler which is responsible for the vertical or the horizontal event binding
       this.touchMoveUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchmove', this.touchHandler.bind(this));
     }
@@ -124,10 +117,12 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
         clientX: e.changedTouches[0].clientX,
         clientY: e.changedTouches[0].clientY,
       }],
+      preventDefault: () => null
     };
 
     this.touchState = 'end';
     this.touchHandler(customEvent as unknown as TouchEvent);
+    this.touchHistory = [];
     this.touchHandler = () => null;
     this.touchMoveUnsubscribe();
   }
@@ -136,29 +131,35 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    * Handle the vertical touch event
    */
   private handleVertical(e: TouchEvent): void {
-    this.vSwipe.emit(this.createEventObject(e));
+    e.preventDefault();
+    this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
+    this.vSwipe.emit(this.createEventObject(e, 'y'));
   }
 
   /**
    * Handle the horizontal touch event
    */
   private handleHorizontal(e: TouchEvent): void {
-    this.hSwipe.emit(this.createEventObject(e));
+    e.preventDefault();
+    this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
+    this.hSwipe.emit(this.createEventObject(e, 'x'));
   }
 
   /**
    * Create the event object
    * @param e The touch event
+   * @param touchDirection The direction of the touch
    */
-  private createEventObject(e: TouchEvent): TouchMove {
-    return {
+  private createEventObject(e: TouchEvent, touchDirection: 'y' | 'x'): TouchMove {
+    return TouchMove.create({
+      history: this.touchHistory,
+      touchDirection,
       current: {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
       },
       start: {...this.touchStartPosition},
       state: this.touchState,
-    };
+    });
   }
-
 }

@@ -2,11 +2,11 @@
      libTouchmove
      (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
-     (click)="test()"
 >
 
   <div class="slider" #slider
-       [@toNext]="{value: animateNext, params: {startPosition: startPosition}}"
+       [@toNext]="{value: animate, params: {startPosition: startPosition}}"
+       (@toNext.done)="changeImage()"
   >
       <span *ngIf="getImageModulo(0)" class="index-{{getImageIndex($any(getImageModulo(0)?.index))}}">
         <img [src]="getImageModulo(0)?.imageSRC" alt="image">

@@ -115,13 +115,4 @@ export class ControlsComponent {
     this.fullscreenEnabled = !!this.document.fullscreenElement;
   }
 
-  @HostListener('document:keyup.arrowRight')
-  r = () => this.sliderService.nextPicture();
-
-  @HostListener('document:keyup.arrowLeft')
-  l = () => this.sliderService.previousPicture();
-
-  @HostListener('document:keyup.escape')
-  e = async () => await this.closeSlider();
-
 }
