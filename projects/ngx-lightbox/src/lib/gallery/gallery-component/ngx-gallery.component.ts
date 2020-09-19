@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {IImage} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
+import {ControlsComponent} from '../../slider/controls/controls.component';
 import {LightboxStore} from '../../store/lightbox.store';
 
 @Component({
@@ -9,6 +10,9 @@ import {LightboxStore} from '../../store/lightbox.store';
   styleUrls: ['ngx-gallery.component.scss'],
 })
 export class NgxGalleryComponent implements OnInit {
+
+  @Input()
+  controls: TemplateRef<ControlsComponent> | null = null;
 
   constructor(private ngxLightboxService: NgxLightboxService, private store: LightboxStore) {
   }

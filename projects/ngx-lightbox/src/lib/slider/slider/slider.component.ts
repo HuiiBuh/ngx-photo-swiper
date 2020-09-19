@@ -1,10 +1,24 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
-import {Component, ElementRef, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {GalleryState, IImage} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
 import {LightboxStore} from '../../store/lightbox.store';
+import {ControlsComponent} from '../controls/controls.component';
 import {SliderService} from '../slider.service';
 import {TouchMove} from './touchmove.directive';
 
@@ -26,13 +40,15 @@ interface IImageIndex extends IImage {
         transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
       })),
       transition('current => next', [
-        animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
+        animate('10s cubic-bezier(0.4, 0, 0.22, 1)'),
       ]),
     ]),
   ],
 })
+export class SliderComponent implements OnInit, OnDestroy, OnChanges {
 
-export class SliderComponent implements OnInit, OnDestroy {
+  @Input()
+  controls: TemplateRef<ControlsComponent> | null = null;
 
   @ViewChild('slider')
   private slider: ElementRef | undefined;
@@ -42,11 +58,11 @@ export class SliderComponent implements OnInit, OnDestroy {
   public galleryState!: GalleryState;
   public currentImageIndex: number = 0;
   public imageRange: (IImageIndex | null)[] = [];
-  private swipeEvent: TouchMove | undefined;
+  private swipeEvent!: TouchMove;
   public animateNext: 'current' | 'next' = 'current';
 
   public animationInProgress: boolean = false;
-  private startPosition: string = '0px';
+  public startPosition: string = '0';
 
 
   constructor(
@@ -56,7 +72,6 @@ export class SliderComponent implements OnInit, OnDestroy {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     @Inject(DOCUMENT) private document: Document) {
-    console.log('fuck');
   }
 
   public ngOnInit(): void {
@@ -98,26 +113,31 @@ export class SliderComponent implements OnInit, OnDestroy {
     switch ($event.state) {
       case 'start':
         this.swipeEvent = $event;
-        this.followTouchGesture();
+        this.scheduleAnimation(this.animate);
         break;
       case 'move':
+        this.scheduleAnimation(this.animate);
         this.swipeEvent = $event;
         break;
       case 'end':
-        this.swipeEvent = undefined;
-        this.ngZone.run(() => this.animateNext = 'next');
+        this.swipeEvent = $event;
+        this.animateNext = 'next';
         break;
     }
   }
 
-  private followTouchGesture(): void {
-    if (!this.swipeEvent || this.swipeEvent.state === 'end') {
-      return;
-    }
-
+  private animate = () => {
     this.setTranslate(this.swipeEvent.current.x - this.swipeEvent.start.x, 0);
+    this.inTranslate = false;
+  };
 
-    requestAnimationFrame(this.followTouchGesture.bind(this));
+  private inTranslate = false;
+
+  private scheduleAnimation(callback: () => void): void {
+    if (!this.inTranslate) {
+      this.inTranslate = true;
+      requestAnimationFrame(callback);
+    }
   }
 
   private setTranslate(x: number, y: number): void {
@@ -163,20 +183,20 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.galleryState = value;
   }
 
-  public end(): void {
-    this.animationInProgress = false;
-    this.ngZone.run(() => this.animateNext = 'current');
+  /**
+   * Get the current position of the slider
+   */
+  public updateStartPosition(): void {
+    if (this.slider?.nativeElement) {
+      const transform = getComputedStyle(this.slider?.nativeElement).transform;
+      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
+    }
   }
 
-  public getSliderPosition(): string {
-    if (!this.animationInProgress) {
-      if (this.slider?.nativeElement) {
-        const transform = getComputedStyle(this.slider?.nativeElement).transform;
-        this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
-      }
-    }
+  public ngOnChanges(changes: SimpleChanges): void {
+  }
 
-    console.log(this.startPosition);
-    return this.startPosition;
+  public test(): void {
+
   }
 }

@@ -2,12 +2,12 @@
      libTouchmove
      (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
+     (click)="test()"
 >
 
   <div class="slider" #slider
-       [@toNext]="{value: animateNext, params: {startPosition: getSliderPosition()}}"
-       (@toNext.start)="animationInProgress = true"
-       (@toNext.done)="end()">
+       [@toNext]="{value: animateNext, params: {startPosition: startPosition}}"
+  >
       <span *ngIf="getImageModulo(0)" class="index-{{getImageIndex($any(getImageModulo(0)?.index))}}">
         <img [src]="getImageModulo(0)?.imageSRC" alt="image">
       </span>
@@ -19,5 +19,8 @@
       </span>
   </div>
 
-  <ng-content></ng-content>
+  <ng-template [ngIf]="controls">
+    <ng-container *ngTemplateOutlet="controls"></ng-container>
+  </ng-template>
+
 </div>
