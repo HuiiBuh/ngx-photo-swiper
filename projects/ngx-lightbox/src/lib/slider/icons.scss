@@ -17,10 +17,10 @@
 
     // Server svg for devices with a high pixel density
     @media (-webkit-min-device-pixel-ratio : 1.25), (min-resolution : 120dpi) {
-      background : url($icon-svg) 0 0 no-repeat;;
+      background : var(--lib-icons-svg);
     }
 
-    background      : url($icon-png) 0 0 no-repeat;
+    background      : var(--lib-icons-png);
 
     background-size : 264px 88px;
     width           : 44px;
@@ -39,7 +39,7 @@
   width  : 32px;
 
   &:before {
-    background-color    : $arrow-background-color;
+    background-color    : var(--lib-arrow-background-color);
     background-position : -94px -44px;
 
     height              : 30px;
@@ -54,7 +54,7 @@
   width  : 32px;
 
   &:before {
-    background-color    : $arrow-background-color;
+    background-color    : var(--lib-arrow-background-color);
     background-position : -138px -44px;
     float               : left;
 

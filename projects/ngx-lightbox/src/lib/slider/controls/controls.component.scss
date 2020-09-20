@@ -1,7 +1,7 @@
 @import "../icons.scss";
 
 .top-control {
-  background-color : $overlay-background-color;
+  background-color : var(--lib-overlay-backgound-color);
 
   position         : absolute;
   left             : 0;
@@ -16,7 +16,7 @@
     top         : 0;
     height      : 44px;
     line-height : 44px;
-    color       : $overlay-text-color;
+    color       : var(--lib-overlay-text-color);
     padding     : 0 10px;
   }
 }
@@ -26,8 +26,8 @@
   left             : 0;
   bottom           : 0;
   width            : 100%;
-  background-color : $overlay-background-color;
-  color            : $overlay-text-color;
+  background-color : var(--lib-overlay-backgound-color);
+  color            : var(--lib-overlay-text-color);
   text-align       : center;
   padding          : 10px;
 
@@ -41,8 +41,8 @@
 
 
 .right, .left {
-  width     : map-get($arrow-click-radius, "width");
-  height    : map-get($arrow-click-radius, "height");
+  width     : var(--lib-arrow-click-width);
+  height    : var(--lib-arrow-click-height);
   position  : fixed;
   top       : 50%;
   transform : translateY(-50%);

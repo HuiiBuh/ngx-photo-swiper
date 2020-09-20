@@ -7,7 +7,7 @@
   width            : 100%;
 
   text-align       : center;
-  background-color : $backdrop-color;
+  background-color : var(--lib-backdrop-color);
 }
 
 .slider {

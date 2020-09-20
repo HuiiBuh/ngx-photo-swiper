@@ -7,6 +7,7 @@ import {LightboxStore} from '../../store/lightbox.store';
 @Component({
   selector: 'lib-gallery-component[imageList][lightboxID]',
   templateUrl: 'ngx-gallery.component.html',
+  styleUrls: ['ngx-gallery.component.scss']
 })
 export class NgxGalleryComponent implements OnInit {
 

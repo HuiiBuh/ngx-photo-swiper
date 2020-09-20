@@ -6,22 +6,20 @@
   }
 }
 
-lib-gallery-component {
-  @import "src/lib/gallery/gallery-component/ngx-gallery.component.scss";
-  @include tab-highlight
+:root {
+  --lib-image-margin            : #{$image-margin};
+  --lib-backdrop-color          : #{$backdrop-color};
+  --lib-overlay-backgound-color : #{$overlay-background-color};
+  --lib-arrow-background-color  : #{$arrow-background-color};
+  --lib-overlay-text-color      : #{$overlay-text-color};
+
+  --lib-arrow-click-height      : #{map-get($arrow-click-radius, "height")};
+  --lib-arrow-click-width       : #{map-get($arrow-click-radius, "width")};
+
+  --lib-icons-png               : url("#{$icon-png}") 0 0 no-repeat;
+  --lib-icons-svg               : url("#{$icon-svg}") 0 0 no-repeat;
 }
 
-lib-controls {
-  @import "src/lib/slider/controls/controls.component.scss";
-  @include tab-highlight
-}
-
-lib-share {
-  @import "src/lib/slider/share/share.component.scss";
-  @include tab-highlight
-}
-
-lib-slider {
-  @import "src/lib/slider/slider/slider.component.scss";
+lib-gallery-component, lib-controls, lib-share, lib-slider {
   @include tab-highlight
 }

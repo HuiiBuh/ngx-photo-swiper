@@ -6,6 +6,7 @@ import {ShareService} from './share.service';
 @Component({
   selector: 'lib-share[shareOptionList]',
   templateUrl: './share.component.html',
+  styleUrls: ['share.component.scss'],
   animations: [
     trigger('openClose', [
       // ...
