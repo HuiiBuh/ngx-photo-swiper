@@ -1,8 +1,7 @@
 @import "../icons.scss";
-@import "../../../../lightbox-config.scss";
 
 .top-control {
-  background-color : $icons-background-color;
+  background-color : $overlay-background-color;
 
   position         : absolute;
   left             : 0;
@@ -17,7 +16,7 @@
     top         : 0;
     height      : 44px;
     line-height : 44px;
-    color       : #fff;
+    color       : $overlay-text-color;
     padding     : 0 10px;
   }
 }
@@ -27,9 +26,9 @@
   left             : 0;
   bottom           : 0;
   width            : 100%;
-  background-color : rgba(0, 0, 0, 0.3);
+  background-color : $overlay-background-color;
+  color            : $overlay-text-color;
   text-align       : center;
-  color            : rgba(255, 255, 255, 0.7);
   padding          : 10px;
 
   span {
@@ -42,10 +41,11 @@
 
 
 .right, .left {
-  background-color : rgba(0, 0, 0, 0.3);
-  position         : fixed;
-  top              : 50%;
-  transform        : translateY(-50%);
+  width     : map-get($arrow-click-radius, "width");
+  height    : map-get($arrow-click-radius, "height");
+  position  : fixed;
+  top       : 50%;
+  transform : translateY(-50%);
 }
 
 .right {

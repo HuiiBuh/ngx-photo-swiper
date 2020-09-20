@@ -1,5 +1,3 @@
-@import "../../../../lightbox-config.scss";
-
 .lightbox-slider-container {
   position         : fixed;
   z-index          : 1000;
@@ -61,18 +59,3 @@ img {
   max-width  : 100%;
   max-height : 100%;
 }
-
-//img {
-//  // Touch devices only
-//  @media (hover : none) and (pointer : coarse) {
-//    width  : calc(100%); /*width of parent container*/
-//    height : calc(100% - 3rem); /*height of parent container*/
-//  }
-//
-//  width      : calc(100% - 6rem); /*width of parent container*/
-//  height     : calc(100% - 6rem); /*height of parent container*/
-//  object-fit : contain;
-//  position   : relative;
-//  top        : 50%;
-//  transform  : translateY(-50%);
-//}

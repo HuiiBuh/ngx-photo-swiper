@@ -1,69 +1,27 @@
 @import "lightbox-config.scss";
 
-* {
-  -webkit-tap-highlight-color : transparent;
-}
-
-.lightbox-grid {
-
-  ul {
-    padding   : 0;
-    margin    : 0;
-    display   : flex;
-    flex-wrap : wrap;
-  }
-
-  li {
-    flex-grow  : 1;
-    height     : 40vh;
-    list-style : none;
-    margin     : $image-margin;
-    overflow   : hidden;
-  }
-
-  li:last-child {
-    flex-grow : 10;
-  }
-
-  img {
-    cursor         : pointer;
-
-    max-height     : 100%;
-    min-width      : 100%;
-    object-fit     : cover;
-    transition     : transform 300ms ease-in-out;
-    vertical-align : bottom;
-  }
-
-  img:hover {
-    transform : scale(1.1);
-  }
-
-  @media (max-aspect-ratio : 1 / 1) {
-    li {
-      height : 30vh;
-    }
-  }
-
-  @media (max-height : 480px) {
-    li {
-      height : 80vh;
-    }
-  }
-
-  @media (max-aspect-ratio : 1 / 1) and (max-width : 480px) {
-    ul {
-      flex-direction : row;
-    }
-    li {
-      height : auto;
-      width  : 100%;
-    }
-    img {
-      max-height : 75vh;
-      min-width  : 0;
-      width      : 100%;
-    }
+@mixin tab-highlight {
+  * {
+    -webkit-tap-highlight-color : transparent;
   }
 }
 
+lib-gallery-component {
+  @import "src/lib/gallery/gallery-component/ngx-gallery.component.scss";
+  @include tab-highlight
+}
+
+lib-controls {
+  @import "src/lib/slider/controls/controls.component.scss";
+  @include tab-highlight
+}
+
+lib-share {
+  @import "src/lib/slider/share/share.component.scss";
+  @include tab-highlight
+}
+
+lib-slider {
+  @import "src/lib/slider/slider/slider.component.scss";
+  @include tab-highlight
+}

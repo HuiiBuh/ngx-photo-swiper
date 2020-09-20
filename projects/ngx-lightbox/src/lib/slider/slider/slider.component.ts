@@ -30,7 +30,6 @@ interface IImageIndex extends IImage {
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss'],
   animations: [
     trigger('toNext', [
       state('current', style({

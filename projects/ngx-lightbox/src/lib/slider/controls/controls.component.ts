@@ -9,7 +9,6 @@ import {AnimationService} from '../slider/animation.service';
 @Component({
   selector: 'lib-controls',
   templateUrl: './controls.component.html',
-  styleUrls: ['./controls.component.scss'],
   animations: [
     trigger('fadeInOut', [
       state('visible', style({
