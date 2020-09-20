@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
   Inject,
   Input,
   NgZone,
@@ -20,6 +19,8 @@ import {NgxLightboxService} from '../../ngx-lightbox.service';
 import {LightboxStore} from '../../store/lightbox.store';
 import {ControlsComponent} from '../controls/controls.component';
 import {SliderService} from '../slider.service';
+import {AnimationService} from './animation.service';
+import {HDirection, TAnimation, THorizontal} from './slider.types';
 import {TouchMove} from './touchmove/touchmove.event';
 
 interface IImageIndex extends IImage {
@@ -66,6 +67,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private changeDetectorRef: ChangeDetectorRef,
+    private animationService: AnimationService,
     @Inject(DOCUMENT) private document: Document) {
   }
 
@@ -75,18 +77,20 @@ export class SliderComponent implements OnInit, OnDestroy {
   @ViewChild('slider')
   private slider: ElementRef | undefined;
 
+  private animationServiceSubscription!: Subscription;
   private galleryStateSubscription!: Subscription;
+  private inTranslate = false;
 
   public galleryState!: GalleryState;
   public currentImageIndex: number = 0;
   public imageRange: (IImageIndex | null)[] = [];
-  public animate: 'current' | 'left' | 'right' | 'none' = 'current';
 
+  public animate: THorizontal = 'current';
   public startPosition: string = '0';
-  private inTranslate = false;
 
   public ngOnInit(): void {
     this.galleryStateSubscription = this.store.state$.subscribe(this.populateData.bind(this));
+    this.animationServiceSubscription = this.animationService.animateTo$.subscribe(this.handleAnimationRequest.bind(this));
   }
 
   /**
@@ -104,7 +108,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get always the same image
+   * Get always the same image from the image range
    * @param x The modulo solution
    */
   public getImageModulo(x: number): IImageIndex | null {
@@ -130,8 +134,20 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => {
         this.updateStartPosition();
         this.changeDetectorRef.detectChanges();
-        this.animateTransition($event.getDirection() as 'left' | 'right' | 'none');
+        this.animateTransition($event.getDirection() as HDirection);
       });
+    }
+  }
+
+
+  /**
+   * Schedule the animation with request animation frame
+   * @param callback The function which should be called if the time is right
+   */
+  private scheduleAnimation(callback: () => void): void {
+    if (!this.inTranslate) {
+      this.inTranslate = true;
+      requestAnimationFrame(callback);
     }
   }
 
@@ -143,14 +159,10 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle the vertical swipe and hide the image
-   * @param $event The vertical swipe event
+   * Animate the transition to another image
+   * @param direction The direction the transition should go to
    */
-  public verticalSwipe($event: TouchMove): void {
-    console.log($event);
-  }
-
-  private animateTransition(direction: 'left' | 'right' | 'none'): void {
+  private animateTransition(direction: HDirection): void {
     if (this.currentImageIndex === 0 && direction === 'left' ||
       this.currentImageIndex === this.galleryState.gallery[this.galleryState.slider.gridID].length - 1 && direction === 'right') {
       this.animate = 'none';
@@ -158,6 +170,40 @@ export class SliderComponent implements OnInit, OnDestroy {
     } else {
       this.animate = direction;
     }
+  }
+
+  /**
+   * Actually switch to the next image after the animation
+   */
+  public changeImage(): void {
+    if (this.animate !== 'current') {
+      if (this.animate === 'left') {
+        this.sliderService.previousPicture();
+      } else if (this.animate === 'right') {
+        this.sliderService.nextPicture();
+      }
+      this.startPosition = '0px';
+      this.animate = 'current';
+    }
+  }
+
+  /**
+   * Get the current position of the slider
+   */
+  public updateStartPosition(): void {
+    if (this.slider?.nativeElement) {
+      const transform = getComputedStyle(this.slider?.nativeElement).transform;
+      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
+    }
+  }
+
+
+  /**
+   * Handle the vertical swipe and hide the image
+   * @param $event The vertical swipe event
+   */
+  public verticalSwipe($event: TouchMove): void {
+    console.log($event);
   }
 
 
@@ -192,55 +238,17 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the current position of the slider
+   * Handle animation requests
+   * @param animation The animation direction
    */
-  public updateStartPosition(): void {
-    if (this.slider?.nativeElement) {
-      const transform = getComputedStyle(this.slider?.nativeElement).transform;
-      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
+  private handleAnimationRequest(animation: TAnimation): void {
+    if (animation === 'right' || animation === 'left') {
+      this.animateTransition(animation);
+    } else if (animation === 'up' || animation === 'down') {
+      // TODO
+    } else if (animation === 'none') {
+      this.animateTransition(animation);
     }
   }
 
-  /**
-   * Animate to the next image
-   */
-  public changeImage(): void {
-    if (this.animate !== 'current') {
-      if (this.animate === 'left') {
-        this.sliderService.previousPicture();
-      } else if (this.animate === 'right') {
-        this.sliderService.nextPicture();
-      }
-      this.startPosition = '0px';
-      this.animate = 'current';
-    }
-  }
-
-
-  /**
-   * Schedule the animation with request animation frame
-   * @param callback The function which should be called if the time is right
-   */
-  private scheduleAnimation(callback: () => void): void {
-    if (!this.inTranslate) {
-      this.inTranslate = true;
-      requestAnimationFrame(callback);
-    }
-  }
-
-
-  @HostListener('document:keyup.arrowRight')
-  private r(): void {
-    this.animateTransition('right');
-  }
-
-  @HostListener('document:keyup.arrowLeft')
-  private l(): void {
-    this.animateTransition('left');
-  }
-
-  @HostListener('document:keyup.escape')
-  private async e(): Promise<void> {
-    await this.sliderService.closeSlider();
-  }
 }

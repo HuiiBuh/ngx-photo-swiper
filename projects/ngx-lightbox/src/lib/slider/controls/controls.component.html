@@ -17,13 +17,11 @@
 
   </div>
 
-  <ng-template [ngIf]="arrows && !isMobile()">
+  <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
 
-    <button *ngIf="sliderService.isFirstImage()" class="icon-left left"
-            (click)="sliderService.previousPicture()"
+    <button *ngIf="sliderService.isFirstImage()" class="icon-left left" (click)="l()"
             [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"></button>
-    <button *ngIf="sliderService.isLastImage()" class="icon-right right"
-            (click)="sliderService.nextPicture()"
+    <button *ngIf="sliderService.isLastImage()" class="icon-right right" (click)="r()"
             [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"></button>
 
   </ng-template>

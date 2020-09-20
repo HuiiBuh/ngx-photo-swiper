@@ -4,6 +4,7 @@ import {Component, HostListener, Inject, Input} from '@angular/core';
 import {ShareService} from '../share/share.service';
 import {TShareOptionList} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
+import {AnimationService} from '../slider/animation.service';
 
 @Component({
   selector: 'lib-controls',
@@ -33,6 +34,7 @@ export class ControlsComponent {
   @Input() arrows = true;
   @Input() shareOptionList: TShareOptionList = [];
   @Input() fadeoutTime: number = 1000;
+  @Input() showOnMobile: boolean = true;
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
@@ -46,6 +48,7 @@ export class ControlsComponent {
   constructor(
     public sliderService: SliderService,
     private shareService: ShareService,
+    private animationService: AnimationService,
     @Inject(DOCUMENT) private document: Document) {
   }
 
@@ -113,6 +116,22 @@ export class ControlsComponent {
   @HostListener('window:fullscreenchange', ['$event'])
   fullscreenChange(): void {
     this.fullscreenEnabled = !!this.document.fullscreenElement;
+  }
+
+
+  @HostListener('document:keyup.arrowRight')
+  public r(): void {
+    this.animationService.animateTo$.emit('right');
+  }
+
+  @HostListener('document:keyup.arrowLeft')
+  public l(): void {
+    this.animationService.animateTo$.emit('left');
+  }
+
+  @HostListener('document:keyup.escape')
+  public async e(): Promise<void> {
+    await this.sliderService.closeSlider();
   }
 
 }

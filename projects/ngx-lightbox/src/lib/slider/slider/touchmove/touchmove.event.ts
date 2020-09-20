@@ -1,3 +1,4 @@
+import {TDirection} from '../slider.types';
 
 export interface Point {
   x: number;
@@ -28,11 +29,10 @@ export class TouchMove {
     return Object.assign(new TouchMove(), json);
   }
 
-  public getDirection(): 'left' | 'right' | 'up' | 'down' | 'none' {
+  public getDirection(): TDirection {
     const historyLength = this.history.length;
     const counter = historyLength > TouchMove.directionCount ? TouchMove.directionCount : historyLength;
     const offset = this.getPoint(historyLength - 1) - this.getPoint(historyLength - counter);
-    console.log(offset);
 
     if (Math.abs(offset) < TouchMove.swipeThreshold) {
       return 'none';
