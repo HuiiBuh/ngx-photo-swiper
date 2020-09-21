@@ -32,7 +32,7 @@ interface IImageIndex extends IImage {
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
   animations: [
-    trigger('toNext', [
+    trigger('changeImage', [
       state('current', style({
         transform: 'translate3D({{ startPosition }},0,0)',
       }), {params: {startPosition: '0'}}),
@@ -53,6 +53,17 @@ interface IImageIndex extends IImage {
       ]),
       transition('current => none', [
         animate('333ms cubic-bezier(0, 0, 0, 1)'),
+      ]),
+    ]),
+    trigger('openClose', [
+      state('open', style({
+        opacity: 1
+      })),
+      state('close', style({
+        opacity: 0
+      })),
+      transition('close <=> open', [
+        animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
       ]),
     ])
   ],
@@ -84,6 +95,8 @@ export class SliderComponent implements OnInit, OnDestroy {
   public galleryState!: GalleryState;
   public currentImageIndex: number = 0;
   public imageRange: (IImageIndex | null)[] = [];
+
+  public display: 'block' | 'none' = 'none';
 
   public animate: THorizontal = 'current';
   public startPosition: string = '0';
@@ -251,4 +264,9 @@ export class SliderComponent implements OnInit, OnDestroy {
     }
   }
 
+  public close($event: MouseEvent): void {
+    if ($event.target === $event.currentTarget) {
+      this.sliderService.closeSlider();
+    }
+  }
 }
