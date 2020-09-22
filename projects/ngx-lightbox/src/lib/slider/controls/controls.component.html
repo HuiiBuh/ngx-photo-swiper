@@ -8,7 +8,7 @@
     <button *ngIf="fullscreen" (click)="toggleFullscreen()"
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-    <button *ngIf="share && shareOptionList.length !==0"
+    <button *ngIf="share && shareOptionList.length !==0" style="z-index: 100"
             (click)="toggleShareView($event)" class="icon-social-share"></button>
 
     <lib-share [shareOptionList]="shareOptionList"></lib-share>

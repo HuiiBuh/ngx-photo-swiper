@@ -1,5 +1,6 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
 import {TShareOptionList} from '../slider-interfaces';
 import {ShareService} from './share.service';
 
@@ -27,31 +28,22 @@ import {ShareService} from './share.service';
 export class ShareComponent implements OnInit, OnDestroy {
 
   @Input() shareOptionList: TShareOptionList = [];
-  public display: 'block' | 'none' = 'none';
-  private unsubscribable: () => void;
 
-  constructor(private renderer2: Renderer2, public shareService: ShareService) {
-    this.unsubscribable = () => null;
-    this.shareService.shareVisible.subscribe(e => this.changeVisibility(e));
+  public display: 'block' | 'none' = 'none';
+  public visibility: 'open' | 'closed' = 'closed';
+
+  private unsubscribe!: Subscription;
+
+  constructor(public shareService: ShareService) {
   }
 
   public ngOnInit(): void {
-    this.unsubscribable = () => null;
+    this.unsubscribe = this.shareService.visible$.subscribe((visible => {
+      this.visibility = visible ? 'open' : 'closed';
+    }));
   }
 
   public ngOnDestroy(): void {
-    this.unsubscribable();
+    this.unsubscribe.unsubscribe();
   }
-
-  private changeVisibility(value: boolean): void {
-    if (value) {
-      this.unsubscribable = this.renderer2.listen('document', 'click', () => {
-        this.shareService.shareVisible.next(false);
-      });
-    } else {
-      this.unsubscribable();
-      this.unsubscribable = () => null;
-    }
-  }
-
 }

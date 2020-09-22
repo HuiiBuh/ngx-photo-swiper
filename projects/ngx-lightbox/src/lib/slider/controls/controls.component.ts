@@ -88,7 +88,7 @@ export class ControlsComponent {
   public toggleShareView(event: MouseEvent): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
-    this.shareService.shareVisible.next(!this.shareService.shareVisible.value);
+    this.shareService.toggle();
   }
 
   /**
@@ -105,7 +105,7 @@ export class ControlsComponent {
    */
   @HostListener('body:mouseleave')
   hideControls(): void {
-    if (!this.isMobile() && !this.shareService.shareVisible.value) {
+    if (!this.isMobile() && !this.shareService.visible) {
       this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, this.fadeoutTime);
     }
   }
