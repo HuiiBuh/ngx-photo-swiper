@@ -146,16 +146,12 @@ export class SliderComponent implements OnInit, OnDestroy {
    * @param direction The direction the transition should go to
    */
   private animateImageChange(direction: HDirection): void {
-
-    console.log(this.hAnimationInProgress);
-
     const imageIndex = this.sliderState?.slider?.imageIndex;
     if (imageIndex === 0 && direction === 'left' ||
       imageIndex === this.sliderState.gallerySize - 1 && direction === 'right') {
       this.animate = 'none';
       this.animate = 'none';
     } else if (!this.hAnimationInProgress) {
-      console.log(direction);
       this.animate = direction;
     }
   }
