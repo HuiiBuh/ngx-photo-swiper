@@ -1,7 +1,5 @@
-//$image-margin             : 5rem;
-//$backdrop-color           : red;
-//$overlay-background-color : blue;
-//$arrow-background-color   : green;
-//$overlay-text-color       : pink;
-
 @import "projects/ngx-lightbox/lightbox.scss";
+
+body {
+  font-family : "Roboto", sans-serif;
+}

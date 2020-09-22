@@ -26,15 +26,26 @@ export class SliderImageComponent implements OnChanges {
    * Get the index of the image
    */
   public getImageIndex(): number {
-    return ((this.id - (this.currentImageIndex % 3) + 1) % 3);
+    let returnIndex = 0;
+    if (this.currentImage) {
+      returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
+    }
+
+    return returnIndex;
   }
 
+  /**
+   * Close the slider if you click on the black area
+   */
   public close($event: MouseEvent): void {
     if ($event.target === $event.currentTarget) {
       this.animationService.animateTo('down');
     }
   }
 
+  /**
+   * Update the current image if changes get registered
+   */
   public ngOnChanges(): void {
     this.currentImage = this.getImageModulo();
   }

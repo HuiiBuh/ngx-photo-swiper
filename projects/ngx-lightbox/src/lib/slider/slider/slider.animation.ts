@@ -3,7 +3,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export const changeImage = trigger('changeImage', [
   state('current', style({
     transform: 'translate3D({{ startPosition }},0,0)',
-  }), {params: {startPosition: '0'}}),
+  }), {params: {startPosition: '0px'}}),
   state('right', style({
     transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
   })),

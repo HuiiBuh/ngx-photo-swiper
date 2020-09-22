@@ -13,11 +13,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {GalleryState} from '../../ngx-lightbox.interfaces';
-import {NgxLightboxService} from '../../ngx-lightbox.service';
+import {SliderInformation} from '../../ngx-lightbox.interfaces';
 import {LightboxStore} from '../../store/lightbox.store';
 import {ControlsComponent} from '../controls/controls.component';
-import {IImageIndex} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
 import {TouchMove} from '../touchmove/touchmove.event';
 import {AnimationService} from './animation.service';
@@ -37,22 +35,19 @@ import {HDirection, TAnimation, THorizontal} from './slider.types';
 export class SliderComponent implements OnInit, OnDestroy {
 
 
-  @Input()
-  controls: TemplateRef<ControlsComponent> | null = null;
-  public galleryState!: GalleryState;
-  public currentImageIndex: number = 0;
-  public imageRange: (IImageIndex | null)[] = [];
+  @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   public display: 'block' | 'none' = 'none';
   public animate: THorizontal = 'current';
-  public startPosition: string = '0';
-  @ViewChild('slider')
-  private slider: ElementRef | undefined;
-  private animationServiceSubscription!: Subscription;
-  private galleryStateSubscription!: Subscription;
+  public startPosition: string = '0px';
+  public sliderState!: SliderInformation;
+  public hAnimationInProgress = false;
+
+  @ViewChild('slider') private slider: ElementRef | undefined;
   private inTranslate = false;
+  private animationServiceSubscription!: Subscription;
+  private sliderStateSubscription!: Subscription;
 
   constructor(
-    private lightboxService: NgxLightboxService,
     public sliderService: SliderService,
     private store: LightboxStore,
     private renderer2: Renderer2,
@@ -63,15 +58,16 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.galleryStateSubscription = this.store.state$.subscribe(this.populateData.bind(this));
     this.animationServiceSubscription = this.animationService.animateTo$.subscribe(this.handleAnimationRequest.bind(this));
+    this.sliderStateSubscription = this.store.getDisplayedImages().subscribe(v => this.sliderState = v);
   }
 
   /**
    * Unsubscribe from active subscriptions
    */
   public ngOnDestroy(): void {
-    this.galleryStateSubscription.unsubscribe();
+    this.sliderStateSubscription.unsubscribe();
+    this.animationServiceSubscription.unsubscribe();
   }
 
   /**
@@ -88,7 +84,7 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => {
         this.updateStartPosition();
         this.changeDetectorRef.detectChanges();
-        this.animateTransition($event.getDirection() as HDirection);
+        this.animateImageChange($event.getDirection() as HDirection);
       });
     }
   }
@@ -106,6 +102,7 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.startPosition = '0px';
       this.animate = 'current';
     }
+    this.hAnimationInProgress = false;
   }
 
   /**
@@ -124,12 +121,6 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   public verticalSwipe($event: TouchMove): void {
     console.log($event);
-  }
-
-  public close($event: MouseEvent): void {
-    if ($event.target === $event.currentTarget) {
-      this.sliderService.closeSlider();
-    }
   }
 
   /**
@@ -154,44 +145,19 @@ export class SliderComponent implements OnInit, OnDestroy {
    * Animate the transition to another image
    * @param direction The direction the transition should go to
    */
-  private animateTransition(direction: HDirection): void {
-    if (this.currentImageIndex === 0 && direction === 'left' ||
-      this.currentImageIndex === this.galleryState.gallery[this.galleryState.slider.gridID].length - 1 && direction === 'right') {
+  private animateImageChange(direction: HDirection): void {
+
+    console.log(this.hAnimationInProgress);
+
+    const imageIndex = this.sliderState?.slider?.imageIndex;
+    if (imageIndex === 0 && direction === 'left' ||
+      imageIndex === this.sliderState.gallerySize - 1 && direction === 'right') {
       this.animate = 'none';
       this.animate = 'none';
-    } else {
+    } else if (!this.hAnimationInProgress) {
+      console.log(direction);
       this.animate = direction;
     }
-  }
-
-  /**
-   * Fill in the important data from the gallery state
-   * @param value The new gallery state
-   */
-  private populateData(value: GalleryState): void {
-
-    if (value.slider.active) {
-      const images = value.gallery[value.slider.gridID];
-      this.currentImageIndex = value.slider.imageIndex;
-
-      const imageList: (IImageIndex | null)[] = new Array(3);
-
-      for (const i of [-1, 0, 1]) {
-        const image = images[this.currentImageIndex + i];
-        if (image) {
-          imageList[i + 1] = {
-            ...images[this.currentImageIndex + i],
-            index: this.currentImageIndex + i,
-          };
-        } else {
-          imageList[i + 1] = null;
-        }
-      }
-
-      this.imageRange = imageList;
-    }
-
-    this.galleryState = value;
   }
 
   /**
@@ -200,12 +166,11 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   private handleAnimationRequest(animation: TAnimation): void {
     if (animation === 'right' || animation === 'left') {
-      this.animateTransition(animation);
+      this.animateImageChange(animation);
     } else if (animation === 'up' || animation === 'down') {
       this.sliderService.closeSlider();
-      // TODO
     } else if (animation === 'none') {
-      this.animateTransition(animation);
+      this.animateImageChange(animation);
     }
   }
 }
