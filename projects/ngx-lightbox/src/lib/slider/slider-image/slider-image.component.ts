@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges} from '@angular/core';
 import {IImageIndex} from '../slider-interfaces';
 import {AnimationService} from '../slider/animation.service';
 
@@ -7,32 +7,20 @@ import {AnimationService} from '../slider/animation.service';
   templateUrl: './slider-image.component.html',
   styleUrls: ['./slider-image.component.scss'],
 })
-export class SliderImageComponent {
+export class SliderImageComponent implements OnChanges {
 
   private static GLOBAL_ID = 0;
-  private readonly id: number;
 
+  public currentImage: IImageIndex | null = null;
+
+  private readonly id: number;
   @Input() private sliderImages: (IImageIndex | null)[] = [null, null, null];
   @Input() private currentImageIndex: number = 0;
 
   constructor(private animationService: AnimationService) {
     this.id = SliderImageComponent.GLOBAL_ID;
     ++SliderImageComponent.GLOBAL_ID;
-    console.log(SliderImageComponent.GLOBAL_ID);
   }
-
-  /**
-   * Get always the same image from the image range
-   */
-  public getImageModulo(): IImageIndex | null {
-    for (const image of this.sliderImages) {
-      if (image && image.index % 3 === this.id) {
-        return image;
-      }
-    }
-    return null;
-  }
-
 
   /**
    * Get the index of the image
@@ -45,5 +33,21 @@ export class SliderImageComponent {
     if ($event.target === $event.currentTarget) {
       this.animationService.animateTo('down');
     }
+  }
+
+  public ngOnChanges(): void {
+    this.currentImage = this.getImageModulo();
+  }
+
+  /**
+   * Get always the same image from the image range
+   */
+  private getImageModulo(): IImageIndex | null {
+    for (const image of this.sliderImages) {
+      if (image && image.index % 3 === this.id) {
+        return image;
+      }
+    }
+    return null;
   }
 }

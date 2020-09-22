@@ -118,7 +118,6 @@ export class ControlsComponent {
     this.fullscreenEnabled = !!this.document.fullscreenElement;
   }
 
-
   @HostListener('document:keyup.arrowRight')
   public r(): void {
     this.animationService.animateTo('right');
@@ -129,9 +128,9 @@ export class ControlsComponent {
     this.animationService.animateTo('left');
   }
 
+  @HostListener('document:scroll')
   @HostListener('document:keyup.escape')
   public async e(): Promise<void> {
-    await this.sliderService.closeSlider();
+    await this.closeSlider();
   }
-
 }

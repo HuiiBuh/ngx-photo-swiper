@@ -1,21 +1,21 @@
 import {IImage} from '../../../projects/ngx-lightbox/src/lib/ngx-lightbox.interfaces';
 
 export const testData: IImage[] = [{
-  caption: 'Test caption',
+  caption: 'Test caption 1',
   description: 'Test description',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814785/photostream-photos/DSC05466_kwlv0n.jpg',
   height: 1024,
   width: 683,
 }, {
-  caption: 'Test caption',
+  caption: 'Test caption 2',
   description: 'Test description',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
 }, {
-  caption: 'Test caption',
+  caption: 'Test caption 3',
   description: 'Test description',
   imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
 }, {
-  caption: 'Test caption',
+  caption: 'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test',
   description: 'Test description',
   imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
 }, {

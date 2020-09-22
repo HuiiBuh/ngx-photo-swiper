@@ -1,3 +1,9 @@
-<span *ngIf="getImageModulo()" class="index-{{getImageIndex()}}" (click)="close($event)">
-        <img [src]="getImageModulo()?.imageSRC" alt="image">
-</span>
+<div *ngIf="currentImage" class="index-{{getImageIndex()}} image-container" (click)="close($event)">
+
+  <img [src]="currentImage?.imageSRC" alt="image">
+  <div class="caption">
+    <div>{{currentImage.caption}}</div>
+  </div>
+
+</div>
+

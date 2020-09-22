@@ -1,8 +1,15 @@
-span {
+.image-container {
   display         : flex;
   align-content   : center;
   align-items     : center;
   justify-content : center;
+
+  position        : absolute;
+  top             : 0;
+  left            : 0;
+  right           : 0;
+  bottom          : 0;
+  height          : 100%;
 }
 
 .index-0 {
@@ -21,4 +28,30 @@ span {
 img {
   max-width  : 100%;
   max-height : 100%;
+}
+
+
+.caption {
+  position         : absolute;
+  left             : 0;
+  bottom           : 0;
+  min-height       : 44px;
+
+  background-color : var(--lib-overlay-backgound-color);
+  color            : var(--lib-overlay-text-color);
+
+  text-align       : left;
+  width            : 100%;
+
+  display          : flex;
+  align-content    : center;
+  align-items      : center;
+
+  div {
+    max-width     : 420px;
+    margin        : 0 auto;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    padding       : 10px;
+  }
 }

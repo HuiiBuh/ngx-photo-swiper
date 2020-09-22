@@ -202,6 +202,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     if (animation === 'right' || animation === 'left') {
       this.animateTransition(animation);
     } else if (animation === 'up' || animation === 'down') {
+      this.sliderService.closeSlider();
       // TODO
     } else if (animation === 'none') {
       this.animateTransition(animation);
