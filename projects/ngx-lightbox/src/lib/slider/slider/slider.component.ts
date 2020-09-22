@@ -1,4 +1,3 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectorRef,
@@ -11,65 +10,46 @@ import {
   OnInit,
   Renderer2,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
-import {GalleryState, IImage} from '../../ngx-lightbox.interfaces';
+import {GalleryState} from '../../ngx-lightbox.interfaces';
 import {NgxLightboxService} from '../../ngx-lightbox.service';
 import {LightboxStore} from '../../store/lightbox.store';
 import {ControlsComponent} from '../controls/controls.component';
+import {IImageIndex} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
+import {TouchMove} from '../touchmove/touchmove.event';
 import {AnimationService} from './animation.service';
+import {changeImage, openClose} from './slider.animation';
 import {HDirection, TAnimation, THorizontal} from './slider.types';
-import {TouchMove} from './touchmove/touchmove.event';
 
-interface IImageIndex extends IImage {
-  index: number;
-}
 
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
   animations: [
-    trigger('changeImage', [
-      state('current', style({
-        transform: 'translate3D({{ startPosition }},0,0)',
-      }), {params: {startPosition: '0'}}),
-      state('right', style({
-        transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
-      })),
-      state('left', style({
-        transform: 'translate3d(calc(100vw + 30px), 0px, 0px)',
-      })),
-      state('none', style({
-        transform: 'translate3d(0, 0px, 0px)',
-      })),
-      transition('current => right', [
-        animate('333ms cubic-bezier(0, 0, 0, 1)'),
-      ]),
-      transition('current => left', [
-        animate('333ms cubic-bezier(0, 0, 0, 1)'),
-      ]),
-      transition('current => none', [
-        animate('333ms cubic-bezier(0, 0, 0, 1)'),
-      ]),
-    ]),
-    trigger('openClose', [
-      state('open', style({
-        opacity: 1
-      })),
-      state('close', style({
-        opacity: 0
-      })),
-      transition('close <=> open', [
-        animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
-      ]),
-    ])
+    changeImage,
+    openClose,
   ],
 })
 export class SliderComponent implements OnInit, OnDestroy {
 
+
+  @Input()
+  controls: TemplateRef<ControlsComponent> | null = null;
+  public galleryState!: GalleryState;
+  public currentImageIndex: number = 0;
+  public imageRange: (IImageIndex | null)[] = [];
+  public display: 'block' | 'none' = 'none';
+  public animate: THorizontal = 'current';
+  public startPosition: string = '0';
+  @ViewChild('slider')
+  private slider: ElementRef | undefined;
+  private animationServiceSubscription!: Subscription;
+  private galleryStateSubscription!: Subscription;
+  private inTranslate = false;
 
   constructor(
     private lightboxService: NgxLightboxService,
@@ -82,25 +62,6 @@ export class SliderComponent implements OnInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document) {
   }
 
-  @Input()
-  controls: TemplateRef<ControlsComponent> | null = null;
-
-  @ViewChild('slider')
-  private slider: ElementRef | undefined;
-
-  private animationServiceSubscription!: Subscription;
-  private galleryStateSubscription!: Subscription;
-  private inTranslate = false;
-
-  public galleryState!: GalleryState;
-  public currentImageIndex: number = 0;
-  public imageRange: (IImageIndex | null)[] = [];
-
-  public display: 'block' | 'none' = 'none';
-
-  public animate: THorizontal = 'current';
-  public startPosition: string = '0';
-
   public ngOnInit(): void {
     this.galleryStateSubscription = this.store.state$.subscribe(this.populateData.bind(this));
     this.animationServiceSubscription = this.animationService.animateTo$.subscribe(this.handleAnimationRequest.bind(this));
@@ -111,26 +72,6 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.galleryStateSubscription.unsubscribe();
-  }
-
-  /**
-   * Get the index of the image
-   */
-  public getImageIndex(x: number): number {
-    return ((x - (this.currentImageIndex % 3) + 1) % 3);
-  }
-
-  /**
-   * Get always the same image from the image range
-   * @param x The modulo solution
-   */
-  public getImageModulo(x: number): IImageIndex | null {
-    for (const image of this.imageRange) {
-      if (image && image.index % 3 === x) {
-        return image;
-      }
-    }
-    return null;
   }
 
   /**
@@ -152,6 +93,44 @@ export class SliderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Actually switch to the next image after the animation
+   */
+  public changeImage(): void {
+    if (this.animate !== 'current') {
+      if (this.animate === 'left') {
+        this.sliderService.previousPicture();
+      } else if (this.animate === 'right') {
+        this.sliderService.nextPicture();
+      }
+      this.startPosition = '0px';
+      this.animate = 'current';
+    }
+  }
+
+  /**
+   * Get the current position of the slider
+   */
+  public updateStartPosition(): void {
+    if (this.slider?.nativeElement) {
+      const transform = getComputedStyle(this.slider?.nativeElement).transform;
+      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
+    }
+  }
+
+  /**
+   * Handle the vertical swipe and hide the image
+   * @param $event The vertical swipe event
+   */
+  public verticalSwipe($event: TouchMove): void {
+    console.log($event);
+  }
+
+  public close($event: MouseEvent): void {
+    if ($event.target === $event.currentTarget) {
+      this.sliderService.closeSlider();
+    }
+  }
 
   /**
    * Schedule the animation with request animation frame
@@ -184,41 +163,6 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.animate = direction;
     }
   }
-
-  /**
-   * Actually switch to the next image after the animation
-   */
-  public changeImage(): void {
-    if (this.animate !== 'current') {
-      if (this.animate === 'left') {
-        this.sliderService.previousPicture();
-      } else if (this.animate === 'right') {
-        this.sliderService.nextPicture();
-      }
-      this.startPosition = '0px';
-      this.animate = 'current';
-    }
-  }
-
-  /**
-   * Get the current position of the slider
-   */
-  public updateStartPosition(): void {
-    if (this.slider?.nativeElement) {
-      const transform = getComputedStyle(this.slider?.nativeElement).transform;
-      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
-    }
-  }
-
-
-  /**
-   * Handle the vertical swipe and hide the image
-   * @param $event The vertical swipe event
-   */
-  public verticalSwipe($event: TouchMove): void {
-    console.log($event);
-  }
-
 
   /**
    * Fill in the important data from the gallery state
@@ -261,12 +205,6 @@ export class SliderComponent implements OnInit, OnDestroy {
       // TODO
     } else if (animation === 'none') {
       this.animateTransition(animation);
-    }
-  }
-
-  public close($event: MouseEvent): void {
-    if ($event.target === $event.currentTarget) {
-      this.sliderService.closeSlider();
     }
   }
 }

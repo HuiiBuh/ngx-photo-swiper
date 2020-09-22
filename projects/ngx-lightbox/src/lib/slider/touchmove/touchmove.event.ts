@@ -1,4 +1,4 @@
-import {TDirection} from '../slider.types';
+import {TDirection} from '../slider/slider.types';
 
 export interface Point {
   x: number;

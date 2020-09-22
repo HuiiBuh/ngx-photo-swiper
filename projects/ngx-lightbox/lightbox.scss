@@ -23,3 +23,7 @@
 lib-gallery-component, lib-controls, lib-share, lib-slider {
   @include tab-highlight
 }
+
+lib-slider-image {
+  display : contents;
+}

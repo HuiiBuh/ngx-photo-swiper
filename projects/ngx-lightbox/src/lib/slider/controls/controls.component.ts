@@ -121,12 +121,12 @@ export class ControlsComponent {
 
   @HostListener('document:keyup.arrowRight')
   public r(): void {
-    this.animationService.animateTo$.emit('right');
+    this.animationService.animateTo('right');
   }
 
   @HostListener('document:keyup.arrowLeft')
   public l(): void {
-    this.animationService.animateTo$.emit('left');
+    this.animationService.animateTo('left');
   }
 
   @HostListener('document:keyup.escape')

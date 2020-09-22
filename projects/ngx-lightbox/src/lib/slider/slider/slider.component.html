@@ -12,18 +12,11 @@
        [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
        (@changeImage.done)="changeImage()"
   >
-      <span *ngIf="getImageModulo(0)" class="index-{{getImageIndex($any(getImageModulo(0)?.index))}}"
-            (click)="close($event)">
-        <img [src]="getImageModulo(0)?.imageSRC" alt="image">
-      </span>
-    <span *ngIf="getImageModulo(1)" class="index-{{getImageIndex($any(getImageModulo(1)?.index))}}"
-          (click)="close($event)">
-        <img [src]="getImageModulo(1)?.imageSRC" alt="image">
-      </span>
-    <span *ngIf="getImageModulo(2)" class="index-{{getImageIndex($any(getImageModulo(2)?.index))}}"
-          (click)="close($event)">
-        <img [src]="getImageModulo(2)?.imageSRC" alt="image">
-      </span>
+
+    <lib-slider-image [sliderImages]="imageRange" [currentImageIndex]="currentImageIndex"></lib-slider-image>
+    <lib-slider-image [sliderImages]="imageRange" [currentImageIndex]="currentImageIndex"></lib-slider-image>
+    <lib-slider-image [sliderImages]="imageRange" [currentImageIndex]="currentImageIndex"></lib-slider-image>
+
   </div>
 
   <ng-template [ngIf]="controls">

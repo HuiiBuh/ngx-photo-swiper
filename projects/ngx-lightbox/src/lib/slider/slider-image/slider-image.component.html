@@ -1,0 +1,3 @@
+<span *ngIf="getImageModulo()" class="index-{{getImageIndex()}}" (click)="close($event)">
+        <img [src]="getImageModulo()?.imageSRC" alt="image">
+</span>
