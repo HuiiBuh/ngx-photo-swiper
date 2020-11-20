@@ -1,4 +1,5 @@
-import {Injectable} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {Inject, Injectable} from '@angular/core';
 import {GalleryState} from '../ngx-lightbox.interfaces';
 import {LightboxStore} from '../store/lightbox.store';
 import {UrlHandlerService} from './url-handler.service';
@@ -9,7 +10,10 @@ import {UrlHandlerService} from './url-handler.service';
 export class SliderService {
   public galleryState: GalleryState | undefined;
 
-  constructor(private store: LightboxStore, private _: UrlHandlerService) {
+  constructor(
+    private store: LightboxStore,
+    private _: UrlHandlerService,
+    @Inject(DOCUMENT) private document: Document) {
     this.store.state$.subscribe(value => this.galleryState = value);
   }
 
@@ -74,6 +78,8 @@ export class SliderService {
    * Close the slider
    */
   closeSlider(): void {
+    // Close the fullscreen if you close the gallery
+    this.document.exitFullscreen().catch(_ => null);
     this.store.closeSlider();
   }
 

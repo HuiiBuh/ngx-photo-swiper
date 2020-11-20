@@ -1,7 +1,6 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {TShareOptionList} from '../slider-interfaces';
 import {ShareService} from './share.service';
 
 @Component({
@@ -27,7 +26,7 @@ import {ShareService} from './share.service';
 })
 export class ShareComponent implements OnInit, OnDestroy {
 
-  @Input() shareOptionList: TShareOptionList = [];
+  @Input() shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
 
   public display: 'block' | 'none' = 'none';
   public visibility: 'open' | 'closed' = 'closed';

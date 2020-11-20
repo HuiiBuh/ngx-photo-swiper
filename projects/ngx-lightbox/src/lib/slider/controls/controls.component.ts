@@ -1,8 +1,7 @@
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {DOCUMENT} from '@angular/common';
-import {Component, HostListener, Inject, Input} from '@angular/core';
+import {Component, HostListener, Inject, Input, TemplateRef} from '@angular/core';
 import {ShareService} from '../share/share.service';
-import {TShareOptionList} from '../slider-interfaces';
 import {SliderService} from '../slider.service';
 import {AnimationService} from '../slider/animation.service';
 
@@ -32,7 +31,7 @@ export class ControlsComponent {
   @Input() share = true;
   @Input() close = true;
   @Input() arrows = true;
-  @Input() shareOptionList: TShareOptionList = [];
+  @Input() shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
   @Input() fadeoutTime: number = 1000;
   @Input() showOnMobile: boolean = true;
 
@@ -67,10 +66,6 @@ export class ControlsComponent {
    * Close the slider after exiting the fullscreen
    */
   async closeSlider(): Promise<void> {
-    if (this.fullscreenEnabled) {
-      await this.document.exitFullscreen();
-    }
-
     this.sliderService.closeSlider();
   }
 
@@ -131,6 +126,6 @@ export class ControlsComponent {
   @HostListener('document:scroll')
   @HostListener('document:keyup.escape')
   public async e(): Promise<void> {
-    await this.closeSlider();
+    this.sliderService.closeSlider();
   }
 }

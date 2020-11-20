@@ -24,6 +24,7 @@ export const changeImage = trigger('changeImage', [
   ]),
 ]);
 
+// TODO let the image stay until the animation has finished
 export const openClose = trigger('openClose', [
   state('open', style({
     opacity: 1,
@@ -31,7 +32,10 @@ export const openClose = trigger('openClose', [
   state('close', style({
     opacity: 0,
   })),
-  transition('close <=> open', [
-    animate('666ms cubic-bezier(0.4, 0, 0.22, 1)'),
+  transition('close => open', [
+    animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
+  ]),
+  transition('open => close', [
+    animate('666ms cubic-bezier(.02,.72,.74,.71)'),
   ]),
 ]);
