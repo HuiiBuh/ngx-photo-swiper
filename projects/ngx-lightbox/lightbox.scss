@@ -20,10 +20,6 @@
   --lib-icons-svg               : url("#{$icon-svg}") 0 0 no-repeat;
 }
 
-lib-gallery-component, lib-controls, lib-share, lib-slider {
-  @include tab-highlight
-}
-
-lib-slider-image {
-  display : contents;
+lib-gallery-component, lib-controls, lib-share, lib-slider, lib-slider-image {
+  @include tab-highlight;
 }

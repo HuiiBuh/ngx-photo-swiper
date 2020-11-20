@@ -4,10 +4,12 @@
      (vSwipe)="verticalSwipe($event)"
      [@openClose]="sliderState.slider.active ? 'open': 'close'"
      (@openClose.start)="display = 'block'"
-     (@openClose.done)="sliderState.slider.active ? display = 'block' : display = 'none'"
+     (@openClose.done)="afterOpenClose()"
      [ngStyle]="{display: display}"
 >
-
+<div class="background-overlay"
+     #sliderOverlay
+></div>
   <div class="slider" #slider
        [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
        (@changeImage.start)="hAnimationInProgress = true"

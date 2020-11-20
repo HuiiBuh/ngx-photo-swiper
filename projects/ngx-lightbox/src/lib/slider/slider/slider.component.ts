@@ -43,6 +43,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   public hAnimationInProgress = false;
 
   @ViewChild('slider') private slider: ElementRef | undefined;
+  @ViewChild('sliderOverlay') private sliderOverlay: ElementRef | undefined;
   private inTranslate = false;
   private animationServiceSubscription!: Subscription;
   private sliderStateSubscription!: Subscription;
@@ -120,7 +121,32 @@ export class SliderComponent implements OnInit, OnDestroy {
    * @param $event The vertical swipe event
    */
   public verticalSwipe($event: TouchMove): void {
-    console.log($event);
+    if ($event.state === 'start' || $event.state === 'move') {
+      this.scheduleAnimation(() => {
+        this.setTranslate(0, $event.current.y - $event.start.y);
+        this.setOpacity((300 - Math.abs($event.current.y - $event.start.y)) / 300);
+        this.inTranslate = false;
+      });
+    } else {
+      this.ngZone.run(() => {
+        const direction = $event.getDirection() as 'up' | 'down' | 'none';
+        if (direction === 'none') {
+          this.setTranslate(0, 0);
+          this.setOpacity(1);
+        } else {
+          this.sliderService.closeSlider();
+        }
+      });
+    }
+  }
+
+  /**
+   * Reset opacity, translate and the display state
+   */
+  public afterOpenClose(): void {
+    this.display = this.sliderState.slider.active ? 'block' : 'none';
+    this.setTranslate(0, 0);
+    this.setOpacity(1);
   }
 
   /**
@@ -139,6 +165,10 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   private setTranslate(x: number, y: number): void {
     this.renderer2.setStyle(this.slider?.nativeElement, 'transform', `translate3d(${x}px,${y}px,0)`);
+  }
+
+  private setOpacity(opacity: number): void {
+    this.renderer2.setStyle(this.sliderOverlay?.nativeElement, 'opacity', `${opacity}`);
   }
 
   /**

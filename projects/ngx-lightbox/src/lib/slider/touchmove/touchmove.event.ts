@@ -27,6 +27,14 @@ export class TouchMove {
   }
 
   public getDirection(): TDirection {
+    if (this.touchDirection === 'x') {
+      return this.getHorizontalDirection();
+    } else {
+      return this.getVerticalDirection();
+    }
+  }
+
+  private getHorizontalDirection(): TDirection {
     const history = this.getHistorySinceLastDirectionChange();
     const historyLength = history.length;
     if (historyLength === 0) {
@@ -37,6 +45,17 @@ export class TouchMove {
       return 'none';
     }
     return this.getMoveDirection(offset);
+  }
+
+  private getVerticalDirection(): TDirection {
+    const difference = this.start.y - this.current.y;
+    let direction: TDirection = 'none';
+    if (difference > TouchMove.swipeThreshold) {
+      direction = 'up';
+    } else if (Math.abs(difference) > TouchMove.swipeThreshold) {
+      direction = 'down';
+    }
+    return direction;
   }
 
   /**
