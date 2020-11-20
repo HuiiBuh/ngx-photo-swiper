@@ -3,7 +3,7 @@
       (@openClose.done)="visibility === 'open' ? display = 'block': display = 'none'"
       [ngStyle]="{display:display}"
       class="gallery-share-popup">
-  <span class="gallery-share-options">
+  <span *ngIf="shareOptionList" class="gallery-share-options">
     <ng-container [ngTemplateOutlet]="shareOptionList"></ng-container>
   </span>
 </span>
