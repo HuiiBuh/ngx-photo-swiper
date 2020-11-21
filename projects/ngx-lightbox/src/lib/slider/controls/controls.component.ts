@@ -26,7 +26,8 @@ import {AnimationService} from '../slider/animation.service';
 export class ControlsComponent {
 
   @Input() position = true;
-  @Input() zoom = true;
+  // TODO implement zoom
+  zoom = false;
   @Input() fullscreen = true;
   @Input() share = true;
   @Input() close = true;

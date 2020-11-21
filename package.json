@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
-    "build": "ng build",
+    "build": "ng build --prod",
     "build-pages": "ng build --prod --base-href '/ngx-lightbox/'",
     "test": "ng test",
     "lint": "ng lint",
