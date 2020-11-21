@@ -12,7 +12,7 @@ import {TouchmoveDirective} from './touchmove/touchmove.directive';
   imports: [
     CommonModule,
   ],
-  exports: [ControlsComponent],
+  exports: [ControlsComponent, SliderComponent],
 })
 export class SliderModule {
 }
