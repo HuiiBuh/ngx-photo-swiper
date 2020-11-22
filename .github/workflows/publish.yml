@@ -9,8 +9,9 @@ jobs:
         with:
           node-version: 12
       - run: npm install
-      - run: npm lint
-      - run: npm build
-#      - uses: JS-DevTools/npm-publish@v1
-#        with:
-#          token: ${{ secrets.NPM_TOKEN }}
+      - run: npm run-script lint
+      - run: npm run-script build-lib
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          package: dist/ngx-lightbox/package.json

@@ -1,4 +1,4 @@
-import {IImage} from '../../../projects/ngx-lightbox/src/lib/ngx-lightbox.interfaces';
+import {IImage} from '../../../projects/ngx-photo-swiper/src/lib/ngx-lightbox.interfaces';
 
 export const testData: IImage[] = [{
   caption: 'Test caption 1',

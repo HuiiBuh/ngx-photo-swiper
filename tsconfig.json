@@ -14,10 +14,10 @@
       "path": "./tsconfig.spec.json"
     },
     {
-      "path": "./projects/ngx-lightbox/tsconfig.lib.json"
+      "path": "./projects/ngx-photo-swiper/tsconfig.lib.json"
     },
     {
-      "path": "./projects/ngx-lightbox/tsconfig.spec.json"
+      "path": "./projects/ngx-photo-swiper/tsconfig.spec.json"
     }
 ]
 }

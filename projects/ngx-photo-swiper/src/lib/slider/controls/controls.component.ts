@@ -5,6 +5,7 @@ import {ShareService} from '../share/share.service';
 import {SliderService} from '../slider.service';
 import {AnimationService} from '../slider/animation.service';
 
+// @dynamic
 @Component({
   selector: 'lib-controls',
   templateUrl: './controls.component.html',

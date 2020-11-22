@@ -22,7 +22,7 @@ import {AnimationService} from './animation.service';
 import {changeImage, openClose} from './slider.animation';
 import {HDirection, TAnimation, THorizontal} from './slider.types';
 
-
+// @dynamic
 @Component({
   selector: 'lib-slider',
   templateUrl: './slider.component.html',

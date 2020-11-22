@@ -6,6 +6,7 @@
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build --prod",
     "build-pages": "ng build --prod --base-href '/ngx-lightbox/'",
+    "build-lib": "ng build --prod ngx-lightbox",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -1,0 +1,32 @@
+{
+  "name": "ngx-photo-swiper",
+  "author": "HuiiBuh",
+  "license": "MIT",
+  "description": "Responsive and touch friendly lightbox gallery.",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HuiiBuh/ngx-lightbox"
+  },
+  "bugs": {
+    "url": "https://github.com/HuiiBuh/ngx-lightbox/issues"
+  },
+  "keywords": [
+    "angular",
+    "angular 10",
+    "angular 11",
+    "lightbox",
+    "gallery",
+    "image",
+    "touch",
+    "swipe",
+    "photoswipe"
+  ],
+  "homepage": "https://github.com/HuiiBuh/ngx-lightbox",
+  "peerDependencies": {
+    "@angular/common": "^10.0.5",
+    "@angular/core": "^10.0.5"
+  },
+  "dependencies": {
+  }
+}

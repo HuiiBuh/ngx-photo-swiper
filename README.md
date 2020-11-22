@@ -1,6 +1,1 @@
-# ngx lightbox
-
-## Credits
-
-+ Inspiered by photoswipe
-+ The Icons are also from photoswipe
+projects/ngx-lightbox/README.md
