@@ -37,9 +37,10 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-ngx-lightbox
-
 ngx-lightbox-app
+
+ngx-photo-swiper
+MIT
 
 rxjs
 Apache-2.0
