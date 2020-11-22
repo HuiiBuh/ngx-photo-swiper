@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-lightbox-app": {
+    "ngx-photo-swiper-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ngx-lightbox-app",
+            "outputPath": "dist/ngx-photo-swiper-app",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -69,18 +69,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-lightbox-app:build"
+            "browserTarget": "ngx-photo-swiper-app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-lightbox-app:build:production"
+              "browserTarget": "ngx-photo-swiper-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-lightbox-app:build"
+            "browserTarget": "ngx-photo-swiper-app:build"
           }
         },
         "test": {
@@ -117,48 +117,48 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ngx-lightbox-app:serve"
+            "devServerTarget": "ngx-photo-swiper-app:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ngx-lightbox-app:serve:production"
+              "devServerTarget": "ngx-photo-swiper-app:serve:production"
             }
           }
         }
       }
     },
-    "ngx-lightbox": {
+    "ngx-photo-swiper": {
       "projectType": "library",
-      "root": "projects/ngx-lightbox",
-      "sourceRoot": "projects/ngx-lightbox/src",
+      "root": "projects/ngx-photo-swiper",
+      "sourceRoot": "projects/ngx-photo-swiper/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ngx-lightbox/tsconfig.lib.json",
-            "project": "projects/ngx-lightbox/ng-package.json"
+            "tsConfig": "projects/ngx-photo-swiper/tsconfig.lib.json",
+            "project": "projects/ngx-photo-swiper/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ngx-lightbox/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-photo-swiper/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/ngx-lightbox/src/test.ts",
-            "tsConfig": "projects/ngx-lightbox/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-lightbox/karma.conf.js"
+            "main": "projects/ngx-photo-swiper/src/test.ts",
+            "tsConfig": "projects/ngx-photo-swiper/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-photo-swiper/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/ngx-lightbox/tsconfig.lib.json",
-              "projects/ngx-lightbox/tsconfig.spec.json"
+              "projects/ngx-photo-swiper/tsconfig.lib.json",
+              "projects/ngx-photo-swiper/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -167,5 +167,5 @@
         }
       }
     }},
-  "defaultProject": "ngx-lightbox-app"
+  "defaultProject": "ngx-photo-swiper-app"
 }

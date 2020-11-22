@@ -21,5 +21,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: dist/ngx-lightbox-app
+          FOLDER: dist/ngx-photo-swiper-app
           CLEAN: true

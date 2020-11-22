@@ -1,12 +1,12 @@
 {
-  "name": "ngx-lightbox-app",
+  "name": "ngx-photo-swiper-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build --prod",
-    "build-pages": "ng build --prod --base-href '/ngx-lightbox/'",
-    "build-lib": "ng build --prod ngx-lightbox",
+    "build-pages": "ng build --prod --base-href '/ngx-photo-swiper/'",
+    "build-lib": "ng build ngx-photo-swiper --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

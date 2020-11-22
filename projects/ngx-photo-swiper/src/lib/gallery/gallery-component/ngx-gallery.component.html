@@ -3,7 +3,7 @@
   <ul>
     <li *ngFor="let image of imageList; index as i">
 
-      <img [src]="image.imageSRC" (click)="loadSlider(i, image)"    loading="lazy" alt="Image">
+      <img [src]="image.imageSRC" (click)="loadSlider(i, image)" loading="lazy" alt="Image">
     </li>
     <!--  Prevent stretching  -->
     <li></li>

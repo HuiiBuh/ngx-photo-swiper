@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ngx-lightbox
+ * Public API Surface of ngx-photo-swiper
  */
 
 export {GalleryModule} from './lib/gallery/gallery.module';

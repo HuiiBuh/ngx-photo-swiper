@@ -20,9 +20,9 @@
       "dom"
     ],
     "paths": {
-      "ngx-lightbox": [
-        "dist/ngx-lightbox/ngx-lightbox",
-        "dist/ngx-lightbox"
+      "ngx-photo-swiper": [
+        "dist/ngx-photo-swiper/ngx-photo-swiper",
+        "dist/ngx-photo-swiper"
       ]
     }
   },

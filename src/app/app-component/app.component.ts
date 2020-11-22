@@ -8,5 +8,5 @@ import {testData} from './test.data';
 })
 export class AppComponent {
   data = testData;
-  title = 'ngx-lightbox-app';
+  title = 'ngx-photo-swiper-app';
 }
