@@ -1,1 +1,1 @@
-projects/ngx-lightbox/README.md
+projects/ngx-photo-swiper/README.md
