@@ -1,7 +1,7 @@
 # Photo Swiper for Angular
 
-![.github/workflows/publish.yml](https://github.com/HuiiBuh/ngx-photo-swiper/workflows/.github/workflows/publish.yml/badge.svg)
-![Build and Deploy](https://github.com/HuiiBuh/ngx-photo-swiper/workflows/Build%20and%20Deploy/badge.svg)
+![Build and Publish](https://github.com/HuiiBuh/ngx-photo-swiper/workflows/Build%20and%20Publish/badge.svg)
+![Deploy](https://github.com/HuiiBuh/ngx-photo-swiper/workflows/Deploy/badge.svg)
 ![NPM package](https://img.shields.io/npm/v/ngx-photo-swiper.svg?logo=npm&logoColor=fff&label=NPM+package&color=rgb(48,%20197,%2083))
 
 A zero dependency (except Angular + Router obviously) touch and mobile friendly lightbox which supports server side
