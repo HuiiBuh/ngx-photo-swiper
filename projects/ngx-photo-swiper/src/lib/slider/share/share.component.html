@@ -1,6 +1,6 @@
-<span [@openClose]="visibility"
+<span (@openClose.done)="visibility === 'open' ? display = 'block': display = 'none'"
       (@openClose.start)="display = 'block'"
-      (@openClose.done)="visibility === 'open' ? display = 'block': display = 'none'"
+      [@openClose]="visibility"
       [ngStyle]="{display:display}"
       class="gallery-share-popup">
   <span *ngIf="shareOptionList" class="gallery-share-options">
@@ -8,4 +8,4 @@
   </span>
 </span>
 
-<span *ngIf="shareService.visible$ | async" class="share-overlay" (click)="this.shareService.close()"></span>
+<span (click)="this.shareService.close()" *ngIf="shareService.visible$ | async" class="share-overlay"></span>

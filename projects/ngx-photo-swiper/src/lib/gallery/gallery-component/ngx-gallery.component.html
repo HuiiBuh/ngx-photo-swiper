@@ -1,9 +1,9 @@
-<div class="lightbox-grid" [style]="sliderActive ? 'pointer-events: none':''">
+<div [style]="sliderActive ? 'pointer-events: none':''" class="lightbox-grid">
 
   <ul>
     <li *ngFor="let image of imageList; index as i">
 
-      <img [src]="image.imageSRC" (click)="loadSlider(i, image)" loading="lazy" alt="Image">
+      <img (click)="loadSlider(i, image)" [src]="image.imageSRC" alt="Image" loading="lazy">
     </li>
     <!--  Prevent stretching  -->
     <li></li>

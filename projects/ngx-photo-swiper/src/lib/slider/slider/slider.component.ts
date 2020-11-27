@@ -1,4 +1,4 @@
-import {DOCUMENT} from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -12,15 +12,15 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
-import {SliderInformation} from '../../ngx-lightbox.interfaces';
-import {LightboxStore} from '../../store/lightbox.store';
-import {ControlsComponent} from '../controls/controls.component';
-import {SliderService} from '../slider.service';
-import {TouchMove} from '../touchmove/touchmove.event';
-import {AnimationService} from './animation.service';
-import {changeImage, openClose} from './slider.animation';
-import {HDirection, TAnimation, THorizontal} from './slider.types';
+import { Subscription } from 'rxjs';
+import { SliderInformation } from '../../models/gallery';
+import { HDirection, TAnimation, THorizontal } from '../../models/slider';
+import { LightboxStore } from '../../store/lightbox.store';
+import { ControlsComponent } from '../controls/controls.component';
+import { SliderService } from '../slider.service';
+import { TouchMove } from '../touchmove/touchmove.event';
+import { AnimationService } from './animation.service';
+import { changeImage, openClose } from './slider.animation';
 
 // @dynamic
 @Component({

@@ -1,17 +1,6 @@
-import {TDirection} from '../slider/slider.types';
+import { TDirection } from '../../models/slider';
+import { ITouchMove, Point } from '../../models/touchmove';
 
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface ITouchMove {
-  touchDirection: 'y' | 'x';
-  start: Point;
-  current: Point;
-  history: Point[];
-  state: 'start' | 'move' | 'end';
-}
 
 export class TouchMove {
 

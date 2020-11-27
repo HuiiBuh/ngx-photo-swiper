@@ -1,8 +1,8 @@
-import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
-import {GalleryState} from '../ngx-lightbox.interfaces';
-import {LightboxStore} from '../store/lightbox.store';
-import {UrlHandlerService} from './url-handler.service';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
+import { GalleryState } from '../models/gallery';
+import { LightboxStore } from '../store/lightbox.store';
+import { UrlHandlerService } from './url-handler.service';
 
 // @dynamic
 @Injectable({

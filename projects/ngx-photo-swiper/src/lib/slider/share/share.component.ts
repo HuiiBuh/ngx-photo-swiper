@@ -1,7 +1,7 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {Component, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ShareService} from './share.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ShareService } from './share.service';
 
 @Component({
   selector: 'lib-share[shareOptionList]',

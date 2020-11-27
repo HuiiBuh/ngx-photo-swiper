@@ -1,11 +1,11 @@
-import {Location} from '@angular/common';
-import {Injectable} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Slider} from '../ngx-lightbox.interfaces';
-import {LightboxStore} from '../store/lightbox.store';
+import { Location } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Slider } from '../models/gallery';
+import { LightboxStore } from '../store/lightbox.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UrlHandlerService {
 
@@ -37,10 +37,10 @@ export class UrlHandlerService {
       relativeTo: this.route,
       queryParams: {
         gridID: String(slider.gridID),
-        imageIndex: String(slider.imageIndex)
+        imageIndex: String(slider.imageIndex),
       },
       queryParamsHandling: 'merge',
-      skipLocationChange: false
+      skipLocationChange: false,
     });
   }
 
@@ -48,7 +48,7 @@ export class UrlHandlerService {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {},
-      skipLocationChange: false
+      skipLocationChange: false,
     });
   }
 

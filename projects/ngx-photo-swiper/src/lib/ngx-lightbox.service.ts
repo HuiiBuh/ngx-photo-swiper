@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {IImage} from './ngx-lightbox.interfaces';
-import {LightboxStore} from './store/lightbox.store';
+import { Injectable } from '@angular/core';
+import { IImage } from './models/gallery';
+import { LightboxStore } from './store/lightbox.store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NgxLightboxService {
 

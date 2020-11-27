@@ -1,27 +1,27 @@
-<div *ngIf="sliderState" class="lightbox-slider-container"
-     libTouchmove
+<div (@openClose.done)="afterOpenClose()" (@openClose.start)="display = 'block'"
      (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
+     *ngIf="sliderState"
      [@openClose]="sliderState.slider.active ? 'open': 'close'"
-     (@openClose.start)="display = 'block'"
-     (@openClose.done)="afterOpenClose()"
      [ngStyle]="{display: display}"
+     class="lightbox-slider-container"
+     libTouchmove
 >
-<div class="background-overlay"
-     #sliderOverlay
-></div>
-  <div class="slider" #slider
-       [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
+  <div #sliderOverlay
+       class="background-overlay"
+  ></div>
+  <div #slider (@changeImage.done)="changeImage()"
        (@changeImage.start)="hAnimationInProgress = true"
-       (@changeImage.done)="changeImage()"
+       [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
+       class="slider"
   >
 
-    <lib-slider-image [sliderImages]="sliderState.imageRange"
-                      [currentImageIndex]="sliderState.slider.imageIndex"></lib-slider-image>
-    <lib-slider-image [sliderImages]="sliderState.imageRange"
-                      [currentImageIndex]="sliderState.slider.imageIndex"></lib-slider-image>
-    <lib-slider-image [sliderImages]="sliderState.imageRange"
-                      [currentImageIndex]="sliderState.slider.imageIndex"></lib-slider-image>
+    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
+    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
+    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
 
   </div>
 

@@ -1,8 +1,7 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {GalleryState, IImage, Slider, SliderInformation, TGallery} from '../ngx-lightbox.interfaces';
-import {IImageIndex} from '../slider/slider-interfaces';
-import {Store} from './store';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { GalleryState, IImage, IImageIndex, Slider, SliderInformation, TGallery } from '../models/gallery';
+import { Store } from './store';
 
 @Injectable()
 export class LightboxStore extends Store<GalleryState> {

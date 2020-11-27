@@ -1,28 +1,28 @@
 <ng-template [ngIf]="sliderService.active">
-  <div class="top-control" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'">
+  <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control">
 
     <div *ngIf="position" class="counter">{{sliderService.currentImageIndex}} / {{sliderService.sliderLength}}</div>
 
     <button *ngIf="zoom" class="icon-zoom"></button>
 
-    <button *ngIf="fullscreen" (click)="toggleFullscreen()"
+    <button (click)="toggleFullscreen()" *ngIf="fullscreen"
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-    <button *ngIf="share && shareOptionList" style="z-index: 100"
-            (click)="toggleShareView($event)" class="icon-social-share"></button>
+    <button (click)="toggleShareView($event)" *ngIf="share && shareOptionList"
+            class="icon-social-share" style="z-index: 100"></button>
 
     <lib-share [shareOptionList]="shareOptionList"></lib-share>
 
-    <button *ngIf="close" class="icon-close" (click)="closeSlider()"></button>
+    <button (click)="closeSlider()" *ngIf="close" class="icon-close"></button>
 
   </div>
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
 
-    <button *ngIf="sliderService.isFirstImage()" class="icon-left left" (click)="l()"
-            [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"></button>
-    <button *ngIf="sliderService.isLastImage()" class="icon-right right" (click)="r()"
-            [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"></button>
+    <button (click)="l()" *ngIf="sliderService.isFirstImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
+            class="icon-left left"></button>
+    <button (click)="r()" *ngIf="sliderService.isLastImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
+            class="icon-right right"></button>
 
   </ng-template>
 </ng-template>

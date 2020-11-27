@@ -1,4 +1,4 @@
-<div *ngIf="currentImage" class="index-{{getImageIndex()}} image-container" (click)="close($event)">
+<div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
   <img [src]="currentImage?.imageSRC" alt="image">
   <div class="caption">

@@ -1,6 +1,6 @@
-import {Component, Input, OnChanges} from '@angular/core';
-import {IImageIndex} from '../slider-interfaces';
-import {AnimationService} from '../slider/animation.service';
+import { Component, Input, OnChanges } from '@angular/core';
+import { IImageIndex } from '../../models/gallery';
+import { AnimationService } from '../slider/animation.service';
 
 @Component({
   selector: 'lib-slider-image[sliderImages][currentImageIndex]',

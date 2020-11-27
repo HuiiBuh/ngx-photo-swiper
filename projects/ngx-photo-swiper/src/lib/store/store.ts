@@ -5,8 +5,8 @@
  * Copied because the library cause angular not to build
  */
 
-import {BehaviorSubject} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 type Index = string | number | symbol;
 
