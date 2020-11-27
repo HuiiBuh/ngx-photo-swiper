@@ -12,6 +12,6 @@ import { LightboxStore } from './store/lightbox.store';
   providers: [LightboxStore],
   exports: [GalleryModule, SliderModule],
 })
-export class NgxLightboxModule {
+export class LightboxModule {
 }
 

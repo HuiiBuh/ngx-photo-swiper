@@ -7,7 +7,7 @@ import { AnimationService } from '../slider/animation.service';
 
 // @dynamic
 @Component({
-  selector: 'lib-controls',
+  selector: 'photo-controls',
   templateUrl: './controls.component.html',
   styleUrls: ['controls.component.scss'],
   animations: [

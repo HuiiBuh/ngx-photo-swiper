@@ -1,7 +1,7 @@
-<lib-gallery-component [imageList]="data" lightboxID="test" [controls]="controlsComponent"></lib-gallery-component>
+<photo-gallery-component [imageList]="data" lightboxID="test" [controls]="controlsComponent"></photo-gallery-component>
 
 <ng-template #controlsComponent>
-  <lib-controls [fadeoutTime]="1000" [shareOptionList]="shareOptions"></lib-controls>
+  <photo-controls [fadeoutTime]="1000" [shareOptionList]="shareOptions"></photo-controls>
 </ng-template>
 
 <ng-template #shareOptions>

@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {NgxLightboxModule} from '../../projects/ngx-photo-swiper/src/lib/ngx-lightbox.module';
+import {LightboxModule} from '../../projects/ngx-photo-swiper/src/lib/lightbox.module';
 import {AppComponent} from './app-component/app.component';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -12,7 +12,7 @@ import {AppRoutingModule} from './app-routing.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxLightboxModule
+    LightboxModule
   ],
   providers: [],
   bootstrap: [AppComponent],

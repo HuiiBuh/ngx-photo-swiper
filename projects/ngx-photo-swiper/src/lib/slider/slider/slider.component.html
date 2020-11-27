@@ -5,7 +5,7 @@
      [@openClose]="sliderState.slider.active ? 'open': 'close'"
      [ngStyle]="{display: display}"
      class="lightbox-slider-container"
-     libTouchmove
+     photoTouchmove
 >
   <div #sliderOverlay
        class="background-overlay"
@@ -16,12 +16,12 @@
        class="slider"
   >
 
-    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
-    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
-    <lib-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                      [sliderImages]="sliderState.imageRange"></lib-slider-image>
+    <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
+    <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
+    <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
+                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
 
   </div>
 

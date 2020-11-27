@@ -3,7 +3,7 @@
   "author": "HuiiBuh",
   "license": "MIT",
   "description": "Responsive and touch friendly lightbox gallery.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/HuiiBuh/ngx-photo-swiper"
@@ -24,8 +24,8 @@
   ],
   "homepage": "https://github.com/HuiiBuh/ngx-photo-swiper",
   "peerDependencies": {
-    "@angular/common": "^10.0.5",
-    "@angular/core": "^10.0.5"
+    "@angular/common": ">10",
+    "@angular/core": ">10"
   },
   "dependencies": {
   }

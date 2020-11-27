@@ -1,4 +1,9 @@
+name: Build and Publish
+
 on: push
+  push:
+    branches:
+      - master
 
 jobs:
   publish:

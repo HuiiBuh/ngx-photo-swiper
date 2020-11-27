@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SliderModule } from '../slider/slider.module';
-import { NgxGalleryComponent } from './gallery-component/ngx-gallery.component';
+import { GalleryComponent } from './gallery-component/gallery.component';
 
 
 @NgModule({
-  declarations: [NgxGalleryComponent],
+  declarations: [GalleryComponent],
   imports: [
     CommonModule,
     SliderModule,
   ],
-  exports: [NgxGalleryComponent],
+  exports: [GalleryComponent],
 })
 export class GalleryModule {
 }

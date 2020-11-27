@@ -4,13 +4,10 @@ export class Slider {
   public active: boolean = false;
 }
 
+// TODO description
 export interface IImage {
   imageSRC: string;
   caption?: string;
-  height?: number;
-  width?: number;
-  description?: string;
-  imagePreview?: string;
 }
 
 export type TGallery = Record<string, IImage[]> ;

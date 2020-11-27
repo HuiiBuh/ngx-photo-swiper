@@ -4,7 +4,7 @@ import { TouchMove } from './touchmove.event';
 
 
 @Directive({
-  selector: '[libTouchmove]',
+  selector: '[photoTouchmove]',
 })
 export class TouchmoveDirective implements OnInit, OnDestroy {
 

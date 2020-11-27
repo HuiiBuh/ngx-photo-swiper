@@ -3,7 +3,7 @@ import { IImageIndex } from '../../models/gallery';
 import { AnimationService } from '../slider/animation.service';
 
 @Component({
-  selector: 'lib-slider-image[sliderImages][currentImageIndex]',
+  selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
   styleUrls: ['./slider-image.component.scss'],
 })

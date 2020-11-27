@@ -11,7 +11,7 @@
     <button (click)="toggleShareView($event)" *ngIf="share && shareOptionList"
             class="icon-social-share" style="z-index: 100"></button>
 
-    <lib-share [shareOptionList]="shareOptionList"></lib-share>
+    <photo-share [shareOptionList]="shareOptionList"></photo-share>
 
     <button (click)="closeSlider()" *ngIf="close" class="icon-close"></button>
 

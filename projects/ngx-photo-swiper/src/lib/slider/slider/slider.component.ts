@@ -24,7 +24,7 @@ import { changeImage, openClose } from './slider.animation';
 
 // @dynamic
 @Component({
-  selector: 'lib-slider',
+  selector: 'photo-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
   animations: [

@@ -5,11 +5,11 @@ import { ControlsComponent } from '../../slider/controls/controls.component';
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
-  selector: 'lib-gallery-component[imageList][lightboxID]',
-  templateUrl: 'ngx-gallery.component.html',
-  styleUrls: ['ngx-gallery.component.scss'],
+  selector: 'photo-gallery-component[imageList][lightboxID]',
+  templateUrl: 'gallery.component.html',
+  styleUrls: ['gallery.component.scss'],
 })
-export class NgxGalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit {
 
   @Input()
   controls: TemplateRef<ControlsComponent> | null = null;
