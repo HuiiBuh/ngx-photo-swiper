@@ -1,6 +1,6 @@
 import { Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
 import { Point } from '../../models/touchmove';
-import { TouchMove } from './touchmove.event';
+import { TouchMove } from './touchmove.directive.event';
 
 
 @Directive({

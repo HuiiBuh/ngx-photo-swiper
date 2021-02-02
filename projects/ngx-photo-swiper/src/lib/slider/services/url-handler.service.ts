@@ -1,8 +1,8 @@
 import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Slider } from '../models/gallery';
-import { LightboxStore } from '../store/lightbox.store';
+import { Slider } from '../../models/gallery';
+import { LightboxStore } from '../../store/lightbox.store';
 
 @Injectable({
   providedIn: 'root',

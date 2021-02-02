@@ -2,7 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject, Input, TemplateRef } from '@angular/core';
 import { ShareService } from '../share/share.service';
-import { SliderService } from '../slider.service';
+import { SliderService } from '../../services/slider.service';
 import { AnimationService } from '../slider/animation.service';
 
 // @dynamic

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { IImageIndex } from '../../models/gallery';
+import { IImageIndex } from '../../../models/gallery';
 import { AnimationService } from '../slider/animation.service';
 
 @Component({

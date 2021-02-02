@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { IImage } from '../../models/gallery';
 import { NgxLightboxService } from '../../ngx-lightbox.service';
-import { ControlsComponent } from '../../slider/controls/controls.component';
+import { ControlsComponent } from '../../slider/components/controls/controls.component';
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
