@@ -43,7 +43,7 @@ export class UrlHandlerService {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        gridID: String(slider.gridID),
+        gridID: String(slider.lightboxID),
         imageIndex: String(slider.imageIndex),
       },
       queryParamsHandling: 'merge',
@@ -71,7 +71,7 @@ export class UrlHandlerService {
 
     // @ts-ignore
     if (imageIndex && !isNaN(imageIndex) && gridID) {
-      this.store.updateSlider({imageIndex: parseInt(imageIndex, 0), gridID, active: true});
+      this.store.updateSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: gridID, active: true});
     } else {
       this.store.closeSlider();
     }

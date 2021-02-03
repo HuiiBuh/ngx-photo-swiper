@@ -1,6 +1,6 @@
 export class Slider {
   public imageIndex: number = 0;
-  public gridID: string = '';
+  public lightboxID: string = '';
   public active: boolean = false;
 }
 

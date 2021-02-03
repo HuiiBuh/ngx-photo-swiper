@@ -1,0 +1,12 @@
+<photo-gallery-component [controls]="controlsComponent" [imageList]="data"
+                         lightboxID="test"></photo-gallery-component>
+
+<ng-template #controlsComponent>
+  <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>
+</ng-template>
+
+<ng-template #shareOptions>
+  <a href="https://google.com">Google</a>
+  <a href="https://google.com">WhatsApp</a>
+  <a href="https://google.com">Instagram</a>
+</ng-template>

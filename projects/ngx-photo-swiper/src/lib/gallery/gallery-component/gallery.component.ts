@@ -11,7 +11,7 @@ import { LightboxStore } from '../../store/lightbox.store';
 })
 export class GalleryComponent implements OnInit {
 
-  @Input()  public controls: TemplateRef<ControlsComponent> | null = null;
+  @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public imageList!: IImage[];
   @Input() public lightboxID!: string;
   public sliderActive!: boolean;
@@ -25,7 +25,7 @@ export class GalleryComponent implements OnInit {
     this.store.onChanges<boolean>('slider', 'active').subscribe(value => this.sliderActive = value);
   }
 
-  public loadSlider(imageIndex: number, image: IImage): void {
-    this.ngxLightboxService.loadImageInSlider(imageIndex, image, this.lightboxID);
+  public loadSlider(imageIndex: number): void {
+    this.ngxLightboxService.loadIndexInSlider(imageIndex, this.lightboxID);
   }
 }

@@ -21,6 +21,23 @@ export class LightboxStore extends Store<GalleryState> {
   }
 
   /**
+   * Add an image to an gallery
+   * @param image The image which should be added
+   * @param galleryID The gallery id
+   * @returns The index the image was added to
+   */
+  public addImageToGallery(image: IImage, galleryID: string): number {
+    if (!(galleryID in this.state.gallery)) {
+      this.addGallery({[galleryID]: []});
+    }
+    this.patchState<IImage[]>(
+      [...this.state.gallery[galleryID], image],
+      'gallery', galleryID,
+    );
+    return this.state.gallery[galleryID].length - 1;
+  }
+
+  /**
    * Update the slider with a new state
    * @param slider The new slider state
    */
@@ -45,7 +62,7 @@ export class LightboxStore extends Store<GalleryState> {
   public moveImageIndex(moveCount: number): void {
     const newPosition = this.state.slider.imageIndex + moveCount;
 
-    if (newPosition >= this.state.gallery[this.state.slider.gridID].length
+    if (newPosition >= this.state.gallery[this.state.slider.lightboxID].length
       || newPosition < 0) {
       return;
     }
@@ -75,7 +92,7 @@ export class LightboxStore extends Store<GalleryState> {
       let gallery: IImage[] = [];
 
       if (slider.active) {
-        gallery = this.state.gallery[slider.gridID];
+        gallery = this.state.gallery[slider.lightboxID];
 
         for (const i of [-1, 0, 1]) {
           const image = gallery[slider.imageIndex + i];

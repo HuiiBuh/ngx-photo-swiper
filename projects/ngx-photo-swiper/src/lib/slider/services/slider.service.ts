@@ -23,7 +23,7 @@ export class SliderService {
    */
   public get imageCaption(): string {
     if (this.galleryState) {
-      const caption: string | undefined = this.galleryState.gallery[this.galleryState.slider.gridID]
+      const caption: string | undefined = this.galleryState.gallery[this.galleryState.slider.lightboxID]
         [this.galleryState.slider.imageIndex].caption;
       return caption ? caption : '';
     }
@@ -55,7 +55,7 @@ export class SliderService {
    */
   public get sliderLength(): number {
     if (this.galleryState) {
-      return this.galleryState.gallery[this.galleryState.slider.gridID].length;
+      return this.galleryState.gallery[this.galleryState.slider.lightboxID].length;
     }
     return 0;
   }
@@ -88,7 +88,7 @@ export class SliderService {
    */
   public isLastImage(): boolean {
     if (this.galleryState) {
-      return this.galleryState.slider.imageIndex !== this.galleryState.gallery[this.galleryState.slider.gridID].length - 1;
+      return this.galleryState.slider.imageIndex !== this.galleryState.gallery[this.galleryState.slider.lightboxID].length - 1;
     }
     return false;
   }

@@ -9,24 +9,18 @@
   </a>
 </nav>
 <div class="container">
-
   <p>Test URL parameter preservation</p>
   <ul>
     <li><a routerLink="/">HOME</a></li>
     <li><a [routerLink]="'/'" [queryParams]="{test: 'test'}">URL Parameter</a></li>
   </ul>
 
-  <photo-gallery-component [controls]="controlsComponent" [imageList]="data"
-                            lightboxID="test"></photo-gallery-component>
+  <p>Different galleries</p>
+  <ul>
+    <li><a routerLink="/">Default</a></li>
+    <li><a routerLink="/own">Own</a></li>
+  </ul>
 
-  <ng-template #controlsComponent>
-    <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>
-  </ng-template>
-
-  <ng-template #shareOptions>
-    <a href="https://google.com">Google</a>
-    <a href="https://google.com">WhatsApp</a>
-    <a href="https://google.com">Instagram</a>
-  </ng-template>
+  <router-outlet></router-outlet>
 
 </div>
