@@ -5,7 +5,6 @@ import { GalleryModule } from './gallery/gallery.module';
 import { SliderModule } from './slider/slider.module';
 import { LightboxStore } from './store/lightbox.store';
 
-
 @NgModule({
   declarations: [],
   imports: [BrowserModule, GalleryModule, SliderModule, BrowserAnimationsModule],
@@ -14,4 +13,3 @@ import { LightboxStore } from './store/lightbox.store';
 })
 export class LightboxModule {
 }
-

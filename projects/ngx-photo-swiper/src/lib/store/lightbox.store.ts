@@ -56,7 +56,6 @@ export class LightboxStore extends Store<GalleryState> {
     }, 'slider');
   }
 
-
   /**
    * Get the important slider data
    */

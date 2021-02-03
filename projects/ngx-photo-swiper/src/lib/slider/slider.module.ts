@@ -6,7 +6,6 @@ import { SliderImageComponent } from './components/slider-image/slider-image.com
 import { SliderComponent } from './components/slider/slider.component';
 import { TouchmoveDirective } from './directives/touchmove.directive';
 
-
 @NgModule({
   declarations: [SliderComponent, ControlsComponent, ShareComponent, TouchmoveDirective, SliderImageComponent],
   imports: [

@@ -26,7 +26,7 @@ import { ShareService } from './share.service';
 })
 export class ShareComponent implements OnInit, OnDestroy {
 
-  @Input() shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
+  @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
 
   public display: 'block' | 'none' = 'none';
   public visibility: 'open' | 'closed' = 'closed';

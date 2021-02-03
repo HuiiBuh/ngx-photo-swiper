@@ -2,7 +2,6 @@ import { Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output,
 import { Point } from '../../models/touchmove';
 import { TouchMove } from './touchmove.directive.event';
 
-
 @Directive({
   selector: '[photoTouchmove]',
 })
@@ -10,8 +9,8 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
 
   private static touchThreshold: number = 5;
 
-  @Output() vSwipe: EventEmitter<TouchMove> = new EventEmitter();
-  @Output() hSwipe: EventEmitter<TouchMove> = new EventEmitter();
+  @Output() public vSwipe: EventEmitter<TouchMove> = new EventEmitter();
+  @Output() public hSwipe: EventEmitter<TouchMove> = new EventEmitter();
 
   // The element
   private readonly element: ElementRef;
@@ -77,7 +76,7 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
 
   /**
    * Handle the mouse move event
-   * Only gets called if the touch start was not a multitouch
+   * Only gets called if the touch start was not a multi-touch
    */
   private handleTouchMove(e: TouchEvent): void {
     // Get the fist touch
@@ -91,12 +90,10 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
     // Check if the move is over the threshold
     if (max > TouchmoveDirective.touchThreshold) {
       this.touchState = 'start';
+
       // Check if it is a vertical or a horizontal touch
-      if (max === yDiff) {
-        this.touchHandler = this.handleVertical.bind(this);
-      } else {
-        this.touchHandler = this.handleHorizontal.bind(this);
-      }
+      this.touchHandler = max === yDiff ? this.handleVertical.bind(this) : this.handleHorizontal.bind(this);
+
       // Unsubscribe the touchMove handler
       this.touchMoveUnsubscribe();
 

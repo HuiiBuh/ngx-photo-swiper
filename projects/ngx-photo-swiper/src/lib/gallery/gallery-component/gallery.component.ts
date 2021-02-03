@@ -11,16 +11,15 @@ import { LightboxStore } from '../../store/lightbox.store';
 })
 export class GalleryComponent implements OnInit {
 
-  @Input()
-  controls: TemplateRef<ControlsComponent> | null = null;
-  @Input() imageList!: IImage[];
-  @Input() lightboxID!: string;
+  @Input()  public controls: TemplateRef<ControlsComponent> | null = null;
+  @Input() public imageList!: IImage[];
+  @Input() public lightboxID!: string;
   public sliderActive!: boolean;
 
   constructor(private ngxLightboxService: NgxLightboxService, private store: LightboxStore) {
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.store.addGallery({[this.lightboxID]: this.imageList});
     this.store.onChanges<IImage[]>('gallery', this.lightboxID).subscribe(value => this.imageList = value);
     this.store.onChanges<boolean>('slider', 'active').subscribe(value => this.sliderActive = value);

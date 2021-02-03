@@ -17,15 +17,15 @@ export class Store<S extends object> {
     this.state$ = new BehaviorSubject(initialState);
   }
 
-  get state(): S {
+  public get state(): S {
     return this.state$.getValue();
   }
 
-  setState(nextState: S): void {
+  public setState(nextState: S): void {
     this.state$.next(nextState);
   }
 
-  onChanges<T>(...path: Index[]): BehaviorSubject<T> {
+  public onChanges<T>(...path: Index[]): BehaviorSubject<T> {
 
     const initialData = path.reduce((result, part) => {
       if (result === undefined || result === null) {
@@ -55,7 +55,7 @@ export class Store<S extends object> {
     return partialChange as unknown as BehaviorSubject<T>;
   }
 
-  patchState<T>(value: T, ...path: Index[]): void {
+  public patchState<T>(value: T, ...path: Index[]): void {
     if (path.length < 1) {
       return;
     }

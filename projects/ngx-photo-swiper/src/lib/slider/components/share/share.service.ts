@@ -8,11 +8,11 @@ export class ShareService {
   private readonly _visible: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public visible$ = this._visible.asObservable();
 
-  get visible(): boolean {
+  public get visible(): boolean {
     return this._visible.value;
   }
 
-  toggle(): void {
+  public toggle(): void {
     this._visible.next(!this.visible);
   }
 

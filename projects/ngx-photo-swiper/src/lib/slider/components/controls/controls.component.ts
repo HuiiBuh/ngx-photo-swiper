@@ -1,8 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
 import { Component, HostListener, Inject, Input, TemplateRef } from '@angular/core';
-import { ShareService } from '../share/share.service';
 import { SliderService } from '../../services/slider.service';
+import { ShareService } from '../share/share.service';
 import { AnimationService } from '../slider/animation.service';
 
 // @dynamic
@@ -26,16 +26,16 @@ import { AnimationService } from '../slider/animation.service';
 })
 export class ControlsComponent {
 
-  @Input() position = true;
+  @Input() public position = true;
   // TODO implement zoom
-  zoom = false;
-  @Input() fullscreen = true;
-  @Input() share = true;
-  @Input() close = true;
-  @Input() arrows = true;
-  @Input() shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
-  @Input() fadeoutTime: number = 1000;
-  @Input() showOnMobile: boolean = true;
+  public zoom = false;
+  @Input() public fullscreen = true;
+  @Input() public share = true;
+  @Input() public close = true;
+  @Input() public arrows = true;
+  @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
+  @Input() public fadeoutTime: number = 1000;
+  @Input() public showOnMobile: boolean = true;
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
@@ -67,7 +67,7 @@ export class ControlsComponent {
   /**
    * Close the slider after exiting the fullscreen
    */
-  async closeSlider(): Promise<void> {
+  public closeSlider(): void {
     this.sliderService.closeSlider();
   }
 
@@ -77,9 +77,8 @@ export class ControlsComponent {
   public isMobile(): boolean {
     if (this.document.defaultView) {
       return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.document.defaultView.navigator.userAgent));
-    } else {
-      return false;
     }
+    return false;
   }
 
   public toggleShareView(event: MouseEvent): void {
@@ -92,7 +91,7 @@ export class ControlsComponent {
    * Show the controls if the mouse is in the window
    */
   @HostListener('body:mouseenter')
-  showControls(): void {
+  public showControls(): void {
     this.controlsVisible = true;
     clearTimeout(this.controlsVisibleTimeout);
   }
@@ -101,7 +100,7 @@ export class ControlsComponent {
    * Hide the controls if the mouse leaves
    */
   @HostListener('body:mouseleave')
-  hideControls(): void {
+  public hideControls(): void {
     if (!this.isMobile() && !this.shareService.visible) {
       this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, this.fadeoutTime);
     }
@@ -111,7 +110,7 @@ export class ControlsComponent {
    * Listen to fullscreen changes
    */
   @HostListener('window:fullscreenchange', ['$event'])
-  fullscreenChange(): void {
+  public fullscreenChange(): void {
     this.fullscreenEnabled = !!this.document.fullscreenElement;
   }
 
@@ -127,7 +126,7 @@ export class ControlsComponent {
 
   @HostListener('document:scroll')
   @HostListener('document:keyup.escape')
-  public async e(): Promise<void> {
+  public e(): void {
     this.sliderService.closeSlider();
   }
 }

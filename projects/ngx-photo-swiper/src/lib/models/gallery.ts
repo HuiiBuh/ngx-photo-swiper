@@ -10,11 +10,11 @@ export interface IImage {
   caption?: string;
 }
 
-export type TGallery = Record<string, IImage[]> ;
+export type TGallery = Record<string, IImage[]>;
 
 export class GalleryState {
-  gallery: TGallery = {};
-  slider: Slider = new Slider();
+  public gallery: TGallery = {};
+  public slider: Slider = new Slider();
 }
 
 export interface SliderInformation {

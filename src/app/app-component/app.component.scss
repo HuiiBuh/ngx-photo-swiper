@@ -1,0 +1,45 @@
+.flex {
+  display : flex;
+}
+
+.space-between {
+  @extend .flex;
+  justify-content : space-between;
+}
+
+
+.space-around {
+  @extend .flex;
+  justify-content : space-around;
+}
+
+.v-center {
+  @extend .flex;
+  align-items : center;
+}
+
+
+.header {
+  box-shadow : 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+  padding: 0 1rem;
+}
+
+.github-icon {
+  color           : rgba(0, 0, 0, .5);
+  fill            : rgba(0, 0, 0, .5);
+  transition      : color, fill .2s;
+
+  text-decoration : none;
+
+  display         : flex;
+  align-items     : center;
+
+  &:hover {
+    color : rgba(38, 38, 38, 1);
+    fill  : rgba(38, 38, 38, 1);
+  }
+}
+
+.container{
+  padding: 1rem;
+}

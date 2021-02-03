@@ -24,7 +24,6 @@ export const changeImage = trigger('changeImage', [
   ]),
 ]);
 
-// TODO let the image stay until the animation has finished
 export const openClose = trigger('openClose', [
   state('open', style({
     opacity: 1,

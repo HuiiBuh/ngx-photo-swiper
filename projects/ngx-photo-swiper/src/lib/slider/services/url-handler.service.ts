@@ -9,17 +9,24 @@ import { LightboxStore } from '../../store/lightbox.store';
 })
 export class UrlHandlerService {
 
+  private firstPageLoad = true;
+
   constructor(
     private store: LightboxStore,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location) {
+    private location: Location,
+  ) {
 
     this.loadSliderStateFromURL();
-    this.store.onChanges<Slider>('slider').subscribe(value => this.handleSliderURL(value));
-    this.router.events.subscribe((value) => {
-      if (value instanceof NavigationEnd) {
+    this.router.events.subscribe((navigation) => {
+      if (navigation instanceof NavigationEnd) {
         this.loadSliderStateFromURL();
+
+        if (this.firstPageLoad) {
+          this.store.onChanges<Slider>('slider').subscribe(value => this.handleSliderURL(value));
+          this.firstPageLoad = false;
+        }
       }
     });
   }
@@ -45,13 +52,16 @@ export class UrlHandlerService {
   }
 
   private removeSliderStateFromURL(): void {
+    const params = {...this.route.snapshot.queryParams};
+    delete params.gridID;
+    delete params.imageIndex;
+
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {},
+      queryParams: params,
       skipLocationChange: false,
     });
   }
-
 
   private loadSliderStateFromURL(): void {
     const params: URLSearchParams = new URLSearchParams(this.location.path());

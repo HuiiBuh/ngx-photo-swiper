@@ -16,9 +16,9 @@ import { Subscription } from 'rxjs';
 import { SliderInformation } from '../../../models/gallery';
 import { HDirection, TAnimation, THorizontal } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
-import { ControlsComponent } from '../controls/controls.component';
-import { SliderService } from '../../services/slider.service';
 import { TouchMove } from '../../directives/touchmove.directive.event';
+import { SliderService } from '../../services/slider.service';
+import { ControlsComponent } from '../controls/controls.component';
 import { AnimationService } from './animation.service';
 import { changeImage, openClose } from './slider.animation';
 
@@ -33,7 +33,6 @@ import { changeImage, openClose } from './slider.animation';
   ],
 })
 export class SliderComponent implements OnInit, OnDestroy {
-
 
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   public display: 'block' | 'none' = 'none';
@@ -75,7 +74,7 @@ export class SliderComponent implements OnInit, OnDestroy {
    * Handle the horizontal swipe and hide the image
    * @param $event The horizontal swipe event
    */
-  public async horizontalSwipe($event: TouchMove): Promise<void> {
+  public horizontalSwipe($event: TouchMove): void {
     if ($event.state === 'start' || $event.state === 'move') {
       this.scheduleAnimation(() => {
         this.setTranslate($event.current.x - $event.start.x, 0);
@@ -191,12 +190,11 @@ export class SliderComponent implements OnInit, OnDestroy {
    * @param animation The animation direction
    */
   private handleAnimationRequest(animation: TAnimation): void {
-    if (animation === 'right' || animation === 'left') {
+    // tslint:disable-next-line:prefer-switch
+    if (animation === 'right' || animation === 'left' || animation === 'none') {
       this.animateImageChange(animation);
     } else if (animation === 'up' || animation === 'down') {
       this.sliderService.closeSlider();
-    } else if (animation === 'none') {
-      this.animateImageChange(animation);
     }
   }
 }

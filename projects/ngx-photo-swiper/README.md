@@ -5,7 +5,7 @@
 ![NPM package](https://img.shields.io/npm/v/ngx-photo-swiper.svg?logo=npm&logoColor=fff&label=NPM+package&color=rgb(48,%20197,%2083))
 
 A zero dependency (except Angular + Router obviously) touch and mobile friendly lightbox which supports server side
- rendering out of the box.
+rendering out of the box.
 
 ## Install
 
@@ -38,12 +38,13 @@ class AppComponent {
 }
 ```
 
-The following code is in one of you HTML templates. The lightbox needs two parameters to work: 
+The following code is in one of you HTML templates. The lightbox needs two parameters to work:
+
 + the `imageList` parameter which provides your images
 + the `lightboxID` parameter which assigns ever lightbox on the page a __unique__ ID which gets used in the URL
 + If you don't pass a reference to the `controls` no controls will appear and basically nothing in the slider works.
 + If you want some sharing options you have to pass a template reference to some HTML. I have only tested Anchor
- Elements, so these should be fine.
+  Elements, so these should be fine.
 
 ```html
 <!-- Add the gallery component and pass it you images -->
@@ -71,8 +72,8 @@ If your lightbox should have some controls you have to pass these to the photo-g
 ```
 
 If you want to change the style of the lib you can do so by importing the *ngx-photo-swiper/lightbox.scss* file. The
- following preferences are possible and have to be configured before you import the *lightbox.scss* file. Make sure
-  you import the file in your global scss file to make sure the styles get applied correctly. 
+following preferences are possible and have to be configured before you import the *lightbox.scss* file. Make sure you
+import the file in your global scss file to make sure the styles get applied correctly.
 
 ```scss
 // Default margin between the images in the gallery
@@ -99,16 +100,20 @@ $icon-png                 : "";
 ## Result
 
 #### The gallery
+
 ![Gallery](https://i.imgur.com/iWmJHAR.jpg)
 
 #### The slider with a desktop viewport
+
 ![Slider Desktop](https://i.imgur.com/vEN8BL1.jpg)
 
 #### The slider with a mobile viewport (currently transitioning)
+
 ![Slider Smartphone](https://i.imgur.com/yZVPREe.jpg)
 
 ## Credits
 
 - Inspired by [photoswipe](https://photoswipe.com)
 - The Icons are also from [photoswipe](https://photoswipe.com)
-- The [observable store](https://github.com/georgebyte/rxjs-observable-store) was copied and modified to get soma additional functionality and angular 10 support
+- The [observable store](https://github.com/georgebyte/rxjs-observable-store) was copied and modified to get soma
+  additional functionality and angular 10 support

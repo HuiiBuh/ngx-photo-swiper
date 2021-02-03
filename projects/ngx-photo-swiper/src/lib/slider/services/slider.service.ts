@@ -21,20 +21,19 @@ export class SliderService {
   /**
    * Get the caption of the current image
    */
-  get imageCaption(): string {
+  public get imageCaption(): string {
     if (this.galleryState) {
       const caption: string | undefined = this.galleryState.gallery[this.galleryState.slider.gridID]
         [this.galleryState.slider.imageIndex].caption;
       return caption ? caption : '';
-    } else {
-      return '';
     }
+    return '';
   }
 
   /**
    * Check if the slider is active
    */
-  get active(): boolean {
+  public get active(): boolean {
     if (this.galleryState) {
       return this.galleryState.slider.active;
     }
@@ -44,7 +43,7 @@ export class SliderService {
   /**
    * Get the current slider position
    */
-  get currentImageIndex(): number {
+  public get currentImageIndex(): number {
     if (this.galleryState) {
       return this.galleryState.slider.imageIndex + 1;
     }
@@ -54,7 +53,7 @@ export class SliderService {
   /**
    * Get the image count of the slider
    */
-  get sliderLength(): number {
+  public get sliderLength(): number {
     if (this.galleryState) {
       return this.galleryState.gallery[this.galleryState.slider.gridID].length;
     }
@@ -64,21 +63,21 @@ export class SliderService {
   /**
    * Go to the previous image
    */
-  previousPicture(): void {
+  public previousPicture(): void {
     this.store.moveImageIndex(-1);
   }
 
   /**
    * Go to the next image
    */
-  nextPicture(): void {
+  public nextPicture(): void {
     this.store.moveImageIndex(1);
   }
 
   /**
    * Close the slider
    */
-  closeSlider(): void {
+  public closeSlider(): void {
     // Close the fullscreen if you close the gallery
     this.document.exitFullscreen().catch(_ => null);
     this.store.closeSlider();
@@ -87,7 +86,7 @@ export class SliderService {
   /**
    * Check if the current image is the last image
    */
-  isLastImage(): boolean {
+  public isLastImage(): boolean {
     if (this.galleryState) {
       return this.galleryState.slider.imageIndex !== this.galleryState.gallery[this.galleryState.slider.gridID].length - 1;
     }
@@ -97,7 +96,7 @@ export class SliderService {
   /**
    * Check if the image is the first image
    */
-  isFirstImage(): boolean {
+  public isFirstImage(): boolean {
     if (this.galleryState) {
       return this.galleryState.slider.imageIndex !== 0;
     }

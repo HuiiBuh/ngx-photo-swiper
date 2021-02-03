@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { SliderModule } from '../slider/slider.module';
 import { GalleryComponent } from './gallery-component/gallery.component';
 
-
 @NgModule({
   declarations: [GalleryComponent],
   imports: [

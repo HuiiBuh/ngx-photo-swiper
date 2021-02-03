@@ -1,7 +1,6 @@
 import { TDirection } from '../../models/slider';
 import { ITouchMove, Point } from '../../models/touchmove';
 
-
 export class TouchMove {
 
   private static readonly swipeThreshold = 60;
@@ -11,16 +10,15 @@ export class TouchMove {
   private readonly history!: Point[];
   private touchDirection!: 'y' | 'x';
 
-  static create(json: ITouchMove): TouchMove {
+  public static create(json: ITouchMove): TouchMove {
     return Object.assign(new TouchMove(), json);
   }
 
   public getDirection(): TDirection {
     if (this.touchDirection === 'x') {
       return this.getHorizontalDirection();
-    } else {
-      return this.getVerticalDirection();
     }
+    return this.getVerticalDirection();
   }
 
   private getHorizontalDirection(): TDirection {

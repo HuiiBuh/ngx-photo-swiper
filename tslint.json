@@ -1,5 +1,5 @@
 {
-  "extends": "tslint:recommended",
+  "extends": "ts-config",
   "rules": {
     "one-line": [true],
     "align": {
@@ -8,6 +8,12 @@
         "statements"
       ]
     },
+    "member-access": {
+      "options": ["check-accessor", "check-parameter-property"]
+    },
+    "interface-name": false,
+    "no-implicit-dependencies": false,
+    "newline-before-return": false,
     "array-type": false,
     "arrow-return-shorthand": true,
     "curly": false,
