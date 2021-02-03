@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Inject, Input, TemplateRef } from '@angular/core';
+import { Component, HostListener, Inject, Input, NgZone, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
 import { SliderService } from '../../services/slider.service';
 import { ShareService } from '../share/share.service';
 import { AnimationService } from '../slider/animation.service';
@@ -24,7 +24,7 @@ import { AnimationService } from '../slider/animation.service';
     ]),
   ],
 })
-export class ControlsComponent {
+export class ControlsComponent implements OnInit, OnDestroy {
 
   @Input() public position = true;
   // TODO implement zoom
@@ -34,7 +34,7 @@ export class ControlsComponent {
   @Input() public close = true;
   @Input() public arrows = true;
   @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
-  @Input() public fadeoutTime: number = 1000;
+  @Input() public fadeoutTime: number = 3000;
   @Input() public showOnMobile: boolean = true;
 
   // Should the controls be visible
@@ -43,14 +43,37 @@ export class ControlsComponent {
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
   public displayState: string = 'block';
+
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
+  private mouseMoveListenerSubscription: (() => void) | undefined;
 
   constructor(
     public sliderService: SliderService,
-    private shareService: ShareService,
+    public shareService: ShareService,
     private animationService: AnimationService,
+    private ngZone: NgZone,
+    private renderer2: Renderer2,
     @Inject(DOCUMENT) private document: Document) {
+  }
+
+  /**
+   * Add a listener which listens for mouse move events and hides the controls if the mouse stands still
+   */
+  public ngOnInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.mouseMoveListenerSubscription = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
+    });
+    this.handleComponentVisibility();
+  }
+
+  /**
+   * Remove the mouse listener
+   */
+  public ngOnDestroy(): void {
+    if (this.mouseMoveListenerSubscription) {
+      this.mouseMoveListenerSubscription();
+    }
   }
 
   /**
@@ -65,13 +88,6 @@ export class ControlsComponent {
   }
 
   /**
-   * Close the slider after exiting the fullscreen
-   */
-  public closeSlider(): void {
-    this.sliderService.closeSlider();
-  }
-
-  /**
    * Check if the browser is a mobile browser
    */
   public isMobile(): boolean {
@@ -79,31 +95,6 @@ export class ControlsComponent {
       return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(this.document.defaultView.navigator.userAgent));
     }
     return false;
-  }
-
-  public toggleShareView(event: MouseEvent): void {
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    this.shareService.toggle();
-  }
-
-  /**
-   * Show the controls if the mouse is in the window
-   */
-  @HostListener('body:mouseenter')
-  public showControls(): void {
-    this.controlsVisible = true;
-    clearTimeout(this.controlsVisibleTimeout);
-  }
-
-  /**
-   * Hide the controls if the mouse leaves
-   */
-  @HostListener('body:mouseleave')
-  public hideControls(): void {
-    if (!this.isMobile() && !this.shareService.visible) {
-      this.controlsVisibleTimeout = setTimeout(() => this.controlsVisible = false, this.fadeoutTime);
-    }
   }
 
   /**
@@ -129,4 +120,27 @@ export class ControlsComponent {
   public e(): void {
     this.sliderService.closeSlider();
   }
+
+  /**
+   * Handle the visibility. This method gets called every time the user moves his mouse
+   */
+  private handleComponentVisibility(): void {
+    // Check if the controls are not visible and if so set them to visible
+    if (!this.controlsVisible) {
+      this.ngZone.run(() => this.controlsVisible = true);
+    }
+
+    // Clear the fade out timeout
+    clearTimeout(this.controlsVisibleTimeout);
+
+    // Hide the controls after a certain amount of time
+    if (!this.isMobile() && !this.shareService.visible) {
+      this.controlsVisibleTimeout = setTimeout(() => {
+        if (this.controlsVisible) {
+          this.ngZone.run(() => this.controlsVisible = false);
+        }
+      }, this.fadeoutTime);
+    }
+  }
+
 }

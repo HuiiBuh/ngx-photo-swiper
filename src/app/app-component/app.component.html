@@ -16,10 +16,11 @@
     <li><a [routerLink]="'/'" [queryParams]="{test: 'test'}">URL Parameter</a></li>
   </ul>
 
-  <photo-gallery-component [controls]="controlsComponent" [imageList]="data" lightboxID="test"></photo-gallery-component>
+  <photo-gallery-component [controls]="controlsComponent" [imageList]="data"
+                            lightboxID="test"></photo-gallery-component>
 
   <ng-template #controlsComponent>
-    <photo-controls [fadeoutTime]="1000" [shareOptionList]="shareOptions"></photo-controls>
+    <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>
   </ng-template>
 
   <ng-template #shareOptions>

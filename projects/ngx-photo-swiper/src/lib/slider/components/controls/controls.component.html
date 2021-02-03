@@ -8,12 +8,12 @@
     <button (click)="toggleFullscreen()" *ngIf="fullscreen"
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-    <button (click)="toggleShareView($event)" *ngIf="share && shareOptionList"
+    <button (click)="shareService.toggle()" *ngIf="share && shareOptionList"
             class="icon-social-share" style="z-index: 100"></button>
 
     <photo-share [shareOptionList]="shareOptionList"></photo-share>
 
-    <button (click)="closeSlider()" *ngIf="close" class="icon-close"></button>
+    <button (click)="sliderService.closeSlider()" *ngIf="close" class="icon-close"></button>
 
   </div>
 
