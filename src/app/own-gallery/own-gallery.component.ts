@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { IImage } from '../../../projects/ngx-photo-swiper/src/lib/models/gallery';
+import { testData } from '../app-component/test.data';
 
 @Component({
   selector: 'app-own-gallery',
@@ -6,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./own-gallery.component.scss'],
 })
 export class OwnGalleryComponent {
-
+  public data: IImage[] = testData;
 }

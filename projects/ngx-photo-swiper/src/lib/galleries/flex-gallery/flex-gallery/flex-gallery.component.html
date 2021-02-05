@@ -1,0 +1,12 @@
+<div [style]="(sliderActive | async) ? 'pointer-events: none':''" class="lightbox-grid">
+
+  <ul>
+    <li *ngFor="let image of imageList | async; index as i">
+
+      <img (click)="loadSlider(i)" [src]="image.imageSRC" alt="Image" loading="lazy">
+    </li>
+    <!--  Prevent stretching  -->
+    <li></li>
+  </ul>
+
+</div>

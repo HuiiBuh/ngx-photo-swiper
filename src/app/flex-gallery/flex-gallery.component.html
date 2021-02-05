@@ -1,5 +1,4 @@
-<photo-gallery-component [controls]="controlsComponent" [imageList]="data"
-                         lightboxID="test"></photo-gallery-component>
+<photo-gallery [lightboxID]="'flex'" [imageList]="data" galleryType="flex" [controls]="controlsComponent"></photo-gallery>
 
 <ng-template #controlsComponent>
   <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>

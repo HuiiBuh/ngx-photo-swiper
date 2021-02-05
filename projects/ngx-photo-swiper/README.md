@@ -50,24 +50,24 @@ The following code is in one of you HTML templates. The lightbox needs two param
 <!-- Add the gallery component and pass it you images -->
 <!-- Every lightbox has to have a id, so the currently open gallery can be saved in the url -->
 <!-- The id should be the same each time you reload the page -->
-<photo-gallery-component [imageList]="imageList" lightboxID="test" [controls]="controlsComponent"></photo-gallery-component>
+<photo-flex-gallery [imageList]="imageList" lightboxID="test" [controls]="controlsComponent"></photo-flex-gallery>
 
 If your lightbox should have some controls you have to pass these to the photo-gallery-component
 <ng-template #controlsComponent>
-  <!-- In addition you can configure the fadeoutTime, and which control should be displayed -->
-  <!-- showOnMobile controls whether the controls should be displayed on mobile or not -->
-  <!-- To get some custom share options pass these to the photo-controls -->
-  <photo-controls 
-    [fadeoutTime]="1000" [fullscreen]="true" [close]="true" [arrows]="true" [showOnMobile]="true"
-    [shareOptionList]="shareOptions"></photo-controls>
+    <!-- In addition you can configure the fadeoutTime, and which control should be displayed -->
+    <!-- showOnMobile controls whether the controls should be displayed on mobile or not -->
+    <!-- To get some custom share options pass these to the photo-controls -->
+    <photo-controls
+            [fadeoutTime]="1000" [fullscreen]="true" [close]="true" [arrows]="true" [showOnMobile]="true"
+            [shareOptionList]="shareOptions"></photo-controls>
 </ng-template>
 
 <!-- If you have Anchor elements in you ng-template the styling will look nice -->
 <!-- I will not guarantee the styling for any other element type -->
 <ng-template #shareOptions>
-  <a href="https://google.com">Google</a>
-  <a href="https://google.com">WhatsApp</a>
-  <a href="https://google.com">Instagram</a>
+    <a href="https://google.com">Google</a>
+    <a href="https://google.com">WhatsApp</a>
+    <a href="https://google.com">Instagram</a>
 </ng-template>
 ```
 

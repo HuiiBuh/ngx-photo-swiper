@@ -6,7 +6,7 @@ import { LightboxStore } from '../../store/lightbox.store';
 @Directive({
   selector: '[photoSlider]',
 })
-export class PhotoSliderDirective implements OnInit, OnDestroy {
+export class SliderDirective implements OnInit, OnDestroy {
 
   @Input() public image: IImage | undefined;
   @Input() public lightboxID: string | undefined;

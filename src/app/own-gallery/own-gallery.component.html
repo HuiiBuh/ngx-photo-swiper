@@ -1,1 +1,13 @@
-<p>own-gallery works!</p>
+<div class="image-div" *ngFor="let image of data; index as i">
+  <img [src]="image.imageSRC" alt="Image" loading="lazy" photoSlider [image]="image" [lightboxID]="'hello'">
+</div>
+
+<ng-template #controlsComponent>
+  <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>
+</ng-template>
+
+<ng-template #shareOptions>
+  <a href="https://google.com">Google</a>
+  <a href="https://google.com">WhatsApp</a>
+  <a href="https://google.com">Instagram</a>
+</ng-template>

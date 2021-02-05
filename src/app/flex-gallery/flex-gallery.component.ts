@@ -4,9 +4,9 @@ import { testData } from '../app-component/test.data';
 
 @Component({
   selector: 'app-gallery',
-  templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.scss'],
+  templateUrl: './flex-gallery.component.html',
+  styleUrls: ['./flex-gallery.component.scss'],
 })
-export class GalleryComponent {
+export class FlexGalleryComponent {
   public data: IImage[] = testData;
 }
