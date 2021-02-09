@@ -8,6 +8,11 @@
         "statements"
       ]
     },
+    "ordered-imports": {
+      "options": {
+        "import-sources-order": "case-insensitive"
+      }
+    },
     "member-access": {
       "options": ["check-accessor", "check-parameter-property"]
     },

@@ -4,11 +4,11 @@ import { ControlsComponent } from '../slider/components/controls/controls.compon
 import { LightboxStore } from '../store/lightbox.store';
 
 @Component({
-  selector: 'photo-gallery[lightboxID][imageList]',
-  templateUrl: './gallery.component.html',
-  styleUrls: ['./gallery.component.scss'],
+  selector: 'ngx-lightbox[lightboxID][imageList]',
+  templateUrl: './lightbox.component.html',
+  styleUrls: ['./lightbox.component.scss'],
 })
-export class GalleryComponent {
+export class LightboxComponent {
 
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public lightboxID!: string;

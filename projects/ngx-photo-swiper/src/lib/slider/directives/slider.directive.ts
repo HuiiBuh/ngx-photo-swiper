@@ -1,5 +1,4 @@
 import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { IImage } from '../../models/gallery';
 import { NgxLightboxService } from '../../ngx-lightbox.service';
 import { LightboxStore } from '../../store/lightbox.store';
 
@@ -8,10 +7,10 @@ import { LightboxStore } from '../../store/lightbox.store';
 })
 export class SliderDirective implements OnInit, OnDestroy {
 
-  @Input() public image: IImage | undefined;
+  @Input() public imageIndex: number | undefined;
   @Input() public lightboxID: string | undefined;
   private clickSubscription: (() => void) | undefined;
-  private imageIndex: number | undefined;
+  private enterSubscription: (() => void) | undefined;
 
   constructor(
     private element: ElementRef<HTMLElement>,
@@ -22,13 +21,17 @@ export class SliderDirective implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    if (!this.image || !this.lightboxID) throw new Error('You have to pass the lightboxID, and the image to the photoSlider directive');
-    this.imageIndex = this.store.addImageToGallery(this.image, this.lightboxID);
+    if (!this.imageIndex || !this.lightboxID) {
+      throw new Error('You have to pass the lightboxID, and the imageIndex to the photoSlider' +
+        ' directive');
+    }
     this.clickSubscription = this.renderer2.listen(this.element.nativeElement, 'click', this.showSlider.bind(this));
+    this.enterSubscription = this.renderer2.listen(this.element.nativeElement, 'keypress.enter', this.showSlider.bind(this));
   }
 
   public ngOnDestroy(): void {
     if (this.clickSubscription) this.clickSubscription();
+    if (this.enterSubscription) this.enterSubscription();
   }
 
   private showSlider(): void {

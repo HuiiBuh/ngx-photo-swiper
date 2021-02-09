@@ -1,5 +1,5 @@
 <div class="image-div" *ngFor="let image of data; index as i">
-  <img [src]="image.imageSRC" alt="Image" loading="lazy" photoSlider [image]="image" [lightboxID]="'hello'">
+  <img [src]="image.imageSRC" alt="Image" loading="lazy" photoSlider [imageIndex]="i" [lightboxID]="'hello'">
 </div>
 
 <ng-template #controlsComponent>
