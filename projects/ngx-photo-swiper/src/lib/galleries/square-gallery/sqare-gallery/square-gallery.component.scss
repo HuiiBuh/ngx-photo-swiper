@@ -1,0 +1,53 @@
+$very-large  : ("width": 2000px, "columns": 7, "horizontal-gap": 25px, "vertical-gap": 25px);
+$large       : ("width": 1500px, "columns": 6, "horizontal-gap": 20px, "vertical-gap": 20px);
+$medium      : ("width": 1000px, "columns": 5, "horizontal-gap": 15px, "vertical-gap": 15px);
+$small       : ("width": 0500px, "columns": 4, "horizontal-gap": 05px, "vertical-gap": 05px);
+$very-small  : ("width": 0000px, "columns": 3, "horizontal-gap": 02px, "vertical-gap": 02px);
+$breakpoints : $very-small $small $medium $large $very-large;
+
+@each $size in $breakpoints {
+  $columns        : map-get($size, "columns");
+  $width          : map-get($size, "width");
+  $horizontal-gap : map-get($size, "horizontal-gap");
+  $vertical-gap   : map-get($size, "vertical-gap");
+  $column-percentage    : (100 / $columns);
+
+  @media screen and (min-width : $width) {
+    .square-wrapper {
+      grid-template-columns : repeat($columns, calc(#{$column-percentage}% - #{$horizontal-gap}));
+      column-gap            : $horizontal-gap;
+      row-gap               : $vertical-gap;
+    }
+  }
+}
+
+.square-wrapper {
+  display         : grid;
+  width           : 100%;
+  justify-content : space-between;
+  justify-items   : center;
+}
+
+.square-image-wrapper {
+  overflow        : hidden;
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+  cursor          : pointer;
+  padding-bottom  : 100%;
+  width           : 100%;
+  position        : relative;
+}
+
+.fill-square {
+  top              : 0;
+  height           : 100%;
+  position         : absolute;
+}
+
+img {
+  object-fit : cover;
+  height     : 100%;
+  width      : 100%;
+  flex-grow  : 0;
+}

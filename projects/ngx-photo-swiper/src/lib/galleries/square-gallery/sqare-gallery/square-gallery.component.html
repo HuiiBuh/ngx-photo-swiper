@@ -1,1 +1,7 @@
-<p>sqare-gallery works!</p>
+<div class="square-wrapper">
+  <div class="square-image-wrapper" *ngFor="let image of imageList | async; index as i">
+    <div class="fill-square">
+    <img [src]="image.imageSRC" [alt]="image.caption" photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
+    </div>
+  </div>
+</div>
