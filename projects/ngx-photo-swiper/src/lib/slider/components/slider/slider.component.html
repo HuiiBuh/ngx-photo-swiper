@@ -1,7 +1,6 @@
 <div (@openClose.done)="afterOpenClose()" (@openClose.start)="display = 'block'"
      (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
-     *ngIf="sliderState"
      [@openClose]="sliderState.slider.active ? 'open': 'close'"
      [ngStyle]="{display: display}"
      class="lightbox-slider-container"
@@ -24,7 +23,7 @@
 
   </div>
 
-  <ng-template [ngIf]="controls">
+  <ng-template [ngIf]="controls && display === 'block'">
     <ng-container *ngTemplateOutlet="controls"></ng-container>
   </ng-template>
 

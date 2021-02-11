@@ -19,9 +19,9 @@
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
 
-    <button (click)="l()" *ngIf="sliderService.isFirstImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
+    <button (click)="left()" *ngIf="sliderService.isFirstImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
             class="icon-left left"></button>
-    <button (click)="r()" *ngIf="sliderService.isLastImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
+    <button (click)="right()" *ngIf="sliderService.isLastImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
             class="icon-right right"></button>
 
   </ng-template>

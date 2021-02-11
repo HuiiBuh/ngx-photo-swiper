@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef } from '@angular/core';
-import { IImage } from '../models/gallery';
-import { ControlsComponent } from '../slider/components/controls/controls.component';
-import { LightboxStore } from '../store/lightbox.store';
+import { IImage } from '../../models/gallery';
+import { ControlsComponent } from '../../slider/components/controls/controls.component';
+import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
   selector: 'ngx-lightbox[lightboxID][imageList]',

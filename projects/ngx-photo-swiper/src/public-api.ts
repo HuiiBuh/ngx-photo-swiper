@@ -4,7 +4,7 @@
 
 // Flex Gallery
 export { FlexGalleryModule } from './lib/galleries/flex-gallery/flex-gallery.module';
-export { FlexGalleryComponent } from './lib/galleries/flex-gallery/flex-gallery/flex-gallery.component';
+export { FlexGalleryComponent } from './lib/components/flex-gallery/flex-gallery.component';
 
 // Slider
 export { SliderModule } from './lib/slider/slider.module';

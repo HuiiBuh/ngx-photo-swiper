@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT } from '@angular/common';
-import { Component, HostListener, Inject, Input, NgZone, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
+import { Component, Inject, Input, NgZone, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
 import { AnimationService } from '../../services/animation.service';
 import { ShareService } from '../../services/share.service';
 import { SliderService } from '../../services/slider.service';
@@ -46,7 +46,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
-  private mouseMoveListenerSubscription: (() => void) | undefined;
+  private listeners: (() => void)[] = [];
 
   constructor(
     public sliderService: SliderService,
@@ -62,18 +62,19 @@ export class ControlsComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.mouseMoveListenerSubscription = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
+      const listener = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
+      this.listeners.push(listener);
     });
     this.handleComponentVisibility();
+    this.addListeners();
   }
 
   /**
    * Remove the mouse listener
    */
   public ngOnDestroy(): void {
-    if (this.mouseMoveListenerSubscription) {
-      this.mouseMoveListenerSubscription();
-    }
+    this.listeners.forEach(l => l());
+    this.listeners = [];
   }
 
   /**
@@ -97,28 +98,40 @@ export class ControlsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  /**
-   * Listen to fullscreen changes
-   */
-  @HostListener('window:fullscreenchange', ['$event'])
-  public fullscreenChange(): void {
-    this.fullscreenEnabled = !!this.document.fullscreenElement;
-  }
-
-  @HostListener('document:keyup.arrowRight')
-  public r(): void {
-    this.animationService.animateTo('right');
-  }
-
-  @HostListener('document:keyup.arrowLeft')
-  public l(): void {
+  public left(): void {
     this.animationService.animateTo('left');
   }
 
-  @HostListener('document:scroll')
-  @HostListener('document:keyup.escape')
-  public e(): void {
-    this.sliderService.closeSlider();
+  public right(): void {
+    this.animationService.animateTo('right');
+  }
+
+  public closeSlider(): void {
+    this.animationService.animateTo('down');
+  }
+
+  /**
+   * Add the listeners for left, right, escape and scroll
+   */
+  private addListeners(): void {
+    const listener1 = this.renderer2.listen(document, 'keyup', (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          this.left();
+          break;
+        case 'ArrowRight':
+          this.right();
+          break;
+        case 'Escape':
+          this.closeSlider();
+          break;
+        default:
+          console.log('');
+      }
+    });
+    const listener2 = this.renderer2.listen(document, 'scroll', () => this.animationService.animateTo('down'));
+    const listener3 = this.renderer2.listen(document, 'fullscreenchange', () => this.fullscreenEnabled = !!this.document.fullscreenElement);
+    this.listeners.push(listener1, listener2, listener3);
   }
 
   /**

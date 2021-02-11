@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IImage } from '../../../models/gallery';
-import { NgxLightboxService } from '../../../ngx-lightbox.service';
-import { LightboxStore } from '../../../store/lightbox.store';
+import { IImage } from '../../models/gallery';
+import { NgxLightboxService } from '../../ngx-lightbox.service';
+import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
-  selector: 'photo-square-gallery[lightboxID]',
-  templateUrl: './square-gallery.component.html',
-  styleUrls: ['./square-gallery.component.scss'],
+  selector: 'photo-flex-gallery[lightboxID]',
+  templateUrl: 'flex-gallery.component.html',
+  styleUrls: ['flex-gallery.component.scss'],
 })
-export class SquareGalleryComponent implements OnInit {
+export class FlexGalleryComponent implements OnInit {
 
   @Input() public lightboxID!: string;
   public imageList!: Observable<IImage[]>;
