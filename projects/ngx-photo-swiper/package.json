@@ -28,5 +28,6 @@
     "@angular/core": ">10"
   },
   "dependencies": {
+    "@nguniversal/express-engine": "^11.1.2"
   }
 }

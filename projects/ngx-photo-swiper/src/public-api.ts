@@ -2,9 +2,9 @@
  * Public API Surface of ngx-photo-swiper
  */
 
-// Flex Gallery
-export { FlexGalleryModule } from './lib/galleries/flex-gallery/flex-gallery.module';
+// Galleries
 export { FlexGalleryComponent } from './lib/components/flex-gallery/flex-gallery.component';
+export { SquareGalleryComponent } from './lib/components/square-gallery/square-gallery.component';
 
 // Slider
 export { SliderModule } from './lib/slider/slider.module';

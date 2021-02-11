@@ -11,7 +11,7 @@ import { LightboxStore } from './store/lightbox.store';
   declarations: [LightboxComponent, FlexGalleryComponent, SquareGalleryComponent],
   imports: [BrowserModule, SliderModule, BrowserAnimationsModule],
   providers: [LightboxStore],
-  exports: [SliderModule, LightboxComponent],
+  exports: [SliderModule, LightboxComponent, FlexGalleryComponent, SquareGalleryComponent],
 })
 export class LightboxModule {
 }

@@ -16,7 +16,7 @@ import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component
     SquareGalleryComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     LightboxModule,
   ],
