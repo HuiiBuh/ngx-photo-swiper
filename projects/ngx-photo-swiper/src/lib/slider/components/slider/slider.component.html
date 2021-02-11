@@ -10,11 +10,10 @@
   <div #sliderOverlay
        class="background-overlay"
   ></div>
-  <div #slider (@changeImage.done)="changeImage()"
+  <div (@changeImage.done)="changeImage()"
        (@changeImage.start)="hAnimationInProgress = true"
        [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
-       class="slider"
-  >
+       class="slider" #slider>
 
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
                         [sliderImages]="sliderState.imageRange"></photo-slider-image>

@@ -17,9 +17,9 @@ import { SliderInformation } from '../../../models/gallery';
 import { HDirection, TAnimation, THorizontal } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
+import { AnimationService } from '../../services/animation.service';
 import { SliderService } from '../../services/slider.service';
 import { ControlsComponent } from '../controls/controls.component';
-import { AnimationService } from './animation.service';
 import { changeImage, openClose } from './slider.animation';
 
 // @dynamic
@@ -59,7 +59,7 @@ export class SliderComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.animationServiceSubscription = this.animationService.animateTo$.subscribe(this.handleAnimationRequest.bind(this));
-    this.sliderStateSubscription = this.store.getDisplayedImages().subscribe(v => this.sliderState = v);
+    this.sliderStateSubscription = this.store.sliderImages$.subscribe(v => this.sliderState = v);
   }
 
   /**

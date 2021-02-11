@@ -1,7 +1,8 @@
 <div class="square-wrapper">
   <div class="square-image-wrapper" *ngFor="let image of imageList | async; index as i">
     <div class="fill-square">
-    <img [src]="image.imageSRC" [alt]="image.caption" photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
+    <img [src]="image.imageSRC" [alt]="image.caption" photoSlider [imageIndex]="i" [lightboxID]="lightboxID"
+         loading="lazy">
     </div>
   </div>
 </div>

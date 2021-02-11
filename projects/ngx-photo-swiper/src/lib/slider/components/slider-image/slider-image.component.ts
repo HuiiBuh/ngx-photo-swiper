@@ -1,16 +1,15 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { IImageIndex } from '../../../models/gallery';
-import { AnimationService } from '../slider/animation.service';
+import { AnimationService } from '../../services/animation.service';
 
 @Component({
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
   styleUrls: ['./slider-image.component.scss'],
 })
-export class SliderImageComponent implements OnChanges {
+export class SliderImageComponent implements OnChanges, OnDestroy {
 
   private static GLOBAL_ID = 0;
-
   public currentImage: IImageIndex | null = null;
 
   private readonly id: number;
@@ -19,7 +18,11 @@ export class SliderImageComponent implements OnChanges {
 
   constructor(private animationService: AnimationService) {
     this.id = SliderImageComponent.GLOBAL_ID;
-    ++SliderImageComponent.GLOBAL_ID;
+    SliderImageComponent.GLOBAL_ID += 1;
+  }
+
+  public ngOnDestroy(): void {
+    SliderImageComponent.GLOBAL_ID -= 1;
   }
 
   /**
@@ -27,6 +30,7 @@ export class SliderImageComponent implements OnChanges {
    */
   public getImageIndex(): number {
     let returnIndex = 0;
+
     if (this.currentImage) {
       returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
     }

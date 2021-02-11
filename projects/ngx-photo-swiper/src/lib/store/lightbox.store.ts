@@ -9,6 +9,49 @@ export class LightboxStore extends Store<GalleryState> {
     super(new GalleryState());
   }
 
+  public get sliderImages$(): BehaviorSubject<SliderInformation> {
+
+    const subject = new BehaviorSubject<SliderInformation>(
+      {
+        imageRange: new Array(3),
+        gallerySize: 0,
+        slider: new Slider(),
+      },
+    );
+
+    this.onChanges<Slider>('slider').subscribe((slider: Slider) => {
+      const imageList: (IImageIndex | null)[] = new Array(3);
+
+      let gallery: IImage[] = [];
+
+      if (slider.active) {
+        gallery = this.state.gallery[slider.lightboxID];
+
+        for (const i of [-1, 0, 1]) {
+          const image = gallery[slider.imageIndex + i];
+          if (image) {
+            imageList[i + 1] = {
+              ...gallery[slider.imageIndex + i],
+              index: slider.imageIndex + i,
+            };
+          } else {
+            imageList[i + 1] = null;
+          }
+        }
+      }
+
+      console.log(imageList);
+
+      subject.next({
+        imageRange: imageList,
+        gallerySize: gallery.length,
+        slider: this.state.slider,
+      });
+    });
+
+    return subject;
+  }
+
   /**
    * Add a gallery to the store
    * @param gallery The gallery which should be added
@@ -18,23 +61,6 @@ export class LightboxStore extends Store<GalleryState> {
       ...this.state.gallery,
       ...gallery,
     }, 'gallery');
-  }
-
-  /**
-   * Add an image to an gallery
-   * @param image The image which should be added
-   * @param galleryID The gallery id
-   * @returns The index the image was added to
-   */
-  public addImageToGallery(image: IImage, galleryID: string): number {
-    if (!(galleryID in this.state.gallery)) {
-      this.addGallery({[galleryID]: []});
-    }
-    this.patchState<IImage[]>(
-      [...this.state.gallery[galleryID], image],
-      'gallery', galleryID,
-    );
-    return this.state.gallery[galleryID].length - 1;
   }
 
   /**
@@ -71,49 +97,6 @@ export class LightboxStore extends Store<GalleryState> {
       ...this.state.slider,
       imageIndex: newPosition,
     }, 'slider');
-  }
-
-  /**
-   * Get the important slider data
-   */
-  public getDisplayedImages(): BehaviorSubject<SliderInformation> {
-
-    const subject = new BehaviorSubject<SliderInformation>(
-      {
-        imageRange: new Array(3),
-        gallerySize: 0,
-        slider: new Slider(),
-      },
-    );
-
-    this.onChanges<Slider>('slider').subscribe((slider: Slider) => {
-      const imageList: (IImageIndex | null)[] = new Array(3);
-
-      let gallery: IImage[] = [];
-
-      if (slider.active) {
-        gallery = this.state.gallery[slider.lightboxID];
-
-        for (const i of [-1, 0, 1]) {
-          const image = gallery[slider.imageIndex + i];
-          if (image) {
-            imageList[i + 1] = {
-              ...gallery[slider.imageIndex + i],
-              index: slider.imageIndex + i,
-            };
-          } else {
-            imageList[i + 1] = null;
-          }
-        }
-      }
-      subject.next({
-        imageRange: imageList,
-        gallerySize: gallery.length,
-        slider: this.state.slider,
-      });
-    });
-
-    return subject;
   }
 
 }

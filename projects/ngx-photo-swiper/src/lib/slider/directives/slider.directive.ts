@@ -1,9 +1,8 @@
 import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { NgxLightboxService } from '../../ngx-lightbox.service';
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Directive({
-  selector: '[photoSlider]',
+  selector: '[photoSlider][imageIndex][lightboxID]',
 })
 export class SliderDirective implements OnInit, OnDestroy {
 
@@ -16,12 +15,11 @@ export class SliderDirective implements OnInit, OnDestroy {
     private element: ElementRef<HTMLElement>,
     private store: LightboxStore,
     private renderer2: Renderer2,
-    private ngxLightboxService: NgxLightboxService,
   ) {
   }
 
   public ngOnInit(): void {
-    if (!this.imageIndex || !this.lightboxID) {
+    if (this.imageIndex === undefined || !this.lightboxID) {
       throw new Error('You have to pass the lightboxID, and the imageIndex to the photoSlider' +
         ' directive');
     }
@@ -36,6 +34,6 @@ export class SliderDirective implements OnInit, OnDestroy {
 
   private showSlider(): void {
     // tslint:disable-next-line:no-non-null-assertion
-    this.ngxLightboxService.loadIndexInSlider(this.imageIndex!, this.lightboxID!);
+    this.store.updateSlider({imageIndex: this.imageIndex!, lightboxID: this.lightboxID!, active: true});
   }
 }

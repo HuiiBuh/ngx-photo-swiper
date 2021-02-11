@@ -1,5 +1,7 @@
+<ngx-lightbox lightboxID="own" [imageList]="data" galleryType="own" [controls]="controlsComponent"></ngx-lightbox>
+
 <div class="image-div" *ngFor="let image of data; index as i">
-  <img [src]="image.imageSRC" alt="Image" loading="lazy" photoSlider [imageIndex]="i" [lightboxID]="'hello'">
+  <img [src]="image.imageSRC" alt="Image" loading="lazy" photoSlider [imageIndex]="i" lightboxID="own">
 </div>
 
 <ng-template #controlsComponent>

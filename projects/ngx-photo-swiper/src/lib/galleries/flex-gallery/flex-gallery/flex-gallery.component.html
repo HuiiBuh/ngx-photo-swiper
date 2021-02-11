@@ -2,8 +2,8 @@
 
   <ul>
     <li *ngFor="let image of imageList | async; index as i">
-
-      <img (click)="loadSlider(i)" [src]="image.imageSRC" alt="Image" loading="lazy">
+      <img [src]="image.imageSRC" [alt]="image.caption" loading="lazy"
+           photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
     </li>
     <!--  Prevent stretching  -->
     <li></li>

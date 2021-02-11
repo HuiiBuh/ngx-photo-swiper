@@ -6,12 +6,14 @@ import { AppComponent } from './app-component/app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FlexGalleryComponent } from './flex-gallery/flex-gallery.component';
 import { OwnGalleryComponent } from './own-gallery/own-gallery.component';
+import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FlexGalleryComponent,
     OwnGalleryComponent,
+    SquareGalleryComponent,
   ],
   imports: [
     BrowserModule,

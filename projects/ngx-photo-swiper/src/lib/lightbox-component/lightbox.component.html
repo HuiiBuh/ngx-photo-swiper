@@ -1,4 +1,4 @@
-<photo-square-gallery *ngIf="galleryType === 'square'"></photo-square-gallery>
+<photo-square-gallery *ngIf="galleryType === 'square'" [lightboxID]="lightboxID"></photo-square-gallery>
 <photo-flex-gallery *ngIf="galleryType === 'flex'" [lightboxID]="lightboxID"></photo-flex-gallery>
 
 <photo-slider [controls]="controls"></photo-slider>

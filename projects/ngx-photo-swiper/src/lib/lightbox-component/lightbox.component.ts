@@ -12,7 +12,7 @@ export class LightboxComponent {
 
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public lightboxID!: string;
-  @Input() public galleryType: 'flex' | 'square' | 'own' = 'flex';
+  @Input() public galleryType: 'flex' | 'square' | 'own' = 'own';
 
   constructor(private store: LightboxStore) {
   }

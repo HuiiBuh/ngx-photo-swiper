@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { TAnimation } from '../../../models/slider';
+import { TAnimation } from '../../models/slider';
 
 @Injectable({
   providedIn: 'root',
