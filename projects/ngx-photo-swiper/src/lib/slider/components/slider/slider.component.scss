@@ -22,14 +22,13 @@
   will-change           : transition;
   display               : inline-grid;
 
-  grid-template-columns : repeat(3, 100vw);
+  grid-template-columns : repeat(3, 110vw);
   grid-template-areas   : "first second third";
-  column-gap            : 30px;
 
   transform             : translateY(0);
 
   position              : absolute;
-  left                  : calc(-100vw - 30px);
+  left                  : -115vw;
   top                   : 0;
   bottom                : 0;
 }
