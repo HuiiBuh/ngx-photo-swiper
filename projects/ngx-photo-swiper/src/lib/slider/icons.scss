@@ -15,12 +15,7 @@
   &:before {
     content         : "";
 
-    // Server svg for devices with a high pixel density
-    @media (-webkit-min-device-pixel-ratio : 1.25), (min-resolution : 120dpi) {
-      background : var(--lib-icons-svg);
-    }
-
-    background      : var(--lib-icons-png);
+    background      : var(--lib-icons);
 
     background-size : 264px 88px;
     width           : 44px;

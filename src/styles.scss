@@ -1,5 +1,7 @@
 @import "projects/ngx-photo-swiper/lightbox.scss";
 
+@include lightbox-styles();
+
 body {
   font-family : ProximaNova, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   margin      : 0;

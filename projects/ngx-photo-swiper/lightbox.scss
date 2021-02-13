@@ -1,25 +1,72 @@
-@import "lightbox-config.scss";
+// Lightbox
+$-backdrop-color         : #000;
+$-overlay-color          : rgba(0, 0, 0, 0.3);
+$-arrow-background-color : rgba(0, 0, 0, 0.3);
+$-overlay-text-color     : #fff;
+$-arrow-click-radius     : ("width": 60px, "height": 80px);
+$-icons                  : "data:image/svg+xml,%3Csvg width='264' height='88' viewBox='0 0 264 88' xmlns='http://www.w3.org/2000/svg'%3E%3Ctitle%3Edefault-skin 2%3C/title%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg%3E%3Cpath d='M67.002 59.5v3.768c-6.307.84-9.184 5.75-10.002 9.732 2.22-2.83 5.564-5.098 10.002-5.098V71.5L73 65.585 67.002 59.5z' id='Shape' fill='%23fff'/%3E%3Cg fill='%23fff'%3E%3Cpath d='M13 29v-5h2v3h3v2h-5zM13 15h5v2h-3v3h-2v-5zM31 15v5h-2v-3h-3v-2h5zM31 29h-5v-2h3v-3h2v5z' id='Shape'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Cpath d='M62 24v5h-2v-3h-3v-2h5zM62 20h-5v-2h3v-3h2v5zM70 20v-5h2v3h3v2h-5zM70 24h5v2h-3v3h-2v-5z'/%3E%3C/g%3E%3Cpath d='M20.586 66l-5.656-5.656 1.414-1.414L22 64.586l5.656-5.656 1.414 1.414L23.414 66l5.656 5.656-1.414 1.414L22 67.414l-5.656 5.656-1.414-1.414L20.586 66z' fill='%23fff'/%3E%3Cpath d='M111.785 65.03L110 63.5l3-3.5h-10v-2h10l-3-3.5 1.785-1.468L117 59l-5.215 6.03z' fill='%23fff'/%3E%3Cpath d='M152.215 65.03L154 63.5l-3-3.5h10v-2h-10l3-3.5-1.785-1.468L147 59l5.215 6.03z' fill='%23fff'/%3E%3Cg%3E%3Cpath id='Rectangle-11' fill='%23fff' d='M160.957 28.543l-3.25-3.25-1.413 1.414 3.25 3.25z'/%3E%3Cpath d='M152.5 27c3.038 0 5.5-2.462 5.5-5.5s-2.462-5.5-5.5-5.5-5.5 2.462-5.5 5.5 2.462 5.5 5.5 5.5z' id='Oval-1' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath fill='%23fff' d='M150 21h5v1h-5z'/%3E%3C/g%3E%3Cg%3E%3Cpath d='M116.957 28.543l-1.414 1.414-3.25-3.25 1.414-1.414 3.25 3.25z' fill='%23fff'/%3E%3Cpath d='M108.5 27c3.038 0 5.5-2.462 5.5-5.5s-2.462-5.5-5.5-5.5-5.5 2.462-5.5 5.5 2.462 5.5 5.5 5.5z' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath fill='%23fff' d='M106 21h5v1h-5z'/%3E%3Cpath fill='%23fff' d='M109.043 19.008l-.085 5-1-.017.085-5z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E";
 
-@mixin tab-highlight {
-  * {
-    -webkit-tap-highlight-color : transparent;
+// Flex gallery
+$-image-margin           : .5rem;
+
+// Square gallery
+
+@mixin configure-lightbox(
+  $backdrop-color: null,
+  $overlay-color: null,
+  $arrow-background-color: null,
+  $overlay-text-color: null,
+  $arrow-click-radius: null,
+  $icons: null
+) {
+  @if $backdrop-color {
+    $-backdrop-color : $backdrop-color !global;
+  }
+  @if $overlay-color {
+    $-overlay-color : $overlay-color !global;
+  }
+  @if $arrow-background-color {
+    $-arrow-background-color : $arrow-background-color !global;
+  }
+  @if $overlay-text-color {
+    $-overlay-text-color : $overlay-text-color !global;
+  }
+  @if $arrow-click-radius {
+    $-arrow-click-radius : $arrow-click-radius !global;
+  }
+  @if $icons {
+    $-icons : $icons !global;
   }
 }
 
-:root {
-  --lib-image-margin            : #{$image-margin};
-  --lib-backdrop-color          : #{$backdrop-color};
-  --lib-overlay-backgound-color : #{$overlay-background-color};
-  --lib-arrow-background-color  : #{$arrow-background-color};
-  --lib-overlay-text-color      : #{$overlay-text-color};
-
-  --lib-arrow-click-height      : #{map-get($arrow-click-radius, "height")};
-  --lib-arrow-click-width       : #{map-get($arrow-click-radius, "width")};
-
-  --lib-icons-png               : url("#{$icon-png}") 0 0 no-repeat;
-  --lib-icons-svg               : url("#{$icon-svg}") 0 0 no-repeat;
+@mixin configure-flex-gallery($image-margin: null) {
+  @if $image-margin {
+    $-image-margin : $image-margin !global;
+  }
 }
 
-lib-gallery-component, lib-controls, lib-share, lib-slider, lib-slider-image {
-  @include tab-highlight;
+@mixin configure-square-gallery() {
+
+}
+
+@mixin lightbox-styles(){
+  :root {
+    --lib-image-margin            : #{$-image-margin};
+    --lib-backdrop-color          : #{$-backdrop-color};
+    --lib-overlay-backgound-color : #{$-overlay-color};
+    --lib-arrow-background-color  : #{$-arrow-background-color};
+    --lib-overlay-text-color      : #{$-overlay-text-color};
+
+    --lib-arrow-click-height      : #{map-get($-arrow-click-radius, "height")};
+    --lib-arrow-click-width       : #{map-get($-arrow-click-radius, "width")};
+
+    --lib-icons                   : url("#{$-icons}") 0 0 no-repeat;
+  }
+
+  lib-gallery-component, lib-controls, lib-share, lib-slider, lib-slider-image {
+    * {
+      -webkit-tap-highlight-color : transparent;
+    }
+  }
+
 }
