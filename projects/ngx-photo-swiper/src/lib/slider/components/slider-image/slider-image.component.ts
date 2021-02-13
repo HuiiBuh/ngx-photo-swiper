@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { IImageIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
@@ -50,7 +50,7 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
   /**
    * Update the current image if changes get registered
    */
-  public ngOnChanges(): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     this.currentImage = this.getImageModulo();
   }
 

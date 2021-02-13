@@ -1,8 +1,13 @@
-import { IImage } from '../../../projects/ngx-photo-swiper/src/lib/models/gallery';
+import { IImage } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
 
 export const testData: IImage[] = [{
   caption: 'Test caption 1',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814785/photostream-photos/DSC05466_kwlv0n.jpg',
+  srcSet: `http://via.placeholder.com/200x100 600w,
+           http://via.placeholder.com/400x200 900w,
+           http://via.placeholder.com/600x300 1200w,
+           http://via.placeholder.com/800x400 1500w,
+           http://via.placeholder.com/1000x500 1800w`
 }, {
   caption: 'Test caption 2',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',

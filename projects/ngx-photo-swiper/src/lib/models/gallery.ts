@@ -7,6 +7,7 @@ export class Slider {
 // TODO description
 export interface IImage {
   imageSRC: string;
+  srcSet?: string | undefined;
   caption?: string;
 }
 

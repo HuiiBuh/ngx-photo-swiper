@@ -25,9 +25,9 @@
   "homepage": "https://github.com/HuiiBuh/ngx-photo-swiper",
   "peerDependencies": {
     "@angular/common": ">10",
-    "@angular/core": ">10"
+    "@angular/core": ">10",
+    "@angular/router": ">10"
   },
   "dependencies": {
-    "@nguniversal/express-engine": "^11.1.2"
   }
 }
