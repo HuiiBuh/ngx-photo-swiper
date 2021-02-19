@@ -2,7 +2,7 @@ import { IImage } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
 
 export const testData: IImage[] = [{
   caption: 'Test caption 1',
-  imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814785/photostream-photos/DSC05466_kwlv0n.jpg',
+  imageSRC: 'http://via.placeholder.com/100x50',
   srcSet: `http://via.placeholder.com/200x100 600w,
            http://via.placeholder.com/400x200 900w,
            http://via.placeholder.com/600x300 1200w,
