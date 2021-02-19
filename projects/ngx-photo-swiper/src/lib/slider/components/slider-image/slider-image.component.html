@@ -1,6 +1,10 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
-  <img [src]="currentImage?.imageSRC" alt="image" [srcset]="currentImage?.srcSet">
+  <img *ngIf="currentImage.smallImage" [src]="currentImage.smallImage">
+
+  <img *ngIf="largeImageVisible || !currentImage.smallImage"
+       [src]="currentImage?.imageSRC" [srcset]="currentImage.srcSet"
+       [alt]="currentImage.caption || currentImage.smallCaption">
 
   <div class="caption-container">
     <div class="caption">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { GalleryState, IImage, IImageIndex, Slider, SliderInformation, TGallery } from '../models/gallery';
+import { GalleryState, ImageIndex, Slider, SliderImage, SliderImageSmall, SliderInformation, TGallery } from '../models/gallery';
 import { Store } from './store';
 
 @Injectable()
@@ -20,9 +20,9 @@ export class LightboxStore extends Store<GalleryState> {
     );
 
     this.onChanges<Slider>('slider').subscribe((slider: Slider) => {
-      const imageList: (IImageIndex | null)[] = new Array(3);
+      const imageList: (ImageIndex | null)[] = new Array(3);
 
-      let gallery: IImage[] = [];
+      let gallery: (SliderImage | SliderImageSmall)[] = [];
 
       if (slider.active) {
         gallery = this.state.gallery[slider.lightboxID];
@@ -39,8 +39,6 @@ export class LightboxStore extends Store<GalleryState> {
           }
         }
       }
-
-      console.log(imageList);
 
       subject.next({
         imageRange: imageList,

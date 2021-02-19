@@ -1,4 +1,5 @@
-<ngx-lightbox lightboxID="square" [imageList]="data" galleryType="square" [controls]="controlsComponent"></ngx-lightbox>
+<ngx-lightbox lightboxID="square" [imageList]="self.typeCheckData(data)" galleryType="square"
+              [controls]="controlsComponent" #self></ngx-lightbox>
 
 <ng-template #controlsComponent>
   <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="false"></photo-controls>

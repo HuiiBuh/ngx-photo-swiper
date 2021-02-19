@@ -19,13 +19,13 @@ Install the [NPM package](https://www.npmjs.com/package/ngx-photo-swiper) with `
 import { LightboxModule } from "ngx-photo-swiper";
 ```
 
-Create a list of `IImage` objets which should be displayed in the lightbox and pass them to the template.
+Create a list of `SliderImage` objets which should be displayed in the lightbox and pass them to the template.
 
 ```typescript
-import { IImage } from 'ngx-photo-swiper';
+import { SliderImage } from 'ngx-photo-swiper';
 
 class AppComponent {
-  public imageList: IImage[] = [
+  public imageList: (SliderImage | SliderImageSmall)[] = [
     {
       caption: "Test caption 1",
       imageSRC: "image_url.com",
@@ -54,20 +54,20 @@ The following code is in one of you HTML templates. The lightbox needs two param
 
 If your lightbox should have some controls you have to pass these to the photo-gallery-component
 <ng-template #controlsComponent>
-    <!-- In addition you can configure the fadeoutTime, and which control should be displayed -->
-    <!-- showOnMobile controls whether the controls should be displayed on mobile or not -->
-    <!-- To get some custom share options pass these to the photo-controls -->
-    <photo-controls
-            [fadeoutTime]="1000" [fullscreen]="true" [close]="true" [arrows]="true" [showOnMobile]="true"
-            [shareOptionList]="shareOptions"></photo-controls>
+  <!-- In addition you can configure the fadeoutTime, and which control should be displayed -->
+  <!-- showOnMobile controls whether the controls should be displayed on mobile or not -->
+  <!-- To get some custom share options pass these to the photo-controls -->
+  <photo-controls
+    [fadeoutTime]="1000" [fullscreen]="true" [close]="true" [arrows]="true" [showOnMobile]="true"
+    [shareOptionList]="shareOptions"></photo-controls>
 </ng-template>
 
 <!-- If you have Anchor elements in you ng-template the styling will look nice -->
 <!-- I will not guarantee the styling for any other element type -->
 <ng-template #shareOptions>
-    <a href="https://google.com">Google</a>
-    <a href="https://google.com">WhatsApp</a>
-    <a href="https://google.com">Instagram</a>
+  <a href="https://google.com">Google</a>
+  <a href="https://google.com">WhatsApp</a>
+  <a href="https://google.com">Instagram</a>
 </ng-template>
 ```
 
@@ -117,3 +117,4 @@ $icon-png                 : "";
 - The Icons are also from [photoswipe](https://photoswipe.com)
 - The [observable store](https://github.com/georgebyte/rxjs-observable-store) was copied and modified to get soma
   additional functionality and angular 10 support
+- [ts-essentials](https://github.com/krzkaczor/ts-essentials) for their exact type

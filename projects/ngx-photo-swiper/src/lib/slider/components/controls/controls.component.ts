@@ -127,7 +127,6 @@ export class ControlsComponent implements OnInit, OnDestroy {
           this.closeSlider();
           break;
         default:
-          console.log('');
       }
     });
     this.document.addEventListener('scroll', () => this.closeSlider(), {once: true});

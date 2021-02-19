@@ -4,14 +4,23 @@ export class Slider {
   public active: boolean = false;
 }
 
-export interface IImage {
+export interface SliderImage {
   imageSRC: string;
   srcSet?: string | undefined;
   caption?: string;
   smallCaption?: string;
 }
 
-export type TGallery = Record<string, IImage[]>;
+export interface SliderImageSmall {
+  imageSRC: string;
+  smallImage: string;
+  aspectRatio: number;
+  srcSet?: string;
+  caption?: string;
+  smallCaption?: string;
+}
+
+export type TGallery = Record<string, SliderImage[]>;
 
 export class GalleryState {
   public gallery: TGallery = {};
@@ -19,11 +28,17 @@ export class GalleryState {
 }
 
 export interface SliderInformation {
-  imageRange: (IImageIndex | null)[];
+  imageRange: (ImageIndex | null)[];
   gallerySize: number;
   slider: Slider;
 }
 
-export interface IImageIndex extends IImage {
+export interface SliderImageIndex extends SliderImage {
   index: number;
 }
+
+export interface SliderImageSmallIndex extends SliderImageSmall {
+  index: number;
+}
+
+export type ImageIndex = (SliderImageIndex | SliderImageSmallIndex);

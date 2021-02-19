@@ -13,6 +13,6 @@ export class AppComponent implements AfterViewChecked {
   }
 
   public ngAfterViewChecked(): void {
-    console.log('Checked');
+    // console.log('Checked');
   }
 }

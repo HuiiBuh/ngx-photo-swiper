@@ -5,7 +5,7 @@
  * Copied because the library cause angular not to build
  */
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 type Index = string | number | symbol;
@@ -25,19 +25,8 @@ export class Store<S extends object> {
     this.state$.next(nextState);
   }
 
-  public onChanges<T>(...path: Index[]): BehaviorSubject<T> {
-
-    const initialData = path.reduce((result, part) => {
-      if (result === undefined || result === null) {
-        return undefined;
-      }
-      // @ts-ignore
-      return result[part];
-    }, this.state);
-
-    const partialChange = new BehaviorSubject(initialData);
-
-    this.state$.pipe(
+  public onChanges<T>(...path: Index[]): Observable<T> {
+    return this.state$.pipe(
       map(state =>
         path.reduce((result, part) => {
           if (result === undefined || result === null) {
@@ -48,11 +37,7 @@ export class Store<S extends object> {
         }, state),
       ),
       distinctUntilChanged(),
-    ).subscribe(v => {
-      partialChange.next(v);
-    });
-
-    return partialChange as unknown as BehaviorSubject<T>;
+    ) as unknown as Observable<T>;
   }
 
   public patchState<T>(value: T, ...path: Index[]): void {

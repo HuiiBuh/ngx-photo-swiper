@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { IImageIndex } from '../../../models/gallery';
+import { ImageIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
 @Component({
@@ -10,10 +10,11 @@ import { AnimationService } from '../../services/animation.service';
 export class SliderImageComponent implements OnChanges, OnDestroy {
 
   private static GLOBAL_ID = 0;
-  public currentImage: IImageIndex | null = null;
+  public currentImage: ImageIndex | null = null;
+  public largeImageVisible: boolean = false;
 
   private readonly id: number;
-  @Input() private sliderImages: (IImageIndex | null)[] = [null, null, null];
+  @Input() private sliderImages: (ImageIndex | null)[] = [null, null, null];
   @Input() private currentImageIndex: number = 0;
 
   constructor(private animationService: AnimationService) {
@@ -57,7 +58,7 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
   /**
    * Get always the same image from the image range
    */
-  private getImageModulo(): IImageIndex | null {
+  private getImageModulo(): ImageIndex | null {
     for (const image of this.sliderImages) {
       if (image && image.index % 3 === this.id) {
         return image;
