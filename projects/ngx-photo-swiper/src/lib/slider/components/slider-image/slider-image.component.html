@@ -1,8 +1,12 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
   <img [src]="currentImage?.imageSRC" alt="image" [srcset]="currentImage?.srcSet">
-  <div class="caption">
-    <div>{{currentImage.caption}}</div>
+
+  <div class="caption-container">
+    <div class="caption">
+      <div>{{currentImage.caption}}</div>
+      <small>{{currentImage.smallCaption}}</small>
+    </div>
   </div>
 
 </div>

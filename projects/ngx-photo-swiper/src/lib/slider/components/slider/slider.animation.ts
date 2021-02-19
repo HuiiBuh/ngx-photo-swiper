@@ -5,10 +5,10 @@ export const changeImage = trigger('changeImage', [
     transform: 'translate3D({{ startPosition }},0,0)',
   }), {params: {startPosition: '0px'}}),
   state('right', style({
-    transform: 'translate3d(calc(-100vw - 30px), 0px, 0px)',
+    transform: 'translate3d(calc(-110vw), 0px, 0px)',
   })),
   state('left', style({
-    transform: 'translate3d(calc(100vw + 30px), 0px, 0px)',
+    transform: 'translate3d(calc(110vw), 0px, 0px)',
   })),
   state('none', style({
     transform: 'translate3d(0, 0px, 0px)',

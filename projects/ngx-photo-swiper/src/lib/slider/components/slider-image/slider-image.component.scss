@@ -1,3 +1,7 @@
+:host {
+  display : contents;
+}
+
 .image-container {
   display         : flex;
   align-content   : center;
@@ -31,32 +35,23 @@ img {
   max-height : 100%;
 }
 
-
-.caption {
+.caption-container {
   position         : absolute;
   left             : 0;
+  right            : 0;
   bottom           : 0;
   min-height       : 44px;
 
+  display          : flex;
+  justify-content  : center;
+
   background-color : var(--lib-overlay-backgound-color);
   color            : var(--lib-overlay-text-color);
-
-  text-align       : left;
-  width            : 100%;
-
-  display          : flex;
-  align-content    : center;
-  align-items      : center;
-
-  div {
-    max-width     : 420px;
-    margin        : 0 auto;
-    overflow      : hidden;
-    text-overflow : ellipsis;
-    padding       : 10px;
-  }
 }
 
-:host {
-  display : contents;
+.caption {
+  min-width  : 40%;
+  width      : 40%;
+  max-width  : 100%;
+  text-align : left;
 }

@@ -7,9 +7,10 @@ export const testData: IImage[] = [{
            http://via.placeholder.com/400x200 900w,
            http://via.placeholder.com/600x300 1200w,
            http://via.placeholder.com/800x400 1500w,
-           http://via.placeholder.com/1000x500 1800w`
+           http://via.placeholder.com/1000x500 1800w`,
 }, {
   caption: 'Test caption 2',
+  smallCaption: 'A smaller caption',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
 }, {
   caption: 'Test caption 3',

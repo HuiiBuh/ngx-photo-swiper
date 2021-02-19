@@ -4,11 +4,11 @@ export class Slider {
   public active: boolean = false;
 }
 
-// TODO description
 export interface IImage {
   imageSRC: string;
   srcSet?: string | undefined;
   caption?: string;
+  smallCaption?: string;
 }
 
 export type TGallery = Record<string, IImage[]>;
