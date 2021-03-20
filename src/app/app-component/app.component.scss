@@ -13,7 +13,7 @@
   justify-content : space-around;
 }
 
-.v-center {
+.center {
   @extend .flex;
   align-items : center;
 }
@@ -24,13 +24,15 @@
   height     : 4rem;
 }
 
-.nav-left {
-  flex-grow : 1;
+.nav-right {
+  flex-grow   : 1;
+  display     : flex;
+  align-items : center;
 
   a {
-    color: black;
-    padding : 1.5rem 1rem;
-    text-decoration: none;
+    color           : black;
+    padding         : 1.5rem 1rem;
+    text-decoration : none;
   }
 }
 

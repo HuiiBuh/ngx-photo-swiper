@@ -1,6 +1,6 @@
-import { SliderImage, SliderImageSmall } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
+import { checkImageData } from '../../projects/ngx-photo-swiper/src/lib/typeguards';
 
-export const testData: (SliderImage | SliderImageSmall)[] = [{
+export const testData = checkImageData([{
   caption: 'Test caption 1',
   imageSRC: 'http://via.placeholder.com/100x50',
   srcSet: `http://via.placeholder.com/200x100 600w,
@@ -16,7 +16,7 @@ export const testData: (SliderImage | SliderImageSmall)[] = [{
   caption: 'Test caption 3',
   imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
 }, {
-  caption: 'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test',
+  caption: 'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test',
   imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
 }, {
   caption: 'Test caption',
@@ -97,4 +97,4 @@ export const testData: (SliderImage | SliderImageSmall)[] = [{
   caption: 'Test caption',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814782/photostream-photos/DSC05482_dtrj02.jpg',
 },
-];
+]);

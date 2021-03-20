@@ -1,16 +1,17 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
-  <img *ngIf="currentImage.smallImage" [src]="currentImage.smallImage">
-
-  <img *ngIf="largeImageVisible || !currentImage.smallImage"
-       [src]="currentImage?.imageSRC" [srcset]="currentImage.srcSet"
-       [alt]="currentImage.caption || currentImage.smallCaption">
-
-  <div class="caption-container">
+  <div class="caption-container" #caption [hidden]="getImageIndex() !== 1">
     <div class="caption">
       <div>{{currentImage.caption}}</div>
       <small>{{currentImage.smallCaption}}</small>
     </div>
   </div>
 
+  <div [ngStyle]="{height: getHeight(caption.clientHeight), width: '100vw'}"
+       class="center">
+    <img *ngIf="$any(currentImage).smallImage" [src]="$any(currentImage).smallImage">
+    <img *ngIf="largeImageVisible || !$any(currentImage).smallImage"
+         [src]="currentImage?.imageSRC" [srcset]="currentImage.srcSet"
+         [alt]="currentImage.caption || currentImage.smallCaption">
+  </div>
 </div>

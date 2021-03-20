@@ -55,6 +55,11 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
     this.currentImage = this.getImageModulo();
   }
 
+  public getHeight(clientHeight: number): string {
+    //                   top                 caption top   caption bottom
+    return `calc(100vh - 44px - ${clientHeight}px - 1rem - .5rem)`;
+  }
+
   /**
    * Get always the same image from the image range
    */

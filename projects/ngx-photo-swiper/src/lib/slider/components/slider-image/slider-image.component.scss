@@ -17,6 +17,12 @@
   padding         : 0 5vw;
 }
 
+.center {
+  display         : flex;
+  align-items     : center;
+  justify-content : center;
+}
+
 .index-0 {
   grid-area : first;
 }
@@ -36,12 +42,13 @@ img {
 }
 
 .caption-container {
-  position         : absolute;
+  position         : fixed;
   left             : 0;
   right            : 0;
   bottom           : 0;
   min-height       : 44px;
-
+  padding-top      : 1rem;
+  padding-bottom   : .5rem;
   display          : flex;
   justify-content  : center;
 
@@ -50,8 +57,8 @@ img {
 }
 
 .caption {
-  min-width  : 40%;
-  width      : 40%;
-  max-width  : 100%;
+  display    : inline-block;
+  min-width  : 30vw;
+  max-width  : 70vw;
   text-align : left;
 }

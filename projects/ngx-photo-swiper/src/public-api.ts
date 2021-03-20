@@ -15,3 +15,6 @@ export { SliderDirective } from './lib/slider/directives/slider.directive';
 export * from './lib/models/gallery';
 export * from './lib/models/slider';
 export * from './lib/models/touchmove';
+
+// Typeguard
+export * from './lib/typeguards';
