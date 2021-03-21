@@ -36,6 +36,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
   @Input() public fadeoutTime: number = 3000;
   @Input() public showOnMobile: boolean = true;
+  @Input() public disableFadeout: boolean = false;
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
@@ -133,13 +134,16 @@ export class ControlsComponent implements OnInit, OnDestroy {
     const listener3 = this.renderer2.listen(this.document, 'fullscreenchange', () => {
       this.fullscreenEnabled = !!this.document.fullscreenElement;
     });
-    this.listeners.push(listener1,  listener3);
+    this.listeners.push(listener1, listener3);
   }
 
   /**
    * Handle the visibility. This method gets called every time the user moves his mouse
    */
   private handleComponentVisibility(): void {
+
+    if (this.disableFadeout) return;
+
     // Check if the controls are not visible and if so set them to visible
     if (!this.controlsVisible) {
       this.ngZone.run(() => this.controlsVisible = true);
