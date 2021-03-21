@@ -1,9 +1,9 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
-  <div class="caption-container" #caption [style]="'opacity:' + (getImageIndex() === 1 ? 1 : 0)">
+  <div class="caption-container" #caption [style]="'visibility:' + (getImageIndex() === 1 ? 'visible' : 'hidden')">
     <div class="caption">
-      <div>{{currentImage.caption}}</div>
-      <small>{{currentImage.smallCaption}}</small>
+      <div [innerText]="currentImage.caption"></div>
+      <small *ngIf="currentImage.smallCaption" [innerText]="currentImage.smallCaption"></small>
     </div>
   </div>
 

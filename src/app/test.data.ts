@@ -22,7 +22,7 @@ export const testData: (SliderImageSmall | SliderImage)[] = [{
   caption: 'Test caption 4',
   imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
 }, {
-  caption: 'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test',
+  caption: `Test Test Test Test Test Test Test Test Test \n Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test `,
   imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
 }, {
   caption: 'Test caption 6',
