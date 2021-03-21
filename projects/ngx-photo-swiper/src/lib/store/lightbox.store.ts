@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { GalleryState, ImageIndex, Slider, SliderImage, SliderImageSmall, SliderInformation, TGallery } from '../models/gallery';
 import { Store } from './store';
 
@@ -9,17 +10,12 @@ export class LightboxStore extends Store<GalleryState> {
     super(new GalleryState());
   }
 
-  public get sliderImages$(): BehaviorSubject<SliderInformation> {
+  /**
+   * Get the relevant slider images (3)
+   */
+  public get sliderImages$(): Observable<SliderInformation> {
 
-    const subject = new BehaviorSubject<SliderInformation>(
-      {
-        imageRange: new Array(3),
-        gallerySize: 0,
-        slider: new Slider(),
-      },
-    );
-
-    this.onChanges<Slider>('slider').subscribe((slider: Slider) => {
+    const toSliderInformation = (slider: Slider): SliderInformation => {
       const imageList: (ImageIndex | null)[] = new Array(3);
 
       let gallery: (SliderImage | SliderImageSmall)[] = [];
@@ -28,8 +24,7 @@ export class LightboxStore extends Store<GalleryState> {
         gallery = this.state.gallery[slider.lightboxID];
 
         for (const i of [-1, 0, 1]) {
-          const image = gallery[slider.imageIndex + i];
-          if (image) {
+          if (gallery[slider.imageIndex + i]) {
             imageList[i + 1] = {
               ...gallery[slider.imageIndex + i],
               index: slider.imageIndex + i,
@@ -39,15 +34,16 @@ export class LightboxStore extends Store<GalleryState> {
           }
         }
       }
-
-      subject.next({
+      return {
         imageRange: imageList,
         gallerySize: gallery.length,
         slider: this.state.slider,
-      });
-    });
+      };
+    };
 
-    return subject;
+    return this.onChanges<Slider>('slider').pipe(
+      map(slider => toSliderInformation(slider)),
+    );
   }
 
   /**
