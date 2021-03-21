@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, NgZone, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { ChangeDetectorRef, Component, Inject, Input, NgZone, OnDestroy, OnInit, PLATFORM_ID, Renderer2, TemplateRef } from '@angular/core';
 import { AnimationService } from '../../services/animation.service';
 import { ShareService } from '../../services/share.service';
 import { SliderService } from '../../services/slider.service';
@@ -56,7 +56,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
     private ngZone: NgZone,
     private renderer2: Renderer2,
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document) {
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object) {
   }
 
   /**
@@ -142,7 +143,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
    */
   private handleComponentVisibility(): void {
 
-    if (this.disableFadeout) return;
+    // Check if the fadeout is disabled or if the code is run on the server side.
+    // If run on the server side don't use the timeout, because this would result in the server waiting 3 seconds
+    if (this.disableFadeout || !isPlatformBrowser(this.platformId)) return;
 
     // Check if the controls are not visible and if so set them to visible
     if (!this.controlsVisible) {
