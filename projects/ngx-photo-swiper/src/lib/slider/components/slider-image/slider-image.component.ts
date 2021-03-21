@@ -3,6 +3,7 @@ import { Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@
 import { ImageIndex, SliderImageSmallIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
+/** @dynamic */
 @Component({
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
@@ -70,7 +71,7 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
 
     if (image.width === undefined || image.height === undefined) return {height: 'auto', width: 'auto'};
 
-    const window = document.defaultView;
+    const window = this.document.defaultView;
     if (!window) return {height: 'auto', width: '100%'};
 
     const height = image.height / window.innerHeight;
