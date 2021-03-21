@@ -14,7 +14,8 @@ export interface SliderImage {
 export interface SliderImageSmall {
   imageSRC: string;
   smallImage: string;
-  aspectRatio: number;
+  width: number;
+  height: number;
   srcSet?: string;
   caption?: string;
   smallCaption?: string;

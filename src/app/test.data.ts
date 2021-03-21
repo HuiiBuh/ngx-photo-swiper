@@ -1,6 +1,6 @@
-import { checkImageData } from '../../projects/ngx-photo-swiper/src/lib/typeguards';
+import { SliderImage, SliderImageSmall } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
 
-export const testData = checkImageData([{
+export const testData: (SliderImageSmall | SliderImage)[] = [{
   caption: 'Test caption 1',
   imageSRC: 'http://via.placeholder.com/100x50',
   srcSet: `http://via.placeholder.com/200x100 600w,
@@ -10,16 +10,22 @@ export const testData = checkImageData([{
            http://via.placeholder.com/1000x500 1800w`,
 }, {
   caption: 'Test caption 2',
+  smallImage: 'http://via.placeholder.com/200x100',
+  width: 2000,
+  height: 1000,
+  imageSRC: 'http://via.placeholder.com/5000x2500',
+}, {
+  caption: 'Test caption 3',
   smallCaption: 'A smaller caption',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
 }, {
-  caption: 'Test caption 3',
+  caption: 'Test caption 4',
   imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
 }, {
   caption: 'Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test',
   imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
 }, {
-  caption: 'Test caption',
+  caption: 'Test caption 6',
   imageSRC: 'https://farm6.staticflickr.com/5591/15008867125_b61960af01_h.jpg',
 }, {
   caption: 'Test caption',
@@ -97,4 +103,4 @@ export const testData = checkImageData([{
   caption: 'Test caption',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814782/photostream-photos/DSC05482_dtrj02.jpg',
 },
-]);
+];
