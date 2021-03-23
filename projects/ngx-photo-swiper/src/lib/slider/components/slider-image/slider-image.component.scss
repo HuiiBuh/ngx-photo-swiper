@@ -41,25 +41,3 @@ img {
   max-width  : 100%;
   max-height : 100%;
 }
-
-.caption-container {
-  position         : fixed;
-  left             : 0;
-  right            : 0;
-  bottom           : 0;
-  min-height       : 44px;
-  padding-top      : 1rem;
-  padding-bottom   : .5rem;
-  display          : flex;
-  justify-content  : center;
-
-  background-color : var(--lib-overlay-backgound-color);
-  color            : var(--lib-overlay-text-color);
-}
-
-.caption {
-  display    : inline-block;
-  min-width  : 30vw;
-  max-width  : 70vw;
-  text-align : left;
-}
