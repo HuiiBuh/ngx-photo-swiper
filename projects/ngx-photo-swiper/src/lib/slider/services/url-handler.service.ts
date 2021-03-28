@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Slider } from '../../models/gallery';
+import { SliderModel } from '../../models/gallery';
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class UrlHandlerService {
     this.route.queryParams.subscribe(params => {
       this.loadSliderStateFromURL(params);
       if (this.firstPageLoad) {
-        this.store.onChanges<Slider>('slider').subscribe(slider => this.handleSliderURL(slider));
+        this.store.onChanges<SliderModel>('slider').subscribe(slider => this.handleSliderURL(slider));
         this.firstPageLoad = false;
       }
     });
@@ -26,7 +26,7 @@ export class UrlHandlerService {
   /**
    * Ether save the slider state in the url or remove the slider state from the url if the slider is not active
    */
-  private async handleSliderURL(slider: Slider): Promise<void> {
+  private async handleSliderURL(slider: SliderModel): Promise<void> {
     if (slider.active) {
       await this.saveSliderStateToURL(slider);
     } else {
@@ -37,7 +37,7 @@ export class UrlHandlerService {
   /**
    * Save the parameters which allow the restoration of the slider in the url
    */
-  private async saveSliderStateToURL(slider: Slider): Promise<void> {
+  private async saveSliderStateToURL(slider: SliderModel): Promise<void> {
     await this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {

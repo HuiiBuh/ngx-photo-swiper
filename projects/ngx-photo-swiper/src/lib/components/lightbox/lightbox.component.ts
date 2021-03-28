@@ -1,5 +1,5 @@
 import { Component, Input, TemplateRef } from '@angular/core';
-import { SliderImage, SliderImageSmall } from '../../models/gallery';
+import { ResponsiveSliderImage, SliderImage } from '../../models/gallery';
 import { ControlsComponent } from '../../slider/components/controls/controls.component';
 import { LightboxStore } from '../../store/lightbox.store';
 
@@ -25,7 +25,7 @@ export class LightboxComponent {
   }
 
   @Input()
-  public set imageList(value: (SliderImage | SliderImageSmall)[]) {
+  public set imageList(value: (SliderImage | ResponsiveSliderImage)[]) {
     this.store.editOrAddGallery(this.lightboxID, {
       images: value,
     });

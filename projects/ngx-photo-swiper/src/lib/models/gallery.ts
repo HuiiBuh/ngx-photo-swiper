@@ -1,10 +1,3 @@
-export class Slider {
-  public imageIndex: number = 0;
-  public lightboxID: string = '';
-  public active: boolean = false;
-  public shareVisible: boolean = false;
-}
-
 export interface SliderImage {
   imageSRC: string;
   srcSet?: string | undefined;
@@ -12,7 +5,11 @@ export interface SliderImage {
   smallCaption?: string;
 }
 
-export interface SliderImageSmall {
+export interface SliderImageIndex extends SliderImage {
+  index: number;
+}
+
+export interface ResponsiveSliderImage {
   imageSRC: string;
   smallImage: string;
   width: number;
@@ -22,30 +19,33 @@ export interface SliderImageSmall {
   smallCaption?: string;
 }
 
+export interface ResponsiveSliderImageIndex extends ResponsiveSliderImage {
+  index: number;
+}
+
+export type ImageWithIndex = (SliderImageIndex | ResponsiveSliderImageIndex);
+
 export interface GalleryModel {
   images: SliderImage[];
   infiniteSwipe: boolean;
 }
 
-export type TGallery = Record<string, GalleryModel>;
+export type GalleryCollection = Record<string, GalleryModel>;
 
-export class GalleryState {
-  public gallery: TGallery = {};
-  public slider: Slider = new Slider();
+export interface SliderModel {
+  imageIndex: number;
+  lightboxID: string;
+  active: boolean;
+  shareVisible: boolean;
 }
 
 export interface SliderInformation {
-  imageRange: (ImageIndex | null)[];
+  imageRange: (ImageWithIndex | null)[];
   gallerySize: number;
-  slider: Slider;
+  slider: SliderModel;
 }
 
-export interface SliderImageIndex extends SliderImage {
-  index: number;
+export interface GalleryState {
+  gallery: GalleryCollection;
+  slider: SliderModel;
 }
-
-export interface SliderImageSmallIndex extends SliderImageSmall {
-  index: number;
-}
-
-export type ImageIndex = (SliderImageIndex | SliderImageSmallIndex);

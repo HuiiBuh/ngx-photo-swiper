@@ -1,13 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GalleryModel, GalleryState, ImageIndex, Slider, SliderInformation, TGallery } from '../models/gallery';
+import { GalleryCollection, GalleryModel, GalleryState, ImageWithIndex, SliderInformation, SliderModel } from '../models/gallery';
 import { Store } from './store';
 
 @Injectable()
 export class LightboxStore extends Store<GalleryState> {
   constructor() {
-    super(new GalleryState());
+    super({
+      slider: {
+        lightboxID: '',
+        imageIndex: 0,
+        shareVisible: false,
+        active: false,
+      },
+      gallery: {},
+    });
   }
 
   /**
@@ -15,8 +23,8 @@ export class LightboxStore extends Store<GalleryState> {
    */
   public get sliderImages$(): Observable<SliderInformation> {
 
-    const toSliderInformation = (slider: Slider): SliderInformation => {
-      const imageList: (ImageIndex | null)[] = new Array(3);
+    const toSliderInformation = (slider: SliderModel): SliderInformation => {
+      const imageList: (ImageWithIndex | null)[] = new Array(3);
 
       const gallery = this.state.gallery[slider.lightboxID];
 
@@ -49,7 +57,7 @@ export class LightboxStore extends Store<GalleryState> {
       };
     };
 
-    return this.onChanges<Slider>('slider').pipe(
+    return this.onChanges<SliderModel>('slider').pipe(
       map(slider => toSliderInformation(slider)),
     );
   }
@@ -58,8 +66,8 @@ export class LightboxStore extends Store<GalleryState> {
    * Add a gallery to the store
    * @param gallery The gallery which should be added
    */
-  public addGallery(gallery: TGallery): void {
-    this.patchState<TGallery>({
+  public addGallery(gallery: GalleryCollection): void {
+    this.patchState<GalleryCollection>({
       ...this.state.gallery,
       ...gallery,
     }, 'gallery');
@@ -97,8 +105,8 @@ export class LightboxStore extends Store<GalleryState> {
    * Update the slider with a new state
    * @param slider The new slider state
    */
-  public updateSlider(slider: Partial<Slider>): void {
-    this.patchState<Slider>({
+  public updateSlider(slider: Partial<SliderModel>): void {
+    this.patchState<SliderModel>({
       ...this.state.slider,
       ...slider,
     }, 'slider');
@@ -108,7 +116,7 @@ export class LightboxStore extends Store<GalleryState> {
    * Close the slider
    */
   public closeSlider(): void {
-    this.patchState<Slider>({
+    this.patchState<SliderModel>({
       ...this.state.slider,
       active: false,
     }, 'slider');
@@ -119,7 +127,7 @@ export class LightboxStore extends Store<GalleryState> {
    * @param moveCount The direction and the amount the index should move
    */
   public moveImageIndex(moveCount: number): void {
-    this.patchState<Slider>({
+    this.patchState<SliderModel>({
       ...this.state.slider,
       imageIndex: this.calculatePosition(moveCount),
     }, 'slider');

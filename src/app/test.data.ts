@@ -1,6 +1,6 @@
-import { SliderImage, SliderImageSmall } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
+import { ResponsiveSliderImage, SliderImage } from '../../projects/ngx-photo-swiper/src/lib/models/gallery';
 
-export const testData: (SliderImageSmall | SliderImage)[] = [{
+export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
   caption: 'Test caption 1',
   imageSRC: 'http://via.placeholder.com/100x50',
   srcSet: `http://via.placeholder.com/200x100 600w,

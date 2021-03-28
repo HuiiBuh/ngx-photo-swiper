@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { ImageIndex, SliderImageSmallIndex } from '../../../models/gallery';
+import { ImageWithIndex, ResponsiveSliderImageIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
 /** @dynamic */
@@ -13,7 +13,7 @@ import { AnimationService } from '../../services/animation.service';
 export class SliderImageComponent implements OnDestroy {
 
   private static GLOBAL_ID = 0;
-  public currentImage: ImageIndex | null = null;
+  public currentImage: ImageWithIndex | null = null;
   public largeImageVisible: boolean = false;
 
   public readonly id: number;
@@ -25,7 +25,7 @@ export class SliderImageComponent implements OnDestroy {
   }
 
   @Input()
-  private set sliderImages(value: (ImageIndex | null)[]) {
+  private set sliderImages(value: (ImageWithIndex | null)[]) {
     this.currentImage = value[this.id];
   }
 
@@ -65,7 +65,7 @@ export class SliderImageComponent implements OnDestroy {
   }
 
   public getStretchConfig(): { width: string; height: string } {
-    const image = this.currentImage as SliderImageSmallIndex;
+    const image = this.currentImage as ResponsiveSliderImageIndex;
 
     if (image.width === undefined || image.height === undefined) return {height: 'auto', width: 'auto'};
 
