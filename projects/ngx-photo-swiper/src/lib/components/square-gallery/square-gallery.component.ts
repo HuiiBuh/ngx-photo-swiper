@@ -24,8 +24,4 @@ export class SquareGalleryComponent implements OnInit {
     this.imageList = this.store.onChanges<GalleryModel>('gallery', this.lightboxID).pipe(map(gallery => gallery.images));
     this.sliderActive = this.store.onChanges<boolean>('slider', 'active');
   }
-
-  public loadSlider(imageIndex: number): void {
-    this.ngxLightboxService.loadIndexInSlider(imageIndex, this.lightboxID);
-  }
 }
