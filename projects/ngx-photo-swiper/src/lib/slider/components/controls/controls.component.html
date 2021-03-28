@@ -1,5 +1,9 @@
 <ng-template [ngIf]="sliderService.active">
-  <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control">
+  <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control"
+       [ngStyle]="{display: display}"
+       (@fadeInOut.start)="display = 'block'"
+       (@fadeInOut.done)="display = controlsVisible ? 'block' : 'none'"
+  >
 
     <div *ngIf="position" class="counter">{{sliderService.currentImageIndex}} / {{sliderService.sliderLength}}</div>
 
@@ -20,9 +24,9 @@
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
 
     <button (click)="left()" *ngIf="sliderService.isFirstImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
-            class="icon-left left"></button>
+            class="icon-left left" [ngStyle]="{display: display}"></button>
     <button (click)="right()" *ngIf="sliderService.isLastImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
-            class="icon-right right"></button>
+            class="icon-right right" [ngStyle]="{display: display}"></button>
 
   </ng-template>
 </ng-template>

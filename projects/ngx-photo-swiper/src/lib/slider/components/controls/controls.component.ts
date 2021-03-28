@@ -1,6 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, Input, NgZone, OnDestroy, OnInit, PLATFORM_ID, Renderer2, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  Renderer2,
+  TemplateRef,
+} from '@angular/core';
 import { AnimationService } from '../../services/animation.service';
 import { ShareService } from '../../services/share.service';
 import { SliderService } from '../../services/slider.service';
@@ -10,6 +22,7 @@ import { SliderService } from '../../services/slider.service';
   selector: 'photo-controls',
   templateUrl: './controls.component.html',
   styleUrls: ['controls.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeInOut', [
       state('visible', style({
@@ -43,7 +56,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
-  public displayState: string = 'block';
+  public display: 'block' | 'none' = 'block';
 
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
@@ -134,6 +147,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.document.addEventListener('scroll', () => this.closeSlider(), {once: true});
     const listener3 = this.renderer2.listen(this.document, 'fullscreenchange', () => {
       this.fullscreenEnabled = !!this.document.fullscreenElement;
+      this.changeDetectorRef.detectChanges();
     });
     this.listeners.push(listener1, listener3);
   }
@@ -149,7 +163,10 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
     // Check if the controls are not visible and if so set them to visible
     if (!this.controlsVisible) {
-      this.ngZone.run(() => this.controlsVisible = true);
+      this.ngZone.run(() => {
+        this.controlsVisible = true;
+        this.changeDetectorRef.detectChanges();
+      });
     }
 
     // Clear the fade out timeout
@@ -160,6 +177,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
       this.controlsVisibleTimeout = setTimeout(() => {
         if (this.controlsVisible) {
           this.ngZone.run(() => this.controlsVisible = false);
+          this.changeDetectorRef.detectChanges();
         }
       }, this.fadeoutTime) as unknown as number;
     }
