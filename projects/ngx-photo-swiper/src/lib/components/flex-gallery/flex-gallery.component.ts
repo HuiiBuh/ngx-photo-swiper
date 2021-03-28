@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SliderImage } from '../../models/gallery';
+import { map } from 'rxjs/operators';
+import { GalleryModel, SliderImage } from '../../models/gallery';
 import { NgxLightboxService } from '../../ngx-lightbox.service';
 import { LightboxStore } from '../../store/lightbox.store';
 
@@ -20,7 +21,7 @@ export class FlexGalleryComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.imageList = this.store.onChanges<SliderImage[]>('gallery', this.lightboxID);
+    this.imageList = this.store.onChanges<GalleryModel>('gallery', this.lightboxID).pipe(map(gallery => gallery.images));
     this.sliderActive = this.store.onChanges<boolean>('slider', 'active');
   }
 

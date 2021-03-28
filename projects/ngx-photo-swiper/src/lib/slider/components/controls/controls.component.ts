@@ -13,8 +13,9 @@ import {
   Renderer2,
   TemplateRef,
 } from '@angular/core';
+import { Observable } from 'rxjs';
+import { LightboxStore } from '../../../store/lightbox.store';
 import { AnimationService } from '../../services/animation.service';
-import { ShareService } from '../../services/share.service';
 import { SliderService } from '../../services/slider.service';
 
 // @dynamic
@@ -57,6 +58,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
   public display: 'block' | 'none' = 'block';
+  public imageIndex$!: Observable<number>;
 
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
@@ -64,7 +66,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   constructor(
     public sliderService: SliderService,
-    public shareService: ShareService,
+    public store: LightboxStore,
     private animationService: AnimationService,
     private ngZone: NgZone,
     private renderer2: Renderer2,
@@ -77,6 +79,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Add a listener which listens for mouse move events and hides the controls if the mouse stands still
    */
   public ngOnInit(): void {
+    this.imageIndex$ = this.store.onChanges('slider', 'imageIndex');
     this.ngZone.runOutsideAngular(() => {
       const listener = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
       this.listeners.push(listener);
@@ -173,7 +176,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
     clearTimeout(this.controlsVisibleTimeout);
 
     // Hide the controls after a certain amount of time
-    if (!this.isMobile() && !this.shareService.visible) {
+    if (!this.isMobile() && !this.store.state.slider.shareVisible) {
       this.controlsVisibleTimeout = setTimeout(() => {
         if (this.controlsVisible) {
           this.ngZone.run(() => this.controlsVisible = false);

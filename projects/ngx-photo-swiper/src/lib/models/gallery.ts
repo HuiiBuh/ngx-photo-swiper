@@ -2,6 +2,7 @@ export class Slider {
   public imageIndex: number = 0;
   public lightboxID: string = '';
   public active: boolean = false;
+  public shareVisible: boolean = false;
 }
 
 export interface SliderImage {
@@ -21,7 +22,12 @@ export interface SliderImageSmall {
   smallCaption?: string;
 }
 
-export type TGallery = Record<string, SliderImage[]>;
+export interface GalleryModel {
+  images: SliderImage[];
+  infiniteSwipe: boolean;
+}
+
+export type TGallery = Record<string, GalleryModel>;
 
 export class GalleryState {
   public gallery: TGallery = {};

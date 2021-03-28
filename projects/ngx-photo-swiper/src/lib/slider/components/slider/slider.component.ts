@@ -176,6 +176,7 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   private animateImageChange(direction: HDirection): void {
     const imageIndex = this.sliderState?.slider?.imageIndex;
+    // TODO infinite
     if (imageIndex === 0 && direction === 'left' ||
       imageIndex === this.sliderState.gallerySize - 1 && direction === 'right') {
       this.animate = 'none';

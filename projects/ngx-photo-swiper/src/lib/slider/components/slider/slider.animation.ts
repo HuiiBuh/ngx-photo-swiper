@@ -35,6 +35,6 @@ export const openClose = trigger('openClose', [
     animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
   ]),
   transition('open => close', [
-    animate('666ms cubic-bezier(.02,.72,.74,.71)'),
+    animate('333ms cubic-bezier(.19,.75,.53,.9)'),
   ]),
 ]);

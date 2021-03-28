@@ -10,18 +10,24 @@ import { LightboxStore } from '../../store/lightbox.store';
 })
 export class LightboxComponent {
 
-  @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public lightboxID!: string;
+  @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public galleryType: 'flex' | 'square' | 'own' = 'own';
 
   constructor(private store: LightboxStore) {
   }
 
-  private _imageList: (SliderImage | SliderImageSmall)[] | undefined;
+  @Input()
+  public set infiniteSwipe(value: boolean) {
+    this.store.editOrAddGallery(this.lightboxID, {
+      infiniteSwipe: value,
+    });
+  }
 
   @Input()
   public set imageList(value: (SliderImage | SliderImageSmall)[]) {
-    this.store.addGallery({[this.lightboxID]: value});
-    this._imageList = value;
+    this.store.editOrAddGallery(this.lightboxID, {
+      images: value,
+    });
   }
 }

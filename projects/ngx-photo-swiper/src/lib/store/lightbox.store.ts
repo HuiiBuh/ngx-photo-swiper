@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GalleryState, ImageIndex, Slider, SliderImage, SliderImageSmall, SliderInformation, TGallery } from '../models/gallery';
+import { GalleryModel, GalleryState, ImageIndex, Slider, SliderInformation, TGallery } from '../models/gallery';
 import { Store } from './store';
 
 @Injectable()
@@ -18,25 +18,25 @@ export class LightboxStore extends Store<GalleryState> {
     const toSliderInformation = (slider: Slider): SliderInformation => {
       const imageList: (ImageIndex | null)[] = new Array(3);
 
-      let gallery: (SliderImage | SliderImageSmall)[] = [];
+      const gallery = this.state.gallery[slider.lightboxID];
 
       if (slider.active) {
-        gallery = this.state.gallery[slider.lightboxID];
 
         for (const i of [-1, 0, 1]) {
-          if (gallery[slider.imageIndex + i]) {
+          if (gallery.images[slider.imageIndex + i]) {
             imageList[i + 1] = {
-              ...gallery[slider.imageIndex + i],
+              ...gallery.images[slider.imageIndex + i],
               index: slider.imageIndex + i,
             };
           } else {
+            // TODO infinite decide if yes or no
             imageList[i + 1] = null;
           }
         }
       }
       return {
         imageRange: imageList,
-        gallerySize: gallery.length,
+        gallerySize: gallery?.images?.length,
         slider: this.state.slider,
       };
     };
@@ -57,12 +57,43 @@ export class LightboxStore extends Store<GalleryState> {
     }, 'gallery');
   }
 
+  public toggleShare(): void {
+    this.patchState(!this.state.slider.shareVisible, 'slider', 'shareVisible');
+  }
+
+  public closeShare(): void {
+    this.patchState(false, 'slider', 'shareVisible');
+  }
+
+  /**
+   * This will edit an existing library with the values you provided
+   * If the gallery does not exist a new gallery will be created. Not provided values will be filled with defaults
+   */
+  public editOrAddGallery(galleryId: string, gallery: Partial<GalleryModel>): void {
+    if (this.state.gallery[galleryId]) {
+      this.patchState<GalleryModel>({
+        ...this.state.gallery[galleryId],
+        ...gallery,
+      }, 'gallery', galleryId);
+    } else {
+      this.addGallery({
+        [galleryId]: {
+          infiniteSwipe: true, images: [],
+          ...gallery,
+        },
+      });
+    }
+  }
+
   /**
    * Update the slider with a new state
    * @param slider The new slider state
    */
-  public updateSlider(slider: Slider): void {
-    this.patchState<Slider>(slider, 'slider');
+  public updateSlider(slider: Partial<Slider>): void {
+    this.patchState<Slider>({
+      ...this.state.slider,
+      ...slider,
+    }, 'slider');
   }
 
   /**
@@ -80,11 +111,15 @@ export class LightboxStore extends Store<GalleryState> {
    * @param moveCount The direction and the amount the index should move
    */
   public moveImageIndex(moveCount: number): void {
-    const newPosition = this.state.slider.imageIndex + moveCount;
+    let newPosition = this.state.slider.imageIndex + moveCount;
 
-    if (newPosition >= this.state.gallery[this.state.slider.lightboxID].length
-      || newPosition < 0) {
-      return;
+    const gallery = this.state.gallery[this.state.slider.lightboxID];
+
+    // TODO infinite decide if yes or no
+    if (newPosition >= gallery.images.length) {
+      newPosition = newPosition % gallery.images.length;
+    } else if (newPosition < 0) {
+      newPosition = gallery.images.length - newPosition;
     }
 
     this.patchState<Slider>({

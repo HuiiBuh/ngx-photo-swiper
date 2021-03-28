@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ShareService } from '../../services/share.service';
+import { LightboxStore } from '../../../store/lightbox.store';
 
 @Component({
     selector: 'photo-share[shareOptionList]',
@@ -28,9 +28,9 @@ export class ShareComponent {
     @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
 
     public display: 'block' | 'none' = 'none';
-    public visibility$: Observable<boolean>;
+    public visible$: Observable<boolean>;
 
-    constructor(public shareService: ShareService) {
-        this.visibility$ = this.shareService.visible$;
+    constructor(public store: LightboxStore) {
+        this.visible$ = this.store.onChanges<boolean>('slider', 'shareVisible');
     }
 }

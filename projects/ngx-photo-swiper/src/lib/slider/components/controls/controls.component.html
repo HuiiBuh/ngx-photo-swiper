@@ -5,14 +5,19 @@
        (@fadeInOut.done)="display = controlsVisible ? 'block' : 'none'"
   >
 
-    <div *ngIf="position" class="counter">{{sliderService.currentImageIndex}} / {{sliderService.sliderLength}}</div>
+    <div *ngIf="position" class="counter">
+      <ng-template [ngIf]="(imageIndex$ | async) !== null">
+        {{$any((imageIndex$ | async)) + 1}}
+      </ng-template>
+      / {{sliderService.sliderLength}}
+    </div>
 
     <button *ngIf="zoom" class="icon-zoom"></button>
 
     <button (click)="toggleFullscreen()" *ngIf="fullscreen"
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
-    <button (click)="shareService.toggle()" *ngIf="share && shareOptionList"
+    <button (click)="store.toggleShare()" *ngIf="share && shareOptionList"
             class="icon-social-share" style="z-index: 100"></button>
 
     <photo-share [shareOptionList]="shareOptionList"></photo-share>
