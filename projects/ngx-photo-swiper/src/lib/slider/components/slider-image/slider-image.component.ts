@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
 import { ImageIndex, SliderImageSmallIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
@@ -8,21 +8,25 @@ import { AnimationService } from '../../services/animation.service';
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
   styleUrls: ['./slider-image.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderImageComponent implements OnChanges, OnDestroy {
+export class SliderImageComponent implements OnDestroy {
 
   private static GLOBAL_ID = 0;
   public currentImage: ImageIndex | null = null;
   public largeImageVisible: boolean = false;
 
-  private readonly id: number;
-  @Input() private sliderImages: (ImageIndex | null)[] = [null, null, null];
+  public readonly id: number;
   @Input() private currentImageIndex: number = 0;
 
   constructor(private animationService: AnimationService, @Inject(DOCUMENT) private document: Document) {
     this.id = SliderImageComponent.GLOBAL_ID;
     SliderImageComponent.GLOBAL_ID += 1;
+  }
+
+  @Input()
+  private set sliderImages(value: (ImageIndex | null)[]) {
+    this.currentImage = value[this.id];
   }
 
   public ngOnDestroy(): void {
@@ -49,13 +53,6 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
     if ($event.target === $event.currentTarget) {
       this.animationService.animateTo('down');
     }
-  }
-
-  /**
-   * Update the current image if changes get registered
-   */
-  public ngOnChanges(changes: SimpleChanges): void {
-    this.currentImage = this.getImageModulo();
   }
 
   public getHeight(captionHeight: number): string {
@@ -87,22 +84,5 @@ export class SliderImageComponent implements OnChanges, OnDestroy {
     let scrollbarWidth = 0;
     if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
     return `calc(5vw + 32px + ${scrollbarWidth}px)`;
-  }
-
-  /**
-   * Get always the same image from the image range
-   */
-  private getImageModulo(): ImageIndex | null {
-    for (const image of this.sliderImages) {
-      if (image && image.index % 3 === this.id) {
-
-        if (image.imageSRC !== this.currentImage?.imageSRC ||
-          image.srcSet !== this.currentImage.srcSet) {
-          this.largeImageVisible = false;
-        }
-        return image;
-      }
-    }
-    return null;
   }
 }

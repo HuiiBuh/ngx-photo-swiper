@@ -2,7 +2,8 @@
  * Version 3.0.3
  * Copyright george byte (https://github.com/georgebyte/rxjs-observable-store)
  * MIT licenced
- * Copied because the library cause angular not to build
+ * Copied because the library caused angular not to build.
+ * Not removed to avoid the ts-toolkit dependency.
  */
 
 import { BehaviorSubject, Observable } from 'rxjs';

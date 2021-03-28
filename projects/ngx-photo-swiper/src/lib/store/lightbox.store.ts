@@ -29,8 +29,16 @@ export class LightboxStore extends Store<GalleryState> {
               index: slider.imageIndex + i,
             };
           } else {
-            // TODO infinite decide if yes or no
-            imageList[i + 1] = null;
+
+            if (gallery.infiniteSwipe) {
+              const position = this.calculatePosition(i);
+              imageList[i + 1] = {
+                ...gallery.images[position],
+                index: position,
+              };
+            } else {
+              imageList[i + 1] = null;
+            }
           }
         }
       }
@@ -111,21 +119,25 @@ export class LightboxStore extends Store<GalleryState> {
    * @param moveCount The direction and the amount the index should move
    */
   public moveImageIndex(moveCount: number): void {
+    this.patchState<Slider>({
+      ...this.state.slider,
+      imageIndex: this.calculatePosition(moveCount),
+    }, 'slider');
+  }
+
+  private calculatePosition(moveCount: number): number {
     let newPosition = this.state.slider.imageIndex + moveCount;
 
     const gallery = this.state.gallery[this.state.slider.lightboxID];
 
-    // TODO infinite decide if yes or no
+    if (!gallery.infiniteSwipe && (newPosition >= gallery.images.length || newPosition < 0)) return this.state.slider.imageIndex;
+
     if (newPosition >= gallery.images.length) {
       newPosition = newPosition % gallery.images.length;
     } else if (newPosition < 0) {
-      newPosition = gallery.images.length - newPosition;
+      newPosition = gallery.images.length + newPosition;
     }
 
-    this.patchState<Slider>({
-      ...this.state.slider,
-      imageIndex: newPosition,
-    }, 'slider');
+    return newPosition;
   }
-
 }
