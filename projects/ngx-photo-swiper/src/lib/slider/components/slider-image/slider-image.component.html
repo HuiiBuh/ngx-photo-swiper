@@ -10,6 +10,7 @@
   <div [ngStyle]="{bottom: caption.clientHeight}" class="center"
        style="position:absolute; left: calc(5vw + 32px); top: 44px;"
        [style]="{bottom: caption.clientHeight + 'px', right: getRight()}"
+       (click)="close($event)"
   >
 
     <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"

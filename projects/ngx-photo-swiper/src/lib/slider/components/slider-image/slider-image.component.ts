@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { ImageIndex, SliderImageSmallIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
@@ -8,6 +8,7 @@ import { AnimationService } from '../../services/animation.service';
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
   styleUrls: ['./slider-image.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderImageComponent implements OnChanges, OnDestroy {
 

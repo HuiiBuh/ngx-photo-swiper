@@ -1,6 +1,6 @@
-<span (@openClose.done)="visibility === 'open' ? display = 'block': display = 'none'"
+<span (@openClose.done)="shareService.visible ? display = 'block': display = 'none'"
       (@openClose.start)="display = 'block'"
-      [@openClose]="visibility"
+      [@openClose]="(visibility$ | async) ? 'open': 'closed'"
       [ngStyle]="{display:display}"
       class="gallery-share-popup">
   <span *ngIf="shareOptionList" class="gallery-share-options">
