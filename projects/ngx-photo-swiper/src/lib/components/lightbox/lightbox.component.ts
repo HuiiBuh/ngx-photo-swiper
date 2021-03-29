@@ -4,7 +4,7 @@ import { ControlsComponent } from '../../slider/components/controls/controls.com
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
-  selector: 'ngx-lightbox[lightboxID][imageList]',
+  selector: 'photo-lightbox[lightboxID][imageList]',
   templateUrl: './lightbox.component.html',
   styleUrls: ['./lightbox.component.scss'],
 })

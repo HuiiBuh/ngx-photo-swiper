@@ -3,6 +3,7 @@ export interface SliderImage {
   srcSet?: string | undefined;
   caption?: string;
   smallCaption?: string;
+  nativeImage?: HTMLImageElement;
 }
 
 export interface SliderImageIndex extends SliderImage {
@@ -17,6 +18,7 @@ export interface ResponsiveSliderImage {
   srcSet?: string;
   caption?: string;
   smallCaption?: string;
+  nativeImage?: HTMLImageElement;
 }
 
 export interface ResponsiveSliderImageIndex extends ResponsiveSliderImage {
@@ -26,7 +28,7 @@ export interface ResponsiveSliderImageIndex extends ResponsiveSliderImage {
 export type ImageWithIndex = (SliderImageIndex | ResponsiveSliderImageIndex);
 
 export interface GalleryModel {
-  images: SliderImage[];
+  images: (SliderImage | ResponsiveSliderImage)[];
   infiniteSwipe: boolean;
 }
 

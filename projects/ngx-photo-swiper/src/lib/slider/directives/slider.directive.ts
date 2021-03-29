@@ -10,6 +10,7 @@ export class SliderDirective implements OnInit, OnDestroy {
   @Input() public lightboxID: string | undefined;
   private clickSubscription: (() => void) | undefined;
   private enterSubscription: (() => void) | undefined;
+  private imageElement: HTMLImageElement | undefined | null;
 
   constructor(
     private element: ElementRef<HTMLElement>,
@@ -23,8 +24,19 @@ export class SliderDirective implements OnInit, OnDestroy {
       throw new Error('You have to pass the lightboxID, and the imageIndex to the photoSlider' +
         ' directive');
     }
+
+    this.imageElement = this.element.nativeElement as HTMLImageElement;
+    if (this.imageElement.tagName.toLowerCase() !== 'img') {
+      this.imageElement = this.imageElement.querySelector('img');
+      if (!this.imageElement) {
+        throw new Error('No image element was found. The photoSlider has to be placed on an image or have an image as a' +
+          ' child element');
+      }
+    }
+
     this.clickSubscription = this.renderer2.listen(this.element.nativeElement, 'click', this.showSlider.bind(this));
     this.enterSubscription = this.renderer2.listen(this.element.nativeElement, 'keypress.enter', this.showSlider.bind(this));
+    this.store.addNativeImageElementToSlider(this.lightboxID, this.imageIndex, this.imageElement);
   }
 
   public ngOnDestroy(): void {

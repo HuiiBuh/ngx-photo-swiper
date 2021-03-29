@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GalleryCollection, GalleryModel, GalleryState, ImageWithIndex, SliderInformation, SliderModel } from '../models/gallery';
+import {
+  GalleryCollection,
+  GalleryModel,
+  GalleryState,
+  ImageWithIndex,
+  ResponsiveSliderImage,
+  SliderImage,
+  SliderInformation,
+  SliderModel,
+} from '../models/gallery';
 import { Store } from './store';
 
 @Injectable()
@@ -79,6 +88,15 @@ export class LightboxStore extends Store<GalleryState> {
 
   public closeShare(): void {
     this.patchState(false, 'slider', 'shareVisible');
+  }
+
+  public addNativeImageElementToSlider(lightboxId: string, index: number, image: HTMLImageElement): void {
+    const currentImage = this.state.gallery[lightboxId].images[index];
+    this.patchState<(SliderImage | ResponsiveSliderImage)>({
+      ...currentImage,
+      nativeImage: image,
+    }, 'gallery', lightboxId, 'images', index);
+    console.log(this.state);
   }
 
   /**

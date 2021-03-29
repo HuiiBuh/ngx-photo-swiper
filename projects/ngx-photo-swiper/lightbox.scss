@@ -61,7 +61,7 @@ $-breakpoints            : $-very-small $-small $-medium $-large $-very-large;
 @mixin lightbox-styles() {
 
   /* Lightbox *********************************************************************************************************/
-  :root {
+  body {
     --lib-backdrop-color          : #{$-backdrop-color};
     --lib-overlay-backgound-color : #{$-overlay-color};
     --lib-arrow-background-color  : #{$-arrow-background-color};
@@ -74,7 +74,7 @@ $-breakpoints            : $-very-small $-small $-medium $-large $-very-large;
   }
 
   /* Flex gallery *****************************************************************************************************/
-  :root {
+  body {
     --lib-image-margin : #{$-image-margin};
   }
 
@@ -96,7 +96,7 @@ $-breakpoints            : $-very-small $-small $-medium $-large $-very-large;
   }
 
 
-  lib-gallery-component, lib-controls, lib-share, lib-slider, lib-slider-image {
+  photo-flex-gallery, photo-controls, photo-share, photo-slider, photo-slider-image, photo-square-gallery, photo-lightbox {
     * {
       -webkit-tap-highlight-color : transparent;
     }

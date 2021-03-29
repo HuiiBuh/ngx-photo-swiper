@@ -34,19 +34,6 @@ export class SliderImageComponent implements OnDestroy {
   }
 
   /**
-   * Get the index of the image
-   */
-  public getImageIndex(): number {
-    let returnIndex = 0;
-
-    if (this.currentImage) {
-      returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
-    }
-
-    return returnIndex;
-  }
-
-  /**
    * Close the slider if you click on the black area
    */
   public close($event: MouseEvent): void {

@@ -20,13 +20,16 @@
     "image",
     "touch",
     "swipe",
-    "photoswipe"
+    "photoswipe",
+    "ssr",
+    "server side rendering"
   ],
   "homepage": "https://github.com/HuiiBuh/ngx-photo-swiper",
   "peerDependencies": {
     "@angular/common": ">10",
     "@angular/core": ">10",
-    "@angular/router": ">10"
+    "@angular/router": ">10",
+    "@angular/animations": ">10"
   },
   "dependencies": {
   }
