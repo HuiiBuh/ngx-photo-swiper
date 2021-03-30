@@ -45,6 +45,7 @@ export class SliderDirective implements OnInit, OnDestroy {
   }
 
   private showSlider(): void {
+    console.log(this.imageIndex);
     // tslint:disable-next-line:no-non-null-assertion
     this.store.updateSlider({imageIndex: this.imageIndex!, lightboxID: this.lightboxID!, active: true});
   }

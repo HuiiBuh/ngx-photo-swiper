@@ -1,7 +1,7 @@
-<div (@openClose.done)="afterOpenClose()" (@openClose.start)="display = 'block'"
-     (hSwipe)="horizontalSwipe($event)"
+<div (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
      [@openClose]="sliderState.slider.active ? 'open': 'close'"
+     (@openClose.start)="display = 'block'" (@openClose.done)="afterOpenClose()"
      [ngStyle]="{display: display}"
      class="lightbox-slider-container"
      photoTouchmove
@@ -9,9 +9,9 @@
   <div #sliderOverlay
        class="background-overlay"
   ></div>
-  <div (@changeImage.done)="changeImage()"
+  <div [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
        (@changeImage.start)="hAnimationInProgress = true"
-       [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
+       (@changeImage.done)="changeImage()"
        class="slider" #slider>
 
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"

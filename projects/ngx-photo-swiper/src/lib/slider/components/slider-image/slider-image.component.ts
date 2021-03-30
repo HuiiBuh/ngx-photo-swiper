@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { ImageWithIndex, ResponsiveSliderImageIndex } from '../../../models/gallery';
+import { ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex } from '../../../models/gallery';
 import { AnimationService } from '../../services/animation.service';
 
 /** @dynamic */
@@ -13,9 +13,10 @@ import { AnimationService } from '../../services/animation.service';
 export class SliderImageComponent implements OnDestroy {
 
   private static GLOBAL_ID = 0;
-  public currentImage: ImageWithIndex | null = null;
-  public largeImageVisible: boolean = false;
+  private static IMAGES_IN_SLIDER: (SliderImageIndex | null | undefined)[] = new Array(3);
 
+  public currentImage: ImageWithIndex | null | undefined = null;
+  public largeImageVisible: boolean = false;
   public readonly id: number;
   @Input() private currentImageIndex: number = 0;
 
@@ -26,11 +27,33 @@ export class SliderImageComponent implements OnDestroy {
 
   @Input()
   private set sliderImages(value: (ImageWithIndex | null)[]) {
-    this.currentImage = value[this.id];
+    let image = value.find(i => i?.index === this.currentImage?.index);
+    if (!image && !this.currentImage) {
+      image = value[this.id];
+    } else if (!image) {
+      const indexList = SliderImageComponent.IMAGES_IN_SLIDER.map(i => i?.index);
+      image = value.filter(i => !indexList.includes(i?.index))[0];
+    }
+
+    SliderImageComponent.IMAGES_IN_SLIDER[this.id] = image;
+    this.currentImage = image;
   }
 
   public ngOnDestroy(): void {
     SliderImageComponent.GLOBAL_ID -= 1;
+  }
+
+  /**
+   * Get the index of the image
+   */
+  public getImageIndex(): number {
+    let returnIndex = 0;
+
+    if (this.currentImage) {
+      returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
+    }
+
+    return returnIndex;
   }
 
   /**

@@ -88,7 +88,7 @@ export class SliderService {
    */
   public isLastImage(): boolean {
     if (this.galleryState) {
-      return this.galleryState.slider.imageIndex !== this.galleryState.gallery[this.galleryState.slider.lightboxID].images.length - 1;
+      return this.galleryState.slider.imageIndex === this.galleryState.gallery[this.galleryState.slider.lightboxID].images.length - 1;
     }
     return false;
   }
@@ -98,9 +98,13 @@ export class SliderService {
    */
   public isFirstImage(): boolean {
     if (this.galleryState) {
-      return this.galleryState.slider.imageIndex !== 0;
+      return this.galleryState.slider.imageIndex === 0;
     }
     return false;
+  }
+
+  public supportsInfiniteSwipe(): boolean {
+    return this.store.state.gallery[this.store.state.slider.lightboxID].infiniteSwipe;
   }
 
 }

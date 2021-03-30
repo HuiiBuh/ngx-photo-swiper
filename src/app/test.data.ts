@@ -22,7 +22,7 @@ export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
   caption: 'Test caption 4',
   imageSRC: 'https://farm6.staticflickr.com/5584/14985868676_b51baa4071_h.jpg',
 }, {
-  caption: `Test Test Test Test Test Test Test Test Test \n Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test `,
+  caption: `Test caption 5\n Test Test Test Test Test Test \n Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test `,
   imageSRC: 'https://farm4.staticflickr.com/3902/14985871946_24f47d4b53_h.jpg',
 }, {
   caption: 'Test caption 6',
@@ -60,9 +60,6 @@ export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
 }, {
   caption: 'Test caption 17',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814784/photostream-photos/DSC05624_f5b2ud.jpg',
-}, {
-  caption: 'Test caption',
-  imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814784/photostream-photos/DSC05501_yirmq8.jpg',
 }, {
   caption: 'Test caption 18',
   imageSRC: 'https://res.cloudinary.com/css-tricks/image/upload/f_auto,q_auto/v1568814784/photostream-photos/DSC05515_d2gzut.jpg',

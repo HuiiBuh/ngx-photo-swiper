@@ -1,4 +1,4 @@
-<div (click)="close($event)" *ngIf="currentImage" class="index-{{id}} image-container">
+<div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
   <div class="caption-container" #caption>
 <!--    TODO<div class="caption">-->

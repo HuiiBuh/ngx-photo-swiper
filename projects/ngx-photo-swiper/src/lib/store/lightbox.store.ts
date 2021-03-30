@@ -46,7 +46,6 @@ export class LightboxStore extends Store<GalleryState> {
               index: slider.imageIndex + i,
             };
           } else {
-
             if (gallery.infiniteSwipe) {
               const position = this.calculatePosition(i);
               imageList[i + 1] = {
@@ -90,13 +89,11 @@ export class LightboxStore extends Store<GalleryState> {
     this.patchState(false, 'slider', 'shareVisible');
   }
 
-  public addNativeImageElementToSlider(lightboxId: string, index: number, image: HTMLImageElement): void {
-    const currentImage = this.state.gallery[lightboxId].images[index];
-    this.patchState<(SliderImage | ResponsiveSliderImage)>({
-      ...currentImage,
-      nativeImage: image,
-    }, 'gallery', lightboxId, 'images', index);
-    console.log(this.state);
+  public addNativeImageElementToSlider(lightboxId: string, index: number, nativeImage: HTMLImageElement): void {
+    const images = [...this.state.gallery[lightboxId].images];
+    const currentImage = images[index];
+    images.splice(index, 1, {...currentImage, nativeImage});
+    this.patchState<(SliderImage | ResponsiveSliderImage)[]>(images, 'gallery', lightboxId, 'images');
   }
 
   /**

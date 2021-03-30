@@ -27,11 +27,12 @@
   </div>
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
+    <button (click)="left()" *ngIf="!sliderService.isFirstImage() || sliderService.supportsInfiniteSwipe()"
+            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-left left"
+            [ngStyle]="{display: display}"></button>
 
-    <button (click)="left()" *ngIf="sliderService.isFirstImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
-            class="icon-left left" [ngStyle]="{display: display}"></button>
-    <button (click)="right()" *ngIf="sliderService.isLastImage()" [@fadeInOut]="controlsVisible ? 'visible': 'hidden'"
-            class="icon-right right" [ngStyle]="{display: display}"></button>
-
+    <button (click)="right()" *ngIf="!sliderService.isLastImage() || sliderService.supportsInfiniteSwipe()"
+            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-right right"
+            [ngStyle]="{display: display}"></button>
   </ng-template>
 </ng-template>
