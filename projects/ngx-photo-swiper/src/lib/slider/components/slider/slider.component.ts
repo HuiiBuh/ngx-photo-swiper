@@ -75,7 +75,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   public horizontalSwipe($event: TouchMove): void {
     if ($event.state === 'start' || $event.state === 'move') {
       this.scheduleAnimation(() => {
-        this.setTranslate($event.current.x - $event.start.x, 0);
+        this.setTranslate($event.current.clientX - $event.start.clientX, 0);
         this.inTranslate = false;
       });
     } else {
@@ -120,8 +120,8 @@ export class SliderComponent implements OnInit, OnDestroy {
   public verticalSwipe($event: TouchMove): void {
     if ($event.state === 'start' || $event.state === 'move') {
       this.scheduleAnimation(() => {
-        this.setTranslate(0, $event.current.y - $event.start.y);
-        this.setOpacity((300 - Math.abs($event.current.y - $event.start.y)) / 300);
+        this.setTranslate(0, $event.current.clientY - $event.start.clientY);
+        this.setOpacity((300 - Math.abs($event.current.clientY - $event.start.clientY)) / 300);
         this.inTranslate = false;
       });
     } else {

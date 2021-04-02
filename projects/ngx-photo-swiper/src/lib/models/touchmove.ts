@@ -1,12 +1,12 @@
-export interface Point {
-  x: number;
-  y: number;
+export interface MovePosition {
+  clientX: number;
+  clientY: number;
 }
 
 export interface ITouchMove {
   touchDirection: 'y' | 'x';
-  start: Point;
-  current: Point;
-  history: Point[];
+  start: MovePosition;
+  current: MovePosition;
+  history: MovePosition[];
   state: 'start' | 'move' | 'end';
 }
