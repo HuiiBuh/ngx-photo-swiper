@@ -1,6 +1,6 @@
 import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
-import {fromEvent} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {fromEvent, Subject, Subscription} from 'rxjs';
+import {filter, map, takeUntil} from 'rxjs/operators';
 import {MovePosition} from '../../models/touchmove';
 import {TouchMove} from './touchmove.directive.event';
 
@@ -8,41 +8,30 @@ import {TouchMove} from './touchmove.directive.event';
   selector: '[photoTouchmove]',
 })
 export class TouchmoveDirective implements OnInit, OnDestroy {
-
   private static touchThreshold: number = 5;
 
   @Output() public vSwipe: EventEmitter<TouchMove> = new EventEmitter();
   @Output() public hSwipe: EventEmitter<TouchMove> = new EventEmitter();
 
-  // The element
-  private readonly element: ElementRef;
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   // The starting point of the touch
   private touchStartPosition: MovePosition = {clientX: 0, clientY: 0};
   private touchState: 'start' | 'move' | 'end' = 'start';
 
-  // Events to unsubscribe
-  private touchStartUnsubscribe: () => void;
-  private touchMoveUnsubscribe: () => void;
-  private touchEndUnsubscribe: () => void;
-
   private touchHistory: MovePosition[] = [];
+
+  private touchMoveSubscription!: Subscription | null;
 
   // Handler placeholder which handles the touches if it is clear what type they have
   private touchHandler: (e: MovePosition, b?: undefined | 'end') => void;
 
   constructor(
-    el: ElementRef,
+    private element: ElementRef,
     private ngZone: NgZone) {
-
-    this.element = el;
 
     // Handler
     this.touchHandler = () => null;
-    // Unsubscribe events
-    this.touchStartUnsubscribe = () => null;
-    this.touchMoveUnsubscribe = () => null;
-    this.touchEndUnsubscribe = () => null;
   }
 
   /**
@@ -52,12 +41,14 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       fromEvent<TouchEvent>(this.element.nativeElement, 'touchstart', {passive: false}).pipe(
         filter(e => e.touches.length === 1),
-        map(e => e.touches[0])
+        map(e => e.touches[0]),
+        takeUntil(this.destroy$)
       ).subscribe(this.handleTouchStart.bind(this));
 
       fromEvent<TouchEvent>(this.element.nativeElement, 'touchend', {passive: false}).pipe(
         filter(e => e.changedTouches.length > 0),
-        map(e => e.changedTouches[0])
+        map(e => e.changedTouches[0]),
+        takeUntil(this.destroy$)
       ).subscribe(this.handleTouchEnd.bind(this));
     });
   }
@@ -66,9 +57,8 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    * Remove all listeners
    */
   public ngOnDestroy(): void {
-    this.touchStartUnsubscribe();
-    this.touchMoveUnsubscribe();
-    this.touchEndUnsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   /**
@@ -77,8 +67,11 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
   private handleTouchStart(event: MovePosition): void {
     this.touchStartPosition.clientX = event.clientX;
     this.touchStartPosition.clientY = event.clientY;
-    fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
-      map(e => e.touches[0])
+
+    if (this.touchMoveSubscription) this.touchMoveSubscription.unsubscribe();
+    this.touchMoveSubscription = fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
+      map(e => e.touches[0]),
+      takeUntil(this.destroy$)
     ).subscribe(this.handleTouchMove.bind(this));
   }
 
@@ -102,7 +95,7 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
       this.touchHandler = max === yDiff ? this.handleVertical.bind(this) : this.handleHorizontal.bind(this);
 
       // Unsubscribe the touchMove handler
-      this.touchMoveUnsubscribe();
+      this.touchMoveSubscription && this.touchMoveSubscription.unsubscribe();
 
       // Pass the current event to the touch handler
       this.touchHandler(event);
@@ -110,8 +103,9 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
       this.touchHistory.push(event);
 
       // And add the handler which is responsible for the vertical or the horizontal event binding
-      fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
-        map(e => e.touches[0])
+      this.touchMoveSubscription = fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
+        map(e => e.touches[0]),
+        takeUntil(this.destroy$)
       ).subscribe(this.touchHandler.bind(this));
     }
   }
@@ -124,7 +118,8 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
     this.touchHandler(event);
     this.touchHistory = [];
     this.touchHandler = () => null;
-    this.touchMoveUnsubscribe();
+    this.touchMoveSubscription && this.touchMoveSubscription.unsubscribe();
+    this.touchMoveSubscription = null;
   }
 
   /**
