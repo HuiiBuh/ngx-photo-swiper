@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
 import {
+  AnimationModel,
   GalleryCollection,
   GalleryModel,
   GalleryState,
@@ -11,7 +12,8 @@ import {
   SliderInformation,
   SliderModel,
 } from '../models/gallery';
-import { Store } from './store';
+import {TAnimation} from '../models/slider';
+import {Store} from './store';
 
 @Injectable()
 export class LightboxStore extends Store<GalleryState> {
@@ -24,6 +26,10 @@ export class LightboxStore extends Store<GalleryState> {
         active: false,
       },
       gallery: {},
+      animation: {
+        time: 0,
+        animation: 'none',
+      }
     });
   }
 
@@ -67,6 +73,21 @@ export class LightboxStore extends Store<GalleryState> {
 
     return this.onChanges<SliderModel>('slider').pipe(
       map(slider => toSliderInformation(slider)),
+    );
+  }
+
+  public animateTo(to: TAnimation): void {
+    this.patchState<AnimationModel>({
+      animation: to,
+      time: new Date().getUTCMilliseconds()
+    }, 'animation');
+  }
+
+  public getAnimation$(): Observable<TAnimation> {
+    return this.state$.pipe(
+      map(state => state.animation),
+      distinctUntilChanged(),
+      map(animation => animation.animation)
     );
   }
 

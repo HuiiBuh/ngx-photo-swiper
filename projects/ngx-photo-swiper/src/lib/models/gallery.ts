@@ -1,3 +1,5 @@
+import {TAnimation} from './slider';
+
 export interface SliderImage {
   imageSRC: string;
   srcSet?: string | undefined;
@@ -47,7 +49,14 @@ export interface SliderInformation {
   slider: SliderModel;
 }
 
+export interface AnimationModel {
+  time: number;
+  animation: TAnimation;
+
+}
+
 export interface GalleryState {
   gallery: GalleryCollection;
   slider: SliderModel;
+  animation: AnimationModel;
 }
