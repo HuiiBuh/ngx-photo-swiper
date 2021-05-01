@@ -81,8 +81,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.imageIndex$ = this.store.onChanges('slider', 'imageIndex');
     this.ngZone.runOutsideAngular(() => {
-      const listener = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
-      this.listeners.push(listener);
+      const move = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
+      const click = this.renderer2.listen('body', 'click', this.handleComponentVisibility.bind(this));
+      this.listeners.push(move, click);
     });
     this.handleComponentVisibility();
     this.addListeners();
