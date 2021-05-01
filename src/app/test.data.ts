@@ -10,10 +10,10 @@ export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
            http://via.placeholder.com/1000x500 1800w`,
 }, {
   caption: 'Test caption 2',
-  smallImage: 'http://via.placeholder.com/200x100',
-  width: 2000,
-  height: 1000,
-  imageSRC: 'http://via.placeholder.com/5000x2500',
+  smallImage: 'http://via.placeholder.com/100x200',
+  width: 1000,
+  height: 2000,
+  imageSRC: 'http://via.placeholder.com/2500x5000',
 }, {
   caption: 'Test caption 3',
   smallCaption: 'A smaller caption',

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CaptionComponent } from './components/caption/caption.component';
 import { ControlsComponent } from './components/controls/controls.component';
 import { ShareComponent } from './components/share/share.component';
 import { SliderImageComponent } from './components/slider-image/slider-image.component';
@@ -8,7 +9,15 @@ import { SliderDirective } from './directives/slider.directive';
 import { TouchmoveDirective } from './directives/touchmove.directive';
 
 @NgModule({
-  declarations: [SliderComponent, ControlsComponent, ShareComponent, TouchmoveDirective, SliderImageComponent, SliderDirective],
+  declarations: [
+    SliderComponent,
+    ControlsComponent,
+    ShareComponent,
+    TouchmoveDirective,
+    SliderImageComponent,
+    SliderDirective,
+    CaptionComponent,
+  ],
   imports: [
     CommonModule,
   ],

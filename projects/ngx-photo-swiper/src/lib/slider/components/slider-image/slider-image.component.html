@@ -1,10 +1,10 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
   <div class="caption-container" #caption>
-<!--    TODO<div class="caption">-->
-<!--      <div [innerText]="currentImage.caption"></div>-->
-<!--      <small *ngIf="currentImage.smallCaption" [innerText]="currentImage.smallCaption"></small>-->
-<!--    </div>-->
+    <div class="caption">
+      <div [innerText]="currentImage.caption"></div>
+      <small *ngIf="currentImage.smallCaption" [innerText]="currentImage.smallCaption"></small>
+    </div>
   </div>
 
   <div [ngStyle]="{bottom: caption.clientHeight}" class="center"

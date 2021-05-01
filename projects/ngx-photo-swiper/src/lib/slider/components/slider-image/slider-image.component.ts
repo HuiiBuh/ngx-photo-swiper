@@ -7,7 +7,7 @@ import {LightboxStore} from '../../../store/lightbox.store';
 @Component({
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
-  styleUrls: ['./slider-image.component.scss'],
+  styleUrls: ['./slider-image.component.scss', '../../image-center-style.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderImageComponent implements OnDestroy {

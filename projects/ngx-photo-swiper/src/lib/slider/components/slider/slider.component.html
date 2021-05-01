@@ -6,18 +6,25 @@
      class="lightbox-slider-container"
      photoTouchmove
 >
-  <div #sliderOverlay
-       class="background-overlay"
-  ></div>
+  <div #sliderOverlay class="background-overlay"></div>
+
   <div [@changeImage]="{value: animate, params: {startPosition: startPosition}}"
        (@changeImage.start)="hAnimationInProgress = true"
        (@changeImage.done)="changeImage()"
        class="slider" #slider>
 
+    <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
+                   [sliderImages]="sliderState.imageRange"></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
                         [sliderImages]="sliderState.imageRange"></photo-slider-image>
+
+    <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
+                   [sliderImages]="sliderState.imageRange"></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
                         [sliderImages]="sliderState.imageRange"></photo-slider-image>
+
+    <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
+                   [sliderImages]="sliderState.imageRange"></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
                         [sliderImages]="sliderState.imageRange"></photo-slider-image>
 

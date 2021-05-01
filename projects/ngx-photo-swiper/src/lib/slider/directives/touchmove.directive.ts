@@ -1,6 +1,6 @@
 import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
 import {fromEvent, Subject, Subscription} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import {MovePosition} from '../../models/touchmove';
 import {TouchMove} from './touchmove.directive.event';
 
@@ -56,6 +56,7 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(this.handleTouchStart.bind(this));
     fromEvent<MouseEvent>(this.element.nativeElement, 'mouseup').pipe(
+      tap(e => e.preventDefault()),
       takeUntil(this.destroy$)
     ).subscribe(this.handleTouchEnd.bind(this));
   }
