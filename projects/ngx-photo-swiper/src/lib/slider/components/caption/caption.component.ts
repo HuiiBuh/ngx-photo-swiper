@@ -1,5 +1,16 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
+import { Subject } from 'rxjs';
 import { ImageWithIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
 
@@ -7,18 +18,27 @@ import { LightboxStore } from '../../../store/lightbox.store';
   selector: 'photo-caption[sliderImages][currentImageIndex]',
   templateUrl: './caption.component.html',
   styleUrls: ['./caption.component.scss', '../../image-center-style.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaptionComponent implements OnDestroy {
+export class CaptionComponent implements OnDestroy, AfterViewInit {
 
   private static GLOBAL_ID = 0;
   private static IMAGES_IN_SLIDER: (SliderImageIndex | null | undefined)[] = new Array(3);
 
   public currentImage: ImageWithIndex | null | undefined = null;
-  public largeImageVisible: boolean = false;
-  public readonly id: number;
+  public captionHeight$ = new Subject<string>();
+
+  private readonly id: number;
+  @ViewChild('caption') private caption: ElementRef | undefined;
+  @ViewChild('smallCaption') private smallCaption: ElementRef | undefined;
+  @ViewChild('captionContainer') private captionContainer: ElementRef | undefined;
   @Input() private currentImageIndex: number = 0;
 
-  constructor(private store: LightboxStore, @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    private store: LightboxStore,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
+  ) {
     this.id = CaptionComponent.GLOBAL_ID;
     CaptionComponent.GLOBAL_ID += 1;
   }
@@ -35,6 +55,11 @@ export class CaptionComponent implements OnDestroy {
 
     CaptionComponent.IMAGES_IN_SLIDER[this.id] = image;
     this.currentImage = image;
+    this.updateCaptionText();
+  }
+
+  public ngAfterViewInit(): void {
+    this.updateCaptionText();
   }
 
   public ngOnDestroy(): void {
@@ -54,4 +79,27 @@ export class CaptionComponent implements OnDestroy {
     return returnIndex;
   }
 
+  private updateCaptionText(): void {
+    if (!this.currentImage) return;
+
+    if (this.caption && this.currentImage.caption) {
+      this.caption.nativeElement.innerText = this.currentImage.caption;
+    }
+
+    if (this.smallCaption && this.currentImage.smallCaption) {
+      this.renderer.setStyle(this.smallCaption.nativeElement, 'display', 'block');
+      this.smallCaption.nativeElement.innerText = this.currentImage.smallCaption;
+    } else {
+      this.smallCaption && this.renderer.setStyle(this.smallCaption.nativeElement, 'display', 'none');
+    }
+
+    // Give the elements time to "find" their height
+    setTimeout(() => {
+      if (this.captionContainer) {
+        console.log(`calc(${this.captionContainer.nativeElement.clientHeight}px + .5rem + 1rem)`);
+        this.captionHeight$.next(`calc(${this.captionContainer.nativeElement.clientHeight}px + .5rem + 1rem)`);
+      }
+    });
+
+  }
 }

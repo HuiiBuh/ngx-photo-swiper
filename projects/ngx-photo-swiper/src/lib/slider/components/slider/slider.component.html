@@ -14,20 +14,22 @@
        class="slider" #slider>
 
     <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                   [sliderImages]="sliderState.imageRange"></photo-caption>
+                   [sliderImages]="sliderState.imageRange" #caption1></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
+                        [sliderImages]="sliderState.imageRange"
+                        [caption]="caption1"></photo-slider-image>
 
     <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                   [sliderImages]="sliderState.imageRange"></photo-caption>
+                   [sliderImages]="sliderState.imageRange" #caption2></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
+                        [sliderImages]="sliderState.imageRange"
+                        [caption]="caption2"></photo-slider-image>
 
     <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                   [sliderImages]="sliderState.imageRange"></photo-caption>
+                   [sliderImages]="sliderState.imageRange" #caption3></photo-caption>
     <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                        [sliderImages]="sliderState.imageRange"></photo-slider-image>
-
+                        [sliderImages]="sliderState.imageRange"
+                        [caption]="caption3"></photo-slider-image>
   </div>
 
   <ng-template [ngIf]="controls && display === 'block'">

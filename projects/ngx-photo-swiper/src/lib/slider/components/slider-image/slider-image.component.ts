@@ -1,7 +1,10 @@
-import {DOCUMENT} from '@angular/common';
-import {ChangeDetectionStrategy, Component, Inject, Input, OnDestroy} from '@angular/core';
-import {ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex} from '../../../models/gallery';
-import {LightboxStore} from '../../../store/lightbox.store';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex } from '../../../models/gallery';
+import { LightboxStore } from '../../../store/lightbox.store';
+import { CaptionComponent } from '../caption/caption.component';
 
 /** @dynamic */
 @Component({
@@ -10,17 +13,24 @@ import {LightboxStore} from '../../../store/lightbox.store';
   styleUrls: ['./slider-image.component.scss', '../../image-center-style.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderImageComponent implements OnDestroy {
+export class SliderImageComponent implements OnDestroy, OnInit {
 
   private static GLOBAL_ID = 0;
   private static IMAGES_IN_SLIDER: (SliderImageIndex | null | undefined)[] = new Array(3);
 
   public currentImage: ImageWithIndex | null | undefined = null;
   public largeImageVisible: boolean = false;
-  public readonly id: number;
+  public captionHeight: string = '0';
+  @Input() public caption!: CaptionComponent;
+  private readonly id: number;
   @Input() private currentImageIndex: number = 0;
+  private captionSubscription!: Subscription;
 
-  constructor(private store: LightboxStore, @Inject(DOCUMENT) private document: Document) {
+  constructor(
+    private store: LightboxStore,
+    private cd: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
+  ) {
     this.id = SliderImageComponent.GLOBAL_ID;
     SliderImageComponent.GLOBAL_ID += 1;
   }
@@ -39,8 +49,16 @@ export class SliderImageComponent implements OnDestroy {
     this.currentImage = image;
   }
 
+  public ngOnInit(): void {
+    this.captionSubscription = this.caption.captionHeight$.pipe(tap(e => console.log(e))).subscribe(h => {
+      this.captionHeight = h;
+      this.cd.detectChanges();
+    });
+  }
+
   public ngOnDestroy(): void {
     SliderImageComponent.GLOBAL_ID -= 1;
+    this.captionSubscription.unsubscribe();
   }
 
   /**
@@ -95,4 +113,5 @@ export class SliderImageComponent implements OnDestroy {
     if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
     return `calc(5vw + 32px + ${scrollbarWidth}px)`;
   }
+
 }

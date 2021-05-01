@@ -1,17 +1,6 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
-  <div class="caption-container" #caption>
-    <div class="caption">
-      <div [innerText]="currentImage.caption"></div>
-      <small *ngIf="currentImage.smallCaption" [innerText]="currentImage.smallCaption"></small>
-    </div>
-  </div>
-
-  <div [ngStyle]="{bottom: caption.clientHeight}" class="center"
-       style="position:absolute; left: calc(5vw + 32px); top: 44px;"
-       [style]="{bottom: caption.clientHeight + 'px', right: getRight()}"
-       (click)="close($event)"
-  >
+  <div [ngStyle]="{bottom: captionHeight, right: getRight()}" class="centered-image" (click)="close($event)">
 
     <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
          [src]="$any(currentImage).smallImage"
