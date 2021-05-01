@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex } from '../../../models/gallery';
-import { AnimationService } from '../../services/animation.service';
+import {DOCUMENT} from '@angular/common';
+import {ChangeDetectionStrategy, Component, Inject, Input, OnDestroy} from '@angular/core';
+import {ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex} from '../../../models/gallery';
+import {LightboxStore} from '../../../store/lightbox.store';
 
 /** @dynamic */
 @Component({
@@ -20,7 +20,7 @@ export class SliderImageComponent implements OnDestroy {
   public readonly id: number;
   @Input() private currentImageIndex: number = 0;
 
-  constructor(private animationService: AnimationService, @Inject(DOCUMENT) private document: Document) {
+  constructor(private store: LightboxStore, @Inject(DOCUMENT) private document: Document) {
     this.id = SliderImageComponent.GLOBAL_ID;
     SliderImageComponent.GLOBAL_ID += 1;
   }
@@ -61,7 +61,7 @@ export class SliderImageComponent implements OnDestroy {
    */
   public close($event: MouseEvent): void {
     if ($event.target === $event.currentTarget) {
-      this.animationService.animateTo('down');
+      this.store.animateTo('down');
     }
   }
 

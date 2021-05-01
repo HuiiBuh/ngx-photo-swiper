@@ -17,6 +17,7 @@
          [src]="$any(currentImage).smallImage"
          [alt]="currentImage.caption || currentImage.smallCaption"
          [ngStyle]="getStretchConfig()"
+         draggable="false"
     >
 
     <img [style]="'display:' + (largeImageVisible ? 'block': 'none')"
@@ -24,6 +25,7 @@
          [alt]="currentImage.caption || currentImage.smallCaption"
          [ngStyle]="getStretchConfig()"
          (load)="loadEnd()"
+         draggable="false"
     >
   </div>
 </div>

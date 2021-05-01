@@ -1,47 +1,37 @@
-import { Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output, Renderer2 } from '@angular/core';
-import { Point } from '../../models/touchmove';
-import { TouchMove } from './touchmove.directive.event';
+import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {fromEvent, Subject, Subscription} from 'rxjs';
+import {filter, map, takeUntil} from 'rxjs/operators';
+import {MovePosition} from '../../models/touchmove';
+import {TouchMove} from './touchmove.directive.event';
 
 @Directive({
   selector: '[photoTouchmove]',
 })
 export class TouchmoveDirective implements OnInit, OnDestroy {
-
   private static touchThreshold: number = 5;
 
   @Output() public vSwipe: EventEmitter<TouchMove> = new EventEmitter();
   @Output() public hSwipe: EventEmitter<TouchMove> = new EventEmitter();
 
-  // The element
-  private readonly element: ElementRef;
+  private destroy$: Subject<boolean> = new Subject<boolean>();
+  private touchHistory: MovePosition[] = [];
 
   // The starting point of the touch
-  private touchStartPosition: Point = {x: 0, y: 0};
+  private touchStartPosition: MovePosition = {clientX: 0, clientY: 0};
   private touchState: 'start' | 'move' | 'end' = 'start';
 
-  // Events to unsubscribe
-  private touchStartUnsubscribe: () => void;
-  private touchMoveUnsubscribe: () => void;
-  private touchEndUnsubscribe: () => void;
-
-  private touchHistory: Point[] = [];
-
   // Handler placeholder which handles the touches if it is clear what type they have
-  private touchHandler: (e: TouchEvent, b?: undefined | 'end') => void;
+  private touchHandler: (e: MovePosition, b?: undefined | 'end') => void;
+
+  private touchMoveSubscription!: Subscription | null;
+  private mouseMoveSubscription!: Subscription | null;
 
   constructor(
-    el: ElementRef,
-    private renderer2: Renderer2,
+    private element: ElementRef,
     private ngZone: NgZone) {
-
-    this.element = el;
 
     // Handler
     this.touchHandler = () => null;
-    // Unsubscribe events
-    this.touchStartUnsubscribe = () => null;
-    this.touchMoveUnsubscribe = () => null;
-    this.touchEndUnsubscribe = () => null;
   }
 
   /**
@@ -49,40 +39,63 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
-      this.touchStartUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchstart', this.handleTouchStart.bind(this));
-      this.touchEndUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchend', this.handleTouchEnd.bind(this));
+      fromEvent<TouchEvent>(this.element.nativeElement, 'touchstart', {passive: false}).pipe(
+        filter(e => e.touches.length === 1),
+        map(e => e.touches[0]),
+        takeUntil(this.destroy$)
+      ).subscribe(this.handleTouchStart.bind(this));
+
+      fromEvent<TouchEvent>(this.element.nativeElement, 'touchend', {passive: false}).pipe(
+        filter(e => e.changedTouches.length > 0),
+        map(e => e.changedTouches[0]),
+        takeUntil(this.destroy$)
+      ).subscribe(this.handleTouchEnd.bind(this));
     });
+
+    fromEvent<MouseEvent>(this.element.nativeElement, 'mousedown').pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.handleTouchStart.bind(this));
+    fromEvent<MouseEvent>(this.element.nativeElement, 'mouseup').pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.handleTouchEnd.bind(this));
   }
 
   /**
    * Remove all listeners
    */
   public ngOnDestroy(): void {
-    this.touchStartUnsubscribe();
-    this.touchMoveUnsubscribe();
-    this.touchEndUnsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   /**
    * Handler the touch start (only react to wipe not to zoom, ...)
    */
-  private handleTouchStart(e: TouchEvent): void {
-    if (e.touches.length === 1) {
-      this.touchMoveUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchmove', this.handleTouchMove.bind(this));
-      this.touchStartPosition.x = e.touches[0].clientX;
-      this.touchStartPosition.y = e.touches[0].clientY;
-    }
+  private handleTouchStart(event: MovePosition): void {
+    this.touchStartPosition.clientX = event.clientX;
+    this.touchStartPosition.clientY = event.clientY;
+
+    if (this.touchMoveSubscription) this.touchMoveSubscription.unsubscribe();
+    if (this.mouseMoveSubscription) this.mouseMoveSubscription.unsubscribe();
+
+    this.touchMoveSubscription = fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
+      map(e => e.touches[0]),
+      takeUntil(this.destroy$)
+    ).subscribe(this.handleTouchMove.bind(this));
+
+    this.mouseMoveSubscription = fromEvent<MouseEvent>(this.element.nativeElement, 'mousemove').pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(this.handleTouchMove.bind(this));
   }
 
   /**
    * Handle the mouse move event
    * Only gets called if the touch start was not a multi-touch
    */
-  private handleTouchMove(e: TouchEvent): void {
+  private handleTouchMove(event: MovePosition): void {
     // Get the fist touch
-    const touch = e.touches[0];
-    const xDiff: number = Math.abs(touch.clientX - this.touchStartPosition.x);
-    const yDiff: number = Math.abs(touch.clientY - this.touchStartPosition.y);
+    const xDiff: number = Math.abs(event.clientX - this.touchStartPosition.clientX);
+    const yDiff: number = Math.abs(event.clientY - this.touchStartPosition.clientY);
 
     // Get the max of the touch
     const max = Math.max(xDiff, yDiff);
@@ -95,67 +108,66 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
       this.touchHandler = max === yDiff ? this.handleVertical.bind(this) : this.handleHorizontal.bind(this);
 
       // Unsubscribe the touchMove handler
-      this.touchMoveUnsubscribe();
+      this.touchMoveSubscription && this.touchMoveSubscription.unsubscribe();
+      this.mouseMoveSubscription && this.mouseMoveSubscription.unsubscribe();
 
       // Pass the current event to the touch handler
-      this.touchHandler(e);
+      this.touchHandler(event);
+      this.touchHistory.push(event);
       this.touchState = 'move';
-      this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
+
       // And add the handler which is responsible for the vertical or the horizontal event binding
-      this.touchMoveUnsubscribe = this.renderer2.listen(this.element.nativeElement, 'touchmove', this.touchHandler.bind(this));
+      this.touchMoveSubscription = fromEvent<TouchEvent>(this.element.nativeElement, 'touchmove', {passive: false}).pipe(
+        map(e => e.touches[0]),
+        takeUntil(this.destroy$)
+      ).subscribe(this.touchHandler.bind(this));
+
+      this.mouseMoveSubscription = fromEvent<MouseEvent>(this.element.nativeElement, 'mousemove').pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(this.touchHandler.bind(this));
     }
   }
 
   /**
    * Remove the touch move subscription
    */
-  private handleTouchEnd(e: TouchEvent): void {
-    const customEvent = {
-      touches: [{
-        clientX: e.changedTouches[0].clientX,
-        clientY: e.changedTouches[0].clientY,
-      }],
-      preventDefault: () => null,
-    };
-
+  private handleTouchEnd(event: MovePosition): void {
     this.touchState = 'end';
-    this.touchHandler(customEvent as unknown as TouchEvent);
+    this.touchHandler(event);
     this.touchHistory = [];
     this.touchHandler = () => null;
-    this.touchMoveUnsubscribe();
+    this.touchMoveSubscription && this.touchMoveSubscription.unsubscribe();
+    this.touchMoveSubscription = null;
+    this.mouseMoveSubscription && this.mouseMoveSubscription.unsubscribe();
+    this.mouseMoveSubscription = null;
   }
 
   /**
    * Handle the vertical touch event
    */
-  private handleVertical(e: TouchEvent): void {
-    e.preventDefault();
-    this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
-    this.vSwipe.emit(this.createEventObject(e, 'y'));
+  private handleVertical(event: MovePosition): void {
+    this.touchHistory.push(event);
+    this.vSwipe.emit(this.createEventObject(event, 'y'));
   }
 
   /**
    * Handle the horizontal touch event
    */
-  private handleHorizontal(e: TouchEvent): void {
-    e.preventDefault();
-    this.touchHistory.push({x: e.touches[0].clientX, y: e.touches[0].clientY});
-    this.hSwipe.emit(this.createEventObject(e, 'x'));
+  private handleHorizontal(event: MovePosition): void {
+    this.touchHistory.push(event);
+    this.hSwipe.emit(this.createEventObject(event, 'x'));
   }
 
   /**
    * Create the event object
-   * @param e The touch event
+   * @param event The touch event
    * @param touchDirection The direction of the touch
    */
-  private createEventObject(e: TouchEvent, touchDirection: 'y' | 'x'): TouchMove {
+  private createEventObject(event: MovePosition, touchDirection: 'y' | 'x'): TouchMove {
     return TouchMove.create({
       history: this.touchHistory,
       touchDirection,
-      current: {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      },
+      current: event,
       start: {...this.touchStartPosition},
       state: this.touchState,
     });

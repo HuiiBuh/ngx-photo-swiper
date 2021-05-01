@@ -1,13 +1,13 @@
-import { TDirection } from '../../models/slider';
-import { ITouchMove, Point } from '../../models/touchmove';
+import {TDirection} from '../../models/slider';
+import {ITouchMove, MovePosition} from '../../models/touchmove';
 
 export class TouchMove {
 
   private static readonly swipeThreshold = 60;
-  public start!: Point;
-  public current!: Point;
+  public start!: MovePosition;
+  public current!: MovePosition;
   public state!: 'start' | 'move' | 'end';
-  private readonly history!: Point[];
+  private readonly history!: MovePosition[];
   private touchDirection!: 'y' | 'x';
 
   public static create(json: ITouchMove): TouchMove {
@@ -35,7 +35,7 @@ export class TouchMove {
   }
 
   private getVerticalDirection(): TDirection {
-    const difference = this.start.y - this.current.y;
+    const difference = this.start.clientY - this.current.clientY;
     let direction: TDirection = 'none';
     if (difference > TouchMove.swipeThreshold) {
       direction = 'up';
@@ -53,7 +53,7 @@ export class TouchMove {
 
     // Get only the x or y coordinate
     this.history.forEach((v, i) => {
-      history[i] = v[this.touchDirection];
+      history[i] = v[('client' + this.touchDirection.toUpperCase()) as 'clientX' | 'clientY'];
     });
 
     let old: number = history[history.length - 1];

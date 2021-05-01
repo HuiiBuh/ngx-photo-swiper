@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LightboxStore } from '../../../store/lightbox.store';
-import { AnimationService } from '../../services/animation.service';
 import { SliderService } from '../../services/slider.service';
 
 // @dynamic
@@ -67,7 +66,6 @@ export class ControlsComponent implements OnInit, OnDestroy {
   constructor(
     public sliderService: SliderService,
     public store: LightboxStore,
-    private animationService: AnimationService,
     private ngZone: NgZone,
     private renderer2: Renderer2,
     private changeDetectorRef: ChangeDetectorRef,
@@ -119,15 +117,15 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   public left(): void {
-    this.animationService.animateTo('left');
+    this.store.animateTo('left');
   }
 
   public right(): void {
-    this.animationService.animateTo('right');
+    this.store.animateTo('right');
   }
 
   public closeSlider(): void {
-    this.animationService.animateTo('down');
+    this.store.animateTo('down');
   }
 
   /**
