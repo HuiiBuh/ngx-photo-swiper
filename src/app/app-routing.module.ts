@@ -8,7 +8,7 @@ const routes: Routes = [
   {path: 'flex', component: FlexGalleryComponent},
   {path: 'square', component: SquareGalleryComponent},
   {path: 'own', component: OwnGalleryComponent},
-  {path: '**', redirectTo: '/flex'},
+  {path: '**', redirectTo: '/square'},
 ];
 
 @NgModule({

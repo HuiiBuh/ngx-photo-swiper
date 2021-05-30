@@ -19,7 +19,41 @@ import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { SliderService } from '../../services/slider.service';
 import { ControlsComponent } from '../controls/controls.component';
-import { changeImage, openClose } from './slider.animation';
+import { openClose } from './slider.animation';
+
+interface AnimationReturn {
+  keyframe: Keyframe[] | PropertyIndexedKeyframes | null;
+  options?: (number | KeyframeAnimationOptions);
+}
+
+interface ImageAnimationFactory {
+  right(): AnimationReturn;
+
+  left(): AnimationReturn;
+
+  center(): AnimationReturn;
+}
+
+const DEFAULT_OPTIONS = {
+  duration: 200,
+  easing: 'cubic-bezier(0, 0, 0, 1)'
+};
+
+const changeImageAnimationFactory: ImageAnimationFactory = {
+  right: () => ({
+    keyframe: [{transform: 'translate3d(-110vw, 0, 0)'}],
+    options: DEFAULT_OPTIONS
+  }),
+  left: () => ({
+    keyframe: [{transform: 'translate3d(110vw, 0, 0)'}],
+    options: DEFAULT_OPTIONS
+  }),
+  center: () => ({
+    keyframe: [{transform: 'translate3d(0, 0, 0)'}],
+    options: DEFAULT_OPTIONS
+  }),
+
+};
 
 // @dynamic
 @Component({
@@ -27,7 +61,6 @@ import { changeImage, openClose } from './slider.animation';
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
   animations: [
-    changeImage,
     openClose,
   ],
 })
@@ -38,7 +71,6 @@ export class SliderComponent implements OnInit, OnDestroy {
   public animate: THorizontal = 'current';
   public startPosition: string = '0px';
   public sliderState!: SliderInformation;
-  public hAnimationInProgress = false;
 
   @ViewChild('slider') private slider: ElementRef | undefined;
   @ViewChild('sliderOverlay') private sliderOverlay: ElementRef | undefined;
@@ -76,40 +108,13 @@ export class SliderComponent implements OnInit, OnDestroy {
     if ($event.state === 'start' || $event.state === 'move') {
       this.scheduleAnimation(() => {
         this.setTranslate($event.current.clientX - $event.start.clientX, 0);
-        this.inTranslate = false;
       });
     } else {
       this.ngZone.run(() => {
         this.updateStartPosition();
         this.changeDetectorRef.detectChanges();
-        this.animateImageChange($event.getDirection() as HDirection);
+        this.handleAnimationRequest($event.getDirection() as HDirection);
       });
-    }
-  }
-
-  /**
-   * Actually switch to the next image after the animation
-   */
-  public changeImage(): void {
-    if (this.animate !== 'current') {
-      if (this.animate === 'left') {
-        this.sliderService.previousPicture();
-      } else if (this.animate === 'right') {
-        this.sliderService.nextPicture();
-      }
-      this.startPosition = '0px';
-      this.animate = 'current';
-    }
-    this.hAnimationInProgress = false;
-  }
-
-  /**
-   * Get the current position of the slider
-   */
-  public updateStartPosition(): void {
-    if (this.slider?.nativeElement) {
-      const transform = getComputedStyle(this.slider?.nativeElement).transform;
-      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
     }
   }
 
@@ -122,7 +127,6 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.scheduleAnimation(() => {
         this.setTranslate(0, $event.current.clientY - $event.start.clientY);
         this.setOpacity((300 - Math.abs($event.current.clientY - $event.start.clientY)) / 300);
-        this.inTranslate = false;
       });
     } else {
       this.ngZone.run(() => {
@@ -134,6 +138,16 @@ export class SliderComponent implements OnInit, OnDestroy {
           this.sliderService.closeSlider();
         }
       });
+    }
+  }
+
+  /**
+   * Get the current position of the slider
+   */
+  public updateStartPosition(): void {
+    if (this.slider?.nativeElement) {
+      const transform = getComputedStyle(this.slider?.nativeElement).transform;
+      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
     }
   }
 
@@ -153,7 +167,10 @@ export class SliderComponent implements OnInit, OnDestroy {
   private scheduleAnimation(callback: () => void): void {
     if (!this.inTranslate) {
       this.inTranslate = true;
-      requestAnimationFrame(callback);
+      requestAnimationFrame(() => {
+        callback();
+        this.inTranslate = false;
+      });
     }
   }
 
@@ -168,22 +185,29 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.renderer2.setStyle(this.sliderOverlay?.nativeElement, 'opacity', `${opacity}`);
   }
 
-  /**
-   * Animate the transition to another image
-   * @param direction The direction the transition should go to
-   */
-  private animateImageChange(direction: HDirection): void {
-    const imageIndex = this.sliderState?.slider?.imageIndex;
-    const gallery = this.store.state.gallery[this.store.state.slider.lightboxID];
-    if (!gallery) return;
+  private hAnimateCenter(): void {
+    const blueprint = changeImageAnimationFactory.center();
+    this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
+  }
 
-    if (!gallery.infiniteSwipe && (imageIndex === 0 && direction === 'left' ||
-      imageIndex === this.sliderState.gallerySize - 1 && direction === 'right')) {
-      this.animate = 'none';
-      this.animate = 'none';
-    } else if (!this.hAnimationInProgress) {
-      this.animate = direction;
-    }
+  private hAnimateLeft(): void {
+    const blueprint = changeImageAnimationFactory.left();
+    const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
+    animation.onfinish = () => {
+      this.sliderService.previousPicture();
+      this.setTranslate(0, 0);
+      this.changeDetectorRef.detectChanges();
+    };
+  }
+
+  private hAnimateRight(): void {
+    const blueprint = changeImageAnimationFactory.right();
+    const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
+    animation.onfinish = () => {
+      this.sliderService.nextPicture();
+      this.setTranslate(0, 0);
+      this.changeDetectorRef.detectChanges();
+    };
   }
 
   /**
@@ -191,11 +215,39 @@ export class SliderComponent implements OnInit, OnDestroy {
    * @param animation The animation direction
    */
   private handleAnimationRequest(animation: TAnimation): void {
-    // tslint:disable-next-line:prefer-switch
-    if (animation === 'right' || animation === 'left' || animation === 'none') {
-      this.animateImageChange(animation);
-    } else if (animation === 'up' || animation === 'down') {
-      this.sliderService.closeSlider();
+    switch (animation) {
+      case 'left':
+        this.shouldChangeImage(animation) && this.hAnimateLeft();
+        break;
+      case 'right':
+        this.shouldChangeImage(animation) && this.hAnimateRight();
+        break;
+      case 'none':
+        this.hAnimateCenter();
+        break;
+      case 'down' || 'up':
+        this.sliderService.closeSlider();
     }
+  }
+
+  /**
+   * Checks if an image change should be initiated or if the image change would cause an overflow (first to last image)
+   * @param direction The direction of the image change
+   */
+  private shouldChangeImage(direction: 'right' | 'left'): boolean {
+    const imageIndex = this.sliderState?.slider?.imageIndex;
+    const gallery = this.store.state.gallery[this.store.state.slider.lightboxID];
+    if (!gallery) return false;
+
+    return !(
+      /*If infinite swipe is on dont check the other conditions */!gallery.infiniteSwipe &&
+      // If infinite swipe is off check if ...
+      (
+        // The image index would get negative
+        imageIndex === 0 && direction === 'left' ||
+        // The image index would get larger as the total images in the gallery
+        imageIndex === this.sliderState.gallerySize - 1 && direction === 'right'
+      )
+    );
   }
 }

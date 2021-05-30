@@ -34,10 +34,7 @@ export class SliderService {
    * Check if the slider is active
    */
   public get active(): boolean {
-    if (this.galleryState) {
-      return this.galleryState.slider.active;
-    }
-    return false;
+    return !!this.galleryState && this.galleryState.slider.active;
   }
 
   /**
