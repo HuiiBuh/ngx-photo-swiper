@@ -19,32 +19,10 @@ export class SliderService {
   }
 
   /**
-   * Get the caption of the current image
-   */
-  public get imageCaption(): string {
-    if (this.galleryState) {
-      const caption: string | undefined = this.galleryState.gallery[this.galleryState.slider.lightboxID].images
-        [this.galleryState.slider.imageIndex].caption;
-      return caption ? caption : '';
-    }
-    return '';
-  }
-
-  /**
    * Check if the slider is active
    */
   public get active(): boolean {
     return !!this.galleryState && this.galleryState.slider.active;
-  }
-
-  /**
-   * Get the current slider position
-   */
-  public get currentImageIndex(): number {
-    if (this.galleryState) {
-      return this.galleryState.slider.imageIndex + 1;
-    }
-    return 0;
   }
 
   /**

@@ -52,16 +52,17 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
         map(e => e.changedTouches[0]),
         takeUntil(this.destroy$)
       ).subscribe(this.handleMoveEnd.bind(this));
+
+      fromEvent<MouseEvent>(this.element.nativeElement, 'mousedown').pipe(
+        tap(e => e.stopPropagation()),
+        takeUntil(this.destroy$)
+      ).subscribe(this.handleMoveStart.bind(this));
+      fromEvent<MouseEvent>(this.element.nativeElement, 'mouseup').pipe(
+        tap(e => e.stopPropagation()),
+        takeUntil(this.destroy$)
+      ).subscribe(this.handleMoveEnd.bind(this));
     });
 
-    fromEvent<MouseEvent>(this.element.nativeElement, 'mousedown').pipe(
-      tap(e => e.stopPropagation()),
-      takeUntil(this.destroy$)
-    ).subscribe(this.handleMoveStart.bind(this));
-    fromEvent<MouseEvent>(this.element.nativeElement, 'mouseup').pipe(
-      tap(e => e.stopPropagation()),
-      takeUntil(this.destroy$)
-    ).subscribe(this.handleMoveEnd.bind(this));
   }
 
   /**

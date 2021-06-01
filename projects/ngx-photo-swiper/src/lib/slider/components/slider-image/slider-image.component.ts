@@ -1,5 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
@@ -24,6 +34,7 @@ export class SliderImageComponent implements OnDestroy, OnInit {
   private readonly id: number;
   @Input() private currentImageIndex: number = 0;
   private captionSubscription!: Subscription;
+  @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
 
   constructor(
     private store: LightboxStore,
@@ -76,8 +87,8 @@ export class SliderImageComponent implements OnDestroy, OnInit {
   /**
    * Close the slider if you click on the black area
    */
-  public close($event: MouseEvent): void {
-    if ($event.target === $event.currentTarget) {
+  public close(event: MouseEvent): void {
+    if (event.target === event.currentTarget || event.target === this.imageCenter.nativeElement) {
       this.store.animateTo('down');
     }
   }

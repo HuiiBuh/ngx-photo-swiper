@@ -39,7 +39,8 @@ export class UrlHandlerService {
    * Save the parameters which allow the restoration of the slider in the url
    */
   private async saveSliderStateToURL(slider: SliderModel): Promise<void> {
-    await this.ngZone.run(() => this.router.navigate([], {
+    await this.ngZone.run(() =>
+      this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
           imageIndex: String(slider.imageIndex),
@@ -47,8 +48,7 @@ export class UrlHandlerService {
         },
         queryParamsHandling: 'merge',
         skipLocationChange: false,
-      })
-    );
+      }));
   }
 
   /**
@@ -59,11 +59,12 @@ export class UrlHandlerService {
     delete params.gridID;
     delete params.imageIndex;
 
-    await this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: params,
-      skipLocationChange: false,
-    });
+    await this.ngZone.run(() =>
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: params,
+        skipLocationChange: false,
+      }));
   }
 
   /**

@@ -1,6 +1,6 @@
 <div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
 
-  <div [ngStyle]="{bottom: captionHeight, right: getRight()}" class="centered-image" (click)="close($event)">
+  <div [ngStyle]="{bottom: captionHeight, right: getRight()}" class="centered-image" #imageCenter>
 
     <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
          [src]="$any(currentImage).smallImage"

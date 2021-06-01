@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -20,24 +21,22 @@ import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { SliderService } from '../../services/slider.service';
 import { ControlsComponent } from '../controls/controls.component';
-import { DEFAULT_IMAGE_CHANGE_FACTORY, openClose } from './slider.animation';
+import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
 
 // @dynamic
 @Component({
   selector: 'photo-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
-  animations: [
-    openClose,
-  ],
 })
-export class SliderComponent implements OnInit, OnDestroy {
+export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   public display: 'block' | 'none' = 'none';
   public sliderState!: SliderInformation;
 
   @ViewChild('slider') private slider: ElementRef | undefined;
+  @ViewChild('lightboxContainer') private lightboxContainer: ElementRef | undefined;
   @ViewChild('sliderOverlay') private sliderOverlay: ElementRef | undefined;
   private inTranslate = false;
   private destroy$: Subject<boolean> = new Subject<boolean>();
@@ -47,13 +46,20 @@ export class SliderComponent implements OnInit, OnDestroy {
     private store: LightboxStore,
     private renderer2: Renderer2,
     private ngZone: NgZone,
-    private changeDetectorRef: ChangeDetectorRef,
+    private cd: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document) {
   }
 
   public ngOnInit(): void {
     this.store.getAnimation$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
     this.store.sliderImages$.pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
+    this.store.onChanges<boolean>('slider', 'active').subscribe(e => {
+      this.handleAnimationRequest(e ? 'up' : 'down');
+    });
+  }
+
+  public ngAfterViewInit(): void {
+    this.afterOpenClose();
   }
 
   /**
@@ -70,14 +76,9 @@ export class SliderComponent implements OnInit, OnDestroy {
    */
   public horizontalSwipe($event: TouchMove): void {
     if ($event.state === 'start' || $event.state === 'move') {
-      this.scheduleAnimation(() => {
-        this.setTranslate($event.current.clientX - $event.start.clientX, 0);
-      });
+      this.scheduleAnimation(() => this.setTranslate($event.current.clientX - $event.start.clientX, 0));
     } else {
-      this.ngZone.run(() => {
-        this.changeDetectorRef.detectChanges();
-        this.handleAnimationRequest($event.getDirection() as HDirection);
-      });
+      this.ngZone.run(() => this.handleAnimationRequest($event.getDirection() as HDirection));
     }
   }
 
@@ -95,10 +96,11 @@ export class SliderComponent implements OnInit, OnDestroy {
       this.ngZone.run(() => {
         const direction = $event.getDirection() as 'up' | 'down' | 'none';
         if (direction === 'none') {
+          // TODO smooth transition back
           this.setTranslate(0, 0);
           this.setOpacity(1);
         } else {
-          this.sliderService.closeSlider();
+          this.handleAnimationRequest(direction);
         }
       });
     }
@@ -108,7 +110,7 @@ export class SliderComponent implements OnInit, OnDestroy {
    * Reset opacity, translate and the display state
    */
   public afterOpenClose(): void {
-    this.display = this.sliderState.slider.active ? 'block' : 'none';
+    this.sliderState.slider.active ? this.setDisplay('block') : this.setDisplay('none');
     this.setTranslate(0, 0);
     this.setOpacity(1);
   }
@@ -143,6 +145,14 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Change the display value of the lightboxContainer
+   * @param display The display property
+   */
+  private setDisplay(display: 'none' | 'block'): void {
+    this.renderer2.setStyle(this.lightboxContainer?.nativeElement, 'display', display);
+  }
+
+  /**
    * Animate back to the center
    */
   private hAnimateCenter(): void {
@@ -164,7 +174,7 @@ export class SliderComponent implements OnInit, OnDestroy {
     animation.onfinish = () => {
       this.sliderService.previousPicture();
       this.setTranslate(0, 0);
-      this.changeDetectorRef.detectChanges();
+      this.cd.detectChanges();
     };
   }
 
@@ -177,8 +187,31 @@ export class SliderComponent implements OnInit, OnDestroy {
     animation.onfinish = () => {
       this.sliderService.nextPicture();
       this.setTranslate(0, 0);
-      this.changeDetectorRef.detectChanges();
+      this.cd.detectChanges();
     };
+  }
+
+  private vAnimateOpen(): void {
+    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.open();
+
+    if (this.slider) {
+      const animation = this.slider.nativeElement.animate(blueprint);
+      animation.onfinish = () => {
+        this.afterOpenClose();
+      };
+    }
+  }
+
+  private vAnimateClosed(): void {
+    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.close();
+
+    if (this.slider) {
+      const animation = this.slider.nativeElement.animate(blueprint);
+      animation.onfinish = () => {
+        this.afterOpenClose();
+        this.sliderService.closeSlider();
+      };
+    }
   }
 
   /**
@@ -196,8 +229,14 @@ export class SliderComponent implements OnInit, OnDestroy {
       case 'none':
         this.hAnimateCenter();
         break;
-      case 'down' || 'up':
-        this.sliderService.closeSlider();
+      case 'down':
+        this.vAnimateClosed();
+        break;
+      case 'up':
+        this.vAnimateOpen();
+        break;
+      default:
+        console.error(`${animation} was not found`);
     }
   }
 

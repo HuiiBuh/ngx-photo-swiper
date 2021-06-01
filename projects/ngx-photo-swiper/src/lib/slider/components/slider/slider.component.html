@@ -1,10 +1,8 @@
 <div (hSwipe)="horizontalSwipe($event)"
      (vSwipe)="verticalSwipe($event)"
-     [ngStyle]="{display: display}"
      class="lightbox-slider-container"
      photoTouchmove
-       [@openClose]="sliderState.slider.active ? 'open': 'close'"
-       (@openClose.start)="display = 'block'" (@openClose.done)="afterOpenClose()"
+     #lightboxContainer
 >
 
   <div #sliderOverlay class="background-overlay"></div>
@@ -30,7 +28,7 @@
                         [caption]="caption3"></photo-slider-image>
   </div>
 
-  <ng-template [ngIf]="controls && display === 'block'">
+  <ng-template [ngIf]="controls && sliderState.slider.active">
     <ng-container *ngTemplateOutlet="controls"></ng-container>
   </ng-template>
 

@@ -1,5 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-
 interface AnimationReturn {
   keyframe: Keyframe[] | PropertyIndexedKeyframes | null;
   options?: (number | KeyframeAnimationOptions);
@@ -13,7 +11,7 @@ export interface ImageAnimationFactory {
   center(): AnimationReturn;
 }
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: KeyframeAnimationOptions = {
   duration: 200,
   easing: 'cubic-bezier(0, 0, 0, 1)'
 };
@@ -31,20 +29,32 @@ export const DEFAULT_IMAGE_CHANGE_FACTORY: ImageAnimationFactory = {
     keyframe: [{transform: 'translate3d(0, 0, 0)'}],
     options: DEFAULT_OPTIONS
   }),
-
 };
 
-export const openClose = trigger('openClose', [
-  state('open', style({
-    opacity: 1,
-  })),
-  state('close', style({
-    opacity: 0,
-  })),
-  transition('close => open', [
-    animate('333ms cubic-bezier(0.4, 0, 0.22, 1)'),
-  ]),
-  transition('open => close', [
-    animate('333ms cubic-bezier(.19,.75,.53,.9)'),
-  ]),
-]);
+interface OpenCloseFactory {
+  open(): AnimationReturn;
+
+  close(): AnimationReturn;
+
+  center(): AnimationReturn;
+}
+
+const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
+  duration: 300,
+  easing: 'cubic-bezier(.19,.75,.53,.9)'
+};
+
+export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
+  open: () => ({
+    keyframe: [{opacity: 1}],
+    options: OPEN_CLOSE_OPTIONS
+  }),
+  close: () => ({
+    keyframe: [{opacity: 0}],
+    options: OPEN_CLOSE_OPTIONS
+  }),
+  center: () => ({
+    keyframe: [],
+    options: OPEN_CLOSE_OPTIONS
+  })
+};
