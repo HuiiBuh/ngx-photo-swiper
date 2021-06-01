@@ -1,8 +1,8 @@
-import {Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
-import {fromEvent, Subject, Subscription} from 'rxjs';
+import { Directive, ElementRef, EventEmitter, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
+import { fromEvent, Subject, Subscription } from 'rxjs';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import {MovePosition} from '../../models/touchmove';
-import {TouchMove} from './touchmove.directive.event';
+import { MovePosition } from '../../models/touchmove';
+import { TouchMove } from './touchmove.directive.event';
 
 @Directive({
   selector: '[photoTouchmove]',
@@ -41,22 +41,25 @@ export class TouchmoveDirective implements OnInit, OnDestroy {
     this.ngZone.runOutsideAngular(() => {
       fromEvent<TouchEvent>(this.element.nativeElement, 'touchstart', {passive: false}).pipe(
         filter(e => e.touches.length === 1),
+        tap(e => e.preventDefault()),
         map(e => e.touches[0]),
         takeUntil(this.destroy$)
       ).subscribe(this.handleMoveStart.bind(this));
 
       fromEvent<TouchEvent>(this.element.nativeElement, 'touchend', {passive: false}).pipe(
         filter(e => e.changedTouches.length > 0),
+        tap(e => e.preventDefault()),
         map(e => e.changedTouches[0]),
         takeUntil(this.destroy$)
       ).subscribe(this.handleMoveEnd.bind(this));
     });
 
     fromEvent<MouseEvent>(this.element.nativeElement, 'mousedown').pipe(
+      tap(e => e.stopPropagation()),
       takeUntil(this.destroy$)
     ).subscribe(this.handleMoveStart.bind(this));
     fromEvent<MouseEvent>(this.element.nativeElement, 'mouseup').pipe(
-      tap(e => e.preventDefault()),
+      tap(e => e.stopPropagation()),
       takeUntil(this.destroy$)
     ).subscribe(this.handleMoveEnd.bind(this));
   }

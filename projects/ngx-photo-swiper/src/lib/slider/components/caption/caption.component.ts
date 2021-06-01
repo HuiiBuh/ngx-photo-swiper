@@ -97,7 +97,6 @@ export class CaptionComponent implements OnDestroy, AfterViewInit {
     // Give the elements time to "find" their height
     setTimeout(() => {
       if (this.captionContainer) {
-        console.log(`calc(${this.captionContainer.nativeElement.clientHeight}px + .5rem + 1rem)`);
         this.captionHeight$.next(`calc(${this.captionContainer.nativeElement.clientHeight}px + .5rem + 1rem)`);
       }
     });

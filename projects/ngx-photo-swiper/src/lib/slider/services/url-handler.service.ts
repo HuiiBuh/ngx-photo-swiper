@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SliderModel } from '../../models/gallery';
 import { LightboxStore } from '../../store/lightbox.store';
@@ -13,6 +13,7 @@ export class UrlHandlerService {
     private store: LightboxStore,
     private router: Router,
     private route: ActivatedRoute,
+    private ngZone: NgZone
   ) {
     this.route.queryParams.subscribe(params => {
       this.loadSliderStateFromURL(params);
@@ -38,15 +39,16 @@ export class UrlHandlerService {
    * Save the parameters which allow the restoration of the slider in the url
    */
   private async saveSliderStateToURL(slider: SliderModel): Promise<void> {
-    await this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        imageIndex: String(slider.imageIndex),
-        gridID: String(slider.lightboxID),
-      },
-      queryParamsHandling: 'merge',
-      skipLocationChange: false,
-    });
+    await this.ngZone.run(() => this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          imageIndex: String(slider.imageIndex),
+          gridID: String(slider.lightboxID),
+        },
+        queryParamsHandling: 'merge',
+        skipLocationChange: false,
+      })
+    );
   }
 
   /**

@@ -1,7 +1,7 @@
-<div [style]="(sliderActive | async) ? 'pointer-events: none':''" class="lightbox-grid">
+<div [style]="(sliderActive$ | async) ? 'pointer-events: none':''" class="lightbox-grid">
 
   <ul>
-    <li *ngFor="let image of imageList | async; index as i">
+    <li *ngFor="let image of imageList$ | async; index as i">
       <img [src]="image.imageSRC" [srcset]="image.srcSet" [alt]="image.caption || image.smallCaption"
            loading="lazy" photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
     </li>

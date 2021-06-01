@@ -14,14 +14,14 @@ import { LightboxStore } from '../../store/lightbox.store';
 export class FlexGalleryComponent implements OnInit {
 
   @Input() public lightboxID!: string;
-  public imageList!: Observable<SliderImage[]>;
-  public sliderActive!: Observable<boolean>;
+  public imageList$!: Observable<SliderImage[]>;
+  public sliderActive$!: Observable<boolean>;
 
   constructor(private ngxLightboxService: NgxLightboxService, private store: LightboxStore) {
   }
 
   public ngOnInit(): void {
-    this.imageList = this.store.onChanges<GalleryModel>('gallery', this.lightboxID).pipe(map(gallery => gallery.images));
-    this.sliderActive = this.store.onChanges<boolean>('slider', 'active');
+    this.imageList$ = this.store.onChanges<GalleryModel>('gallery', this.lightboxID).pipe(map(gallery => gallery.images));
+    this.sliderActive$ = this.store.onChanges<boolean>('slider', 'active');
   }
 }

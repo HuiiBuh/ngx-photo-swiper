@@ -12,9 +12,10 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SliderInformation } from '../../../models/gallery';
-import { HDirection, TAnimation, THorizontal } from '../../../models/slider';
+import { HDirection, TAnimation } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { SliderService } from '../../services/slider.service';
@@ -34,15 +35,12 @@ export class SliderComponent implements OnInit, OnDestroy {
 
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   public display: 'block' | 'none' = 'none';
-  public animate: THorizontal = 'current';
-  public startPosition: string = '0px';
   public sliderState!: SliderInformation;
 
   @ViewChild('slider') private slider: ElementRef | undefined;
   @ViewChild('sliderOverlay') private sliderOverlay: ElementRef | undefined;
   private inTranslate = false;
-  private animationServiceSubscription!: Subscription;
-  private sliderStateSubscription!: Subscription;
+  private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public sliderService: SliderService,
@@ -54,16 +52,16 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.animationServiceSubscription = this.store.getAnimation$().subscribe(this.handleAnimationRequest.bind(this));
-    this.sliderStateSubscription = this.store.sliderImages$.subscribe(v => this.sliderState = v);
+    this.store.getAnimation$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
+    this.store.sliderImages$.pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
   }
 
   /**
    * Unsubscribe from active subscriptions
    */
   public ngOnDestroy(): void {
-    this.sliderStateSubscription.unsubscribe();
-    this.animationServiceSubscription.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   /**
@@ -77,7 +75,6 @@ export class SliderComponent implements OnInit, OnDestroy {
       });
     } else {
       this.ngZone.run(() => {
-        this.updateStartPosition();
         this.changeDetectorRef.detectChanges();
         this.handleAnimationRequest($event.getDirection() as HDirection);
       });
@@ -104,16 +101,6 @@ export class SliderComponent implements OnInit, OnDestroy {
           this.sliderService.closeSlider();
         }
       });
-    }
-  }
-
-  /**
-   * Get the current position of the slider
-   */
-  public updateStartPosition(): void {
-    if (this.slider?.nativeElement) {
-      const transform = getComputedStyle(this.slider?.nativeElement).transform;
-      this.startPosition = `${new WebKitCSSMatrix(transform).m41}px`;
     }
   }
 
@@ -147,15 +134,30 @@ export class SliderComponent implements OnInit, OnDestroy {
     this.renderer2.setStyle(this.slider?.nativeElement, 'transform', `translate3d(${x}px,${y}px,0)`);
   }
 
+  /**
+   * Set the opacity on the overlay
+   * @param opacity The opacity value (0 - 1)
+   */
   private setOpacity(opacity: number): void {
     this.renderer2.setStyle(this.sliderOverlay?.nativeElement, 'opacity', `${opacity}`);
   }
 
+  /**
+   * Animate back to the center
+   */
   private hAnimateCenter(): void {
     const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center();
-    this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
+    if (this.slider) {
+      const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
+      animation.onfinish = () => {
+        this.setTranslate(0, 0);
+      };
+    }
   }
 
+  /**
+   * Animate to the left side
+   */
   private hAnimateLeft(): void {
     const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
@@ -166,6 +168,9 @@ export class SliderComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Animate to the right side
+   */
   private hAnimateRight(): void {
     const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);

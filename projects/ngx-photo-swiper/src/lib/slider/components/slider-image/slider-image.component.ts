@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { ImageWithIndex, ResponsiveSliderImageIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { CaptionComponent } from '../caption/caption.component';
@@ -50,7 +49,7 @@ export class SliderImageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit(): void {
-    this.captionSubscription = this.caption.captionHeight$.pipe(tap(e => console.log(e))).subscribe(h => {
+    this.captionSubscription = this.caption.captionHeight$.subscribe(h => {
       this.captionHeight = h;
       this.cd.detectChanges();
     });
