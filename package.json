@@ -6,7 +6,7 @@
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build --prod",
     "build-pages": "ng build --prod --base-href '/ngx-photo-swiper/'",
-    "build-lib": "ng build ngx-photo-swiper --prod",
+    "build-lib": "ng build ngx-photo-swiper --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 import { ImageWithIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
 
+// @dynamic
 @Component({
   selector: 'photo-caption[sliderImages][currentImageIndex]',
   templateUrl: './caption.component.html',

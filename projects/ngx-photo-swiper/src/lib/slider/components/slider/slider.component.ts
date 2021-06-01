@@ -19,41 +19,7 @@ import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { SliderService } from '../../services/slider.service';
 import { ControlsComponent } from '../controls/controls.component';
-import { openClose } from './slider.animation';
-
-interface AnimationReturn {
-  keyframe: Keyframe[] | PropertyIndexedKeyframes | null;
-  options?: (number | KeyframeAnimationOptions);
-}
-
-interface ImageAnimationFactory {
-  right(): AnimationReturn;
-
-  left(): AnimationReturn;
-
-  center(): AnimationReturn;
-}
-
-const DEFAULT_OPTIONS = {
-  duration: 200,
-  easing: 'cubic-bezier(0, 0, 0, 1)'
-};
-
-const changeImageAnimationFactory: ImageAnimationFactory = {
-  right: () => ({
-    keyframe: [{transform: 'translate3d(-110vw, 0, 0)'}],
-    options: DEFAULT_OPTIONS
-  }),
-  left: () => ({
-    keyframe: [{transform: 'translate3d(110vw, 0, 0)'}],
-    options: DEFAULT_OPTIONS
-  }),
-  center: () => ({
-    keyframe: [{transform: 'translate3d(0, 0, 0)'}],
-    options: DEFAULT_OPTIONS
-  }),
-
-};
+import { DEFAULT_IMAGE_CHANGE_FACTORY, openClose } from './slider.animation';
 
 // @dynamic
 @Component({
@@ -186,12 +152,12 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   private hAnimateCenter(): void {
-    const blueprint = changeImageAnimationFactory.center();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center();
     this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
   }
 
   private hAnimateLeft(): void {
-    const blueprint = changeImageAnimationFactory.left();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
       this.sliderService.previousPicture();
@@ -201,7 +167,7 @@ export class SliderComponent implements OnInit, OnDestroy {
   }
 
   private hAnimateRight(): void {
-    const blueprint = changeImageAnimationFactory.right();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
       this.sliderService.nextPicture();
