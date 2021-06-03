@@ -87,14 +87,14 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Returns the active state of the slider
    */
-  public sliderActive$(): Observable<boolean> {
+  public getSliderActive$(): Observable<boolean> {
     return this.onChanges('slider', 'active');
   }
 
   /**
    * Get the amount of  images in the slider
    */
-  public sliderLength$(): Observable<number> {
+  public getSliderLength$(): Observable<number> {
     return this.state$.pipe(
       filter(state => state.slider.active),
       map(state => state.gallery[state.slider.lightboxID].images.length)
@@ -102,9 +102,16 @@ export class LightboxStore extends Store<GalleryState> {
   }
 
   /**
+   * Get the current image index
+   */
+  public getImageIndex$(): Observable<number> {
+    return this.onChanges('slider', 'imageIndex');
+  }
+
+  /**
    * Subscribe to the animation request
    */
-  public animationRequest$(): Observable<TAnimation> {
+  public getAnimationRequest$(): Observable<TAnimation> {
     return this.state$.pipe(
       map(state => state.animation),
       distinctUntilChanged(),
@@ -115,7 +122,7 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Check if the current image is the last image
    */
-  public isLastImage$(): Observable<boolean> {
+  public getIsLastImage$(): Observable<boolean> {
     return this.state$.pipe(
       map(state => {
         return state.slider.imageIndex === state.gallery[state.slider.lightboxID].images.length - 1;
@@ -126,7 +133,7 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Check if the current image is the first image
    */
-  public isFirstImage$(): Observable<boolean> {
+  public getIsFirstImage$(): Observable<boolean> {
     return this.onChanges<number>('slider', 'imageIndex').pipe(
       map(index => index === 0)
     );
@@ -135,7 +142,7 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Check if the gallery supports infinite swipe
    */
-  public supportsInfiniteSwipe$(): Observable<boolean> {
+  public getHasInfiniteSwipe(): Observable<boolean> {
     return this.state$.pipe(
       map(state => state.gallery[state.slider.lightboxID].infiniteSwipe)
     );

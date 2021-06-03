@@ -1,4 +1,4 @@
-<ng-template [ngIf]="sliderService.active">
+<ng-template [ngIf]="active$ | async">
   <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control"
        [ngStyle]="{display: display}"
        (@fadeInOut.start)="display = 'block'"
@@ -9,7 +9,7 @@
       <ng-template [ngIf]="(imageIndex$ | async) !== null">
         {{$any((imageIndex$ | async)) + 1}}
       </ng-template>
-      / {{sliderService.sliderLength}}
+      / {{ sliderLength$ | async }}
     </div>
 
     <button *ngIf="zoom" class="icon-zoom"></button>
@@ -22,16 +22,16 @@
 
     <photo-share [shareOptionList]="shareOptionList"></photo-share>
 
-    <button (click)="sliderService.closeSlider()" *ngIf="close" class="icon-close"></button>
+    <button (click)="store.closeSlider()" *ngIf="close" class="icon-close"></button>
 
   </div>
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
-    <button (click)="left()" *ngIf="!sliderService.isFirstImage() || sliderService.supportsInfiniteSwipe()"
+    <button (click)="left()" *ngIf="!(isFirstImage$ | async) || (hasInfiniteSwipe$ | async)"
             [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-left left"
             [ngStyle]="{display: display}"></button>
 
-    <button (click)="right()" *ngIf="!sliderService.isLastImage() || sliderService.supportsInfiniteSwipe()"
+    <button (click)="right()" *ngIf="!(isLastImage$ | async) || (hasInfiniteSwipe$ | async)"
             [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-right right"
             [ngStyle]="{display: display}"></button>
   </ng-template>

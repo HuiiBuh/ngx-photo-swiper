@@ -19,7 +19,6 @@ import { SliderInformation } from '../../../models/gallery';
 import { HDirection, TAnimation } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
-import { SliderService } from '../../services/slider.service';
 import { ControlsComponent } from '../controls/controls.component';
 import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
 
@@ -42,7 +41,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    public sliderService: SliderService,
     private store: LightboxStore,
     private renderer2: Renderer2,
     private ngZone: NgZone,
@@ -51,7 +49,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.store.animationRequest$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
+    this.store.getAnimationRequest$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
     this.store.getSliderImages$().pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
     this.store.onChanges<boolean>('slider', 'active').subscribe(e => {
       this.handleAnimationRequest(e ? 'up' : 'down');
@@ -172,7 +170,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
-      this.sliderService.previousPicture();
+      this.store.moveImageIndex(-1);
       this.setTranslate(0, 0);
       this.cd.detectChanges();
     };
@@ -185,7 +183,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right();
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
-      this.sliderService.nextPicture();
+      this.store.moveImageIndex(1);
       this.setTranslate(0, 0);
       this.cd.detectChanges();
     };
@@ -209,7 +207,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       const animation = this.slider.nativeElement.animate(blueprint);
       animation.onfinish = () => {
         this.afterOpenClose();
-        this.sliderService.closeSlider();
+        this.store.closeSlider();
       };
     }
   }

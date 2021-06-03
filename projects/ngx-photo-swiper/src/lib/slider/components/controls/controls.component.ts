@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LightboxStore } from '../../../store/lightbox.store';
-import { SliderService } from '../../services/slider.service';
 
 // @dynamic
 @Component({
@@ -53,18 +52,22 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
+  public active$!: Observable<boolean>;
+  public imageIndex$!: Observable<number>;
+  public sliderLength$!: Observable<number>;
+  public isLastImage$!: Observable<boolean>;
+  public isFirstImage$!: Observable<boolean>;
+  public hasInfiniteSwipe$!: Observable<boolean>;
 
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
   public display: 'block' | 'none' = 'block';
-  public imageIndex$!: Observable<number>;
 
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
   private listeners: (() => void)[] = [];
 
   constructor(
-    public sliderService: SliderService,
     public store: LightboxStore,
     private ngZone: NgZone,
     private renderer2: Renderer2,
@@ -77,7 +80,13 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Add a listener which listens for mouse move events and hides the controls if the mouse stands still
    */
   public ngOnInit(): void {
-    this.imageIndex$ = this.store.onChanges('slider', 'imageIndex');
+    this.imageIndex$ = this.store.getImageIndex$();
+    this.sliderLength$ = this.store.getSliderLength$();
+    this.active$ = this.store.getSliderActive$();
+    this.isLastImage$ = this.store.getIsLastImage$();
+    this.isFirstImage$ = this.store.getIsFirstImage$();
+    this.hasInfiniteSwipe$ = this.store.getHasInfiniteSwipe();
+
     this.ngZone.runOutsideAngular(() => {
       const move = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
       const click = this.renderer2.listen('body', 'click', this.handleComponentVisibility.bind(this));
