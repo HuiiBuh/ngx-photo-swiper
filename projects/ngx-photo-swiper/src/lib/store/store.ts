@@ -41,7 +41,7 @@ export class Store<S extends object> {
     ) as unknown as Observable<T>;
   }
 
-  public patchState<T>(value: T, ...path: Index[]): void {
+  protected patchState<T>(value: T, ...path: Index[]): void {
     if (path.length < 1) {
       return;
     }

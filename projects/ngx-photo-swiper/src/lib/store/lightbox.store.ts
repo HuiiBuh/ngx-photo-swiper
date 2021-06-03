@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {distinctUntilChanged, map} from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import {
   AnimationModel,
   GalleryCollection,
@@ -12,12 +13,15 @@ import {
   SliderInformation,
   SliderModel,
 } from '../models/gallery';
-import {TAnimation} from '../models/slider';
-import {Store} from './store';
+import { TAnimation } from '../models/slider';
+import { Store } from './store';
 
+// @dynamic
 @Injectable()
 export class LightboxStore extends Store<GalleryState> {
-  constructor() {
+  constructor(
+    @Inject(DOCUMENT) private document: Document
+  ) {
     super({
       slider: {
         lightboxID: '',
@@ -33,10 +37,14 @@ export class LightboxStore extends Store<GalleryState> {
     });
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Subscribe to
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   /**
-   * Get the relevant slider images (3)
+   * Get currently active slider images 3
    */
-  public get sliderImages$(): Observable<SliderInformation> {
+  public getSliderImages$(): Observable<SliderInformation> {
 
     const toSliderInformation = (slider: SliderModel): SliderInformation => {
       const imageList: (ImageWithIndex | null)[] = new Array(3);
@@ -76,19 +84,76 @@ export class LightboxStore extends Store<GalleryState> {
     );
   }
 
-  public animateTo(to: TAnimation): void {
-    this.patchState<AnimationModel>({
-      animation: to,
-      time: new Date().getUTCMilliseconds()
-    }, 'animation');
+  /**
+   * Returns the active state of the slider
+   */
+  public sliderActive$(): Observable<boolean> {
+    return this.onChanges('slider', 'active');
   }
 
-  public getAnimation$(): Observable<TAnimation> {
+  /**
+   * Get the amount of  images in the slider
+   */
+  public sliderLength$(): Observable<number> {
+    return this.state$.pipe(
+      filter(state => state.slider.active),
+      map(state => state.gallery[state.slider.lightboxID].images.length)
+    );
+  }
+
+  /**
+   * Subscribe to the animation request
+   */
+  public animationRequest$(): Observable<TAnimation> {
     return this.state$.pipe(
       map(state => state.animation),
       distinctUntilChanged(),
       map(animation => animation.animation)
     );
+  }
+
+  /**
+   * Check if the current image is the last image
+   */
+  public isLastImage$(): Observable<boolean> {
+    return this.state$.pipe(
+      map(state => {
+        return state.slider.imageIndex === state.gallery[state.slider.lightboxID].images.length - 1;
+      })
+    );
+  }
+
+  /**
+   * Check if the current image is the first image
+   */
+  public isFirstImage$(): Observable<boolean> {
+    return this.onChanges<number>('slider', 'imageIndex').pipe(
+      map(index => index === 0)
+    );
+  }
+
+  /**
+   * Check if the gallery supports infinite swipe
+   */
+  public supportsInfiniteSwipe$(): Observable<boolean> {
+    return this.state$.pipe(
+      map(state => state.gallery[state.slider.lightboxID].infiniteSwipe)
+    );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Change state to
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Request the animation to a direction. This will change/open the image/slider
+   * @param to The direction which gets requested
+   */
+  public animateTo(to: TAnimation): void {
+    this.patchState<AnimationModel>({
+      animation: to,
+      time: new Date().getUTCMilliseconds()
+    }, 'animation');
   }
 
   /**
@@ -102,14 +167,12 @@ export class LightboxStore extends Store<GalleryState> {
     }, 'gallery');
   }
 
-  public toggleShare(): void {
-    this.patchState(!this.state.slider.shareVisible, 'slider', 'shareVisible');
-  }
-
-  public closeShare(): void {
-    this.patchState(false, 'slider', 'shareVisible');
-  }
-
+  /**
+   * Add the image element reference to the lightbox image
+   * @param lightboxId The id of the lightbox the image is in
+   * @param index The image index in the lightbox
+   * @param nativeImage The image element
+   */
   public addNativeImageElementToSlider(lightboxId: string, index: number, nativeImage: HTMLImageElement): void {
     const images = [...this.state.gallery[lightboxId].images];
     const currentImage = images[index];
@@ -130,7 +193,8 @@ export class LightboxStore extends Store<GalleryState> {
     } else {
       this.addGallery({
         [galleryId]: {
-          infiniteSwipe: true, images: [],
+          infiniteSwipe: true,
+          images: [],
           ...gallery,
         },
       });
@@ -138,7 +202,21 @@ export class LightboxStore extends Store<GalleryState> {
   }
 
   /**
-   * Update the slider with a new state
+   * Toggle the share component
+   */
+  public toggleShare(): void {
+    this.patchState(!this.state.slider.shareVisible, 'slider', 'shareVisible');
+  }
+
+  /**
+   * Close the share component
+   */
+  public closeShare(): void {
+    this.patchState(false, 'slider', 'shareVisible');
+  }
+
+  /**
+   * Patch the slider state
    * @param slider The new slider state
    */
   public updateSlider(slider: Partial<SliderModel>): void {
@@ -152,6 +230,7 @@ export class LightboxStore extends Store<GalleryState> {
    * Close the slider
    */
   public closeSlider(): void {
+    this.document.exitFullscreen().catch(_ => null);
     this.patchState<SliderModel>({
       ...this.state.slider,
       active: false,
@@ -169,6 +248,10 @@ export class LightboxStore extends Store<GalleryState> {
     }, 'slider');
   }
 
+  /**
+   * Calculate the new position of the slider. Depends on the infinite swipe setting
+   * @param moveCount The moveCount the image index should get moved (+1 = right, ...)
+   */
   private calculatePosition(moveCount: number): number {
     let newPosition = this.state.slider.imageIndex + moveCount;
 

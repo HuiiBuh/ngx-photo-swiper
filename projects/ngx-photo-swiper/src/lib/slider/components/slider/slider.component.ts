@@ -51,8 +51,8 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.store.getAnimation$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
-    this.store.sliderImages$.pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
+    this.store.animationRequest$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
+    this.store.getSliderImages$().pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
     this.store.onChanges<boolean>('slider', 'active').subscribe(e => {
       this.handleAnimationRequest(e ? 'up' : 'down');
     });
