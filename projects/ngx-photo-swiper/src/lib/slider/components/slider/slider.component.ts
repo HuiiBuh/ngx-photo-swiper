@@ -19,6 +19,7 @@ import { SliderInformation } from '../../../models/gallery';
 import { HDirection, TAnimation } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
+import { UrlHandlerService } from '../../services/url-handler.service';
 import { ControlsComponent } from '../controls/controls.component';
 import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
 
@@ -45,6 +46,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private cd: ChangeDetectorRef,
+    private _: UrlHandlerService,
     @Inject(DOCUMENT) private document: Document) {
   }
 

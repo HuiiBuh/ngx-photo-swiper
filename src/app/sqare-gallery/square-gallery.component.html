@@ -1,4 +1,8 @@
-<photo-lightbox lightboxID="square" [imageList]="data" galleryType="square" [controls]="controlsComponent"></photo-lightbox>
+<p style="text-align: center">The gallery preserves existing <a [routerLink]="router.url"
+                                                                [queryParams]="{test: 'test'}">url parameters</a></p>
+
+<photo-lightbox lightboxID="square" [imageList]="data" galleryType="square"
+                [controls]="controlsComponent"></photo-lightbox>
 
 <ng-template #controlsComponent>
   <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="true"></photo-controls>

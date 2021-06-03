@@ -4,19 +4,19 @@ import { LightboxModule } from '../../projects/ngx-photo-swiper/src/lib/lightbox
 import { AppComponent } from './app-component/app.component';
 
 import { AppRoutingModule } from './app-routing.module';
+import { CustomGalleryComponent } from './custom-gallery/custom-gallery.component';
 import { FlexGalleryComponent } from './flex-gallery/flex-gallery.component';
-import { OwnGalleryComponent } from './own-gallery/own-gallery.component';
 import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FlexGalleryComponent,
-    OwnGalleryComponent,
     SquareGalleryComponent,
+    CustomGalleryComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserModule.withServerTransition({appId: 'serverApp'}),
     AppRoutingModule,
     LightboxModule,
   ],

@@ -1,6 +1,4 @@
-import { AfterViewChecked, Component, enableProdMode } from '@angular/core';
-import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { AfterViewChecked, Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +7,6 @@ import { environment } from '../../environments/environment';
 })
 export class AppComponent implements AfterViewChecked {
   public title = 'ngx-photo-swiper-app';
-
-  constructor(public router: Router) {
-    if (environment.production) enableProdMode();
-  }
 
   public ngAfterViewChecked(): void {
     console.log('Checked');

@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OwnGalleryComponent } from './own-gallery.component';
-
 describe('OwnGalleryComponent', () => {
   let component: OwnGalleryComponent;
   let fixture: ComponentFixture<OwnGalleryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OwnGalleryComponent ]
+      declarations: [OwnGalleryComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

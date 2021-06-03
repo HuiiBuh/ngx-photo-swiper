@@ -3,10 +3,10 @@ import { ResponsiveSliderImage, SliderImage } from '../../../projects/ngx-photo-
 import { testData } from '../test.data';
 
 @Component({
-  selector: 'app-own-gallery',
-  templateUrl: './own-gallery.component.html',
-  styleUrls: ['./own-gallery.component.scss'],
+  selector: 'app-custom-gallery',
+  templateUrl: './custom-gallery.component.html',
+  styleUrls: ['./custom-gallery.component.scss'],
 })
-export class OwnGalleryComponent {
+export class CustomGalleryComponent {
   public data: (SliderImage | ResponsiveSliderImage)[] = testData;
 }

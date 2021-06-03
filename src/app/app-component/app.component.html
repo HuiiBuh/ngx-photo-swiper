@@ -1,8 +1,9 @@
 <nav class="space-between v-center header">
   <h1>Ngx Photo Swiper</h1>
   <div class="nav-right">
-    <a routerLink="/flex">Flex</a>
-    <a routerLink="/square">Square</a>
+    <a routerLink="/square" routerLinkActive="active">Square-gallery</a>
+    <a routerLink="/flex" routerLinkActive="active">Flex-gallery</a>
+    <a routerLink="/custom" routerLinkActive="active">Custom-gallery</a>
   </div>
   <a class="v-center github-icon" href="https://github.com/huiibuh/ngx-photo-swiper" target="_blank">
     <svg width="30" height="30" viewBox="0 0 16 16"
@@ -13,8 +14,6 @@
   </a>
 </nav>
 <div class="container">
-
-  <p>The gallery preserves existing <a [routerLink]="router.url" [queryParams]="{test: 'test'}">url parameters</a></p>
 
   <router-outlet></router-outlet>
 

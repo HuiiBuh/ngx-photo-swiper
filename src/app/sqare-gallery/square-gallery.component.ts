@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ResponsiveSliderImage, SliderImage } from '../../../projects/ngx-photo-swiper/src/lib/models/gallery';
 import { testData } from '../test.data';
 
@@ -9,5 +10,10 @@ import { testData } from '../test.data';
 })
 export class SquareGalleryComponent {
   public data: (SliderImage | ResponsiveSliderImage)[] = testData;
+
+  constructor(
+    public router: Router
+  ) {
+  }
 
 }
