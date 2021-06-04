@@ -1,0 +1,18 @@
+<div style="display: flex; padding-bottom: 1rem; justify-content: center">
+  <input type="number" #input placeholder="Set image count" [value]="value" (change)="updateCount(input.value)">
+  <input type="checkbox" id="checkbox">
+  <label for="checkbox" (change)="infiniteSwipe = !infiniteSwipe">Infinite swipe</label>
+</div>
+<photo-lightbox lightboxID="few" [imageList]="data" galleryType="square" [controls]="controlsComponent"
+                [infiniteSwipe]="infiniteSwipe"></photo-lightbox>
+
+<ng-template #controlsComponent>
+  <photo-controls [shareOptionList]="shareOptions" [showOnMobile]="true"></photo-controls>
+</ng-template>
+
+
+<ng-template #shareOptions>
+  <a href="https://google.com">Google</a>
+  <a href="https://google.com">WhatsApp</a>
+  <a href="https://google.com">Instagram</a>
+</ng-template>
