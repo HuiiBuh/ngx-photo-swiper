@@ -3,7 +3,7 @@
  * Copyright george byte (https://github.com/georgebyte/rxjs-observable-store)
  * MIT licenced
  * Copied because the library caused angular not to build.
- * Not removed to avoid the ts-toolkit dependency.
+ * Not removed to avoid the ts-toolbelt dependency.
  */
 
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -26,7 +26,7 @@ export class Store<S extends object> {
     this.state$.next(nextState);
   }
 
-  public onChanges<T>(...path: Index[]): Observable<T> {
+  protected onChanges<T>(...path: Index[]): Observable<T> {
     return this.state$.pipe(
       map(state =>
         path.reduce((result, part) => {

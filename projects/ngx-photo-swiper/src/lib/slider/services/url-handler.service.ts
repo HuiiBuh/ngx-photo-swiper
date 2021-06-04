@@ -18,7 +18,7 @@ export class UrlHandlerService {
     this.route.queryParams.subscribe(params => {
       this.loadSliderStateFromURL(params);
       if (this.firstPageLoad) {
-        this.store.onChanges<SliderModel>('slider').subscribe(slider => this.handleSliderURL(slider));
+        this.store.getSlider$().subscribe(slider => this.handleSliderURL(slider));
         this.firstPageLoad = false;
       }
     });

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GalleryModel, SliderImage } from '../../models/gallery';
+import { SliderImage } from '../../models/gallery';
 import { NgxLightboxService } from '../../ngx-lightbox.service';
 import { LightboxStore } from '../../store/lightbox.store';
 
@@ -21,7 +21,7 @@ export class SquareGalleryComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.imageList$ = this.store.onChanges<GalleryModel>('gallery', this.lightboxID).pipe(map(gallery => gallery.images));
-    this.sliderActive$ = this.store.onChanges<boolean>('slider', 'active');
+    this.imageList$ = this.store.getGallery$(this.lightboxID).pipe(map(gallery => gallery.images));
+    this.sliderActive$ = this.store.getSliderActive$();
   }
 }

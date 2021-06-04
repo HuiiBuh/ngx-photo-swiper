@@ -1,7 +1,9 @@
 {
   "extends": "ts-config",
   "rules": {
-    "one-line": [true],
+    "one-line": [
+      true
+    ],
     "align": {
       "options": [
         "parameters",
@@ -14,7 +16,10 @@
       }
     },
     "member-access": {
-      "options": ["check-accessor", "check-parameter-property"]
+      "options": [
+        "check-accessor",
+        "check-parameter-property"
+      ]
     },
     "interface-name": false,
     "no-implicit-dependencies": false,
@@ -84,7 +89,7 @@
     "no-unused-expression": {
       "options": "allow-fast-null-checks"
     },
-    "no-non-null-assertion": true,
+    "no-non-null-assertion": false,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-var-requires": false,

@@ -79,7 +79,7 @@ export class LightboxStore extends Store<GalleryState> {
       };
     };
 
-    return this.onChanges<SliderModel>('slider').pipe(
+    return this.getSlider$().pipe(
       map(slider => toSliderInformation(slider)),
     );
   }
@@ -142,10 +142,44 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Check if the gallery supports infinite swipe
    */
-  public getHasInfiniteSwipe(): Observable<boolean> {
+  public getHasInfiniteSwipe$(): Observable<boolean> {
     return this.state$.pipe(
       map(state => state.gallery[state.slider.lightboxID].infiniteSwipe)
     );
+  }
+
+  /**
+   * Get the current slider
+   */
+  public getSlider$(): Observable<SliderModel> {
+    return this.onChanges<SliderModel>('slider');
+  }
+
+  /**
+   * Get a certain gallery
+   * @param galleryId The id of the gallery you want to subscribe to
+   */
+  public getGallery$(galleryId: string): Observable<GalleryModel> {
+    return this.onChanges<GalleryModel>('gallery', galleryId);
+  }
+
+  /**
+   * Check if the share overlay is visible
+   */
+  public getShareVisible$(): Observable<boolean> {
+    return this.onChanges<boolean>('slider', 'shareVisible');
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Change state to
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public getCurrentImage(): SliderImage | ResponsiveSliderImage | null {
+    if (!this.state.slider.active) return null;
+
+    const imageIndex = this.state.slider.imageIndex;
+    const lightboxId = this.state.slider.lightboxID;
+    return this.state.gallery[lightboxId].images[imageIndex];
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -62,6 +62,7 @@ export class SliderImageComponent implements OnDestroy, OnInit {
   public ngOnInit(): void {
     this.captionSubscription = this.caption.captionHeight$.subscribe(h => {
       this.captionHeight = h;
+      // Prevent expressionhaschangedafteritwaschecked error
       this.cd.detectChanges();
     });
   }
@@ -89,7 +90,7 @@ export class SliderImageComponent implements OnDestroy, OnInit {
    */
   public close(event: MouseEvent): void {
     if (event.target === event.currentTarget || event.target === this.imageCenter.nativeElement) {
-      this.store.animateTo('down');
+      this.store.animateTo('close');
     }
   }
 

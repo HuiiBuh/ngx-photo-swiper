@@ -1,5 +1,5 @@
-import {TDirection} from '../../models/slider';
-import {ITouchMove, MovePosition} from '../../models/touchmove';
+import { TDirection } from '../../models/slider';
+import { ITouchMove, MovePosition } from '../../models/touchmove';
 
 export class TouchMove {
 
@@ -38,9 +38,9 @@ export class TouchMove {
     const difference = this.start.clientY - this.current.clientY;
     let direction: TDirection = 'none';
     if (difference > TouchMove.swipeThreshold) {
-      direction = 'up';
+      direction = 'open';
     } else if (Math.abs(difference) > TouchMove.swipeThreshold) {
-      direction = 'down';
+      direction = 'close';
     }
     return direction;
   }
@@ -83,10 +83,10 @@ export class TouchMove {
     return returnHistory;
   }
 
-  private getMoveDirection(offset: number): 'left' | 'right' | 'up' | 'down' {
+  private getMoveDirection(offset: number): 'left' | 'right' | 'open' | 'close' {
     if (this.touchDirection === 'x') {
       return offset > 0 ? 'left' : 'right';
     }
-    return offset > 0 ? 'up' : 'down';
+    return offset > 0 ? 'open' : 'close';
   }
 }

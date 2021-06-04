@@ -13,7 +13,8 @@ import {
   Renderer2,
   TemplateRef,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { fromEvent, Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { LightboxStore } from '../../../store/lightbox.store';
 
 // @dynamic
@@ -65,7 +66,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   // Timeout for the controls
   private controlsVisibleTimeout: number = 0;
-  private listeners: (() => void)[] = [];
+  private destroy$ = new Subject<boolean>();
 
   constructor(
     public store: LightboxStore,
@@ -85,12 +86,13 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.active$ = this.store.getSliderActive$();
     this.isLastImage$ = this.store.getIsLastImage$();
     this.isFirstImage$ = this.store.getIsFirstImage$();
-    this.hasInfiniteSwipe$ = this.store.getHasInfiniteSwipe();
+    this.hasInfiniteSwipe$ = this.store.getHasInfiniteSwipe$();
 
     this.ngZone.runOutsideAngular(() => {
-      const move = this.renderer2.listen('body', 'mousemove', this.handleComponentVisibility.bind(this));
-      const click = this.renderer2.listen('body', 'click', this.handleComponentVisibility.bind(this));
-      this.listeners.push(move, click);
+      fromEvent(this.document.body, 'mousemove').pipe(takeUntil(this.destroy$))
+        .subscribe(this.handleComponentVisibility.bind(this));
+      fromEvent(this.document.body, 'click').pipe(takeUntil(this.destroy$))
+        .subscribe(this.handleComponentVisibility.bind(this));
     });
     this.handleComponentVisibility();
     this.addListeners();
@@ -100,8 +102,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Remove the mouse listener
    */
   public ngOnDestroy(): void {
-    this.listeners.forEach(l => l());
-    this.listeners = [];
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   /**
@@ -125,42 +127,30 @@ export class ControlsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  public left(): void {
-    this.store.animateTo('left');
-  }
-
-  public right(): void {
-    this.store.animateTo('right');
-  }
-
-  public closeSlider(): void {
-    this.store.animateTo('down');
-  }
-
   /**
    * Add the listeners for left, right, escape and scroll
    */
   private addListeners(): void {
-    const listener1 = this.renderer2.listen(this.document, 'keyup', (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowLeft':
-          this.left();
-          break;
-        case 'ArrowRight':
-          this.right();
-          break;
-        case 'Escape':
-          this.closeSlider();
-          break;
-        default:
-      }
-    });
-    this.document.addEventListener('scroll', () => this.closeSlider(), {once: true});
-    const listener3 = this.renderer2.listen(this.document, 'fullscreenchange', () => {
-      this.fullscreenEnabled = !!this.document.fullscreenElement;
-      this.changeDetectorRef.detectChanges();
-    });
-    this.listeners.push(listener1, listener3);
+    fromEvent<KeyboardEvent>(this.document, 'keyup').pipe(takeUntil(this.destroy$))
+      .subscribe(e => {
+        switch (e.key) {
+          case 'ArrowLeft':
+            this.store.animateTo('left');
+            break;
+          case 'ArrowRight':
+            this.store.animateTo('right');
+            break;
+          case 'Escape':
+            this.store.animateTo('close');
+        }
+      });
+    fromEvent(this.document, 'scroll', {once: true}).pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.store.animateTo('close'));
+    fromEvent(this.document, 'fullscreenchange').pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.fullscreenEnabled = !!this.document.fullscreenElement;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   /**

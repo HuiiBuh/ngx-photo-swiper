@@ -22,16 +22,16 @@
 
     <photo-share [shareOptionList]="shareOptionList"></photo-share>
 
-    <button (click)="store.closeSlider()" *ngIf="close" class="icon-close"></button>
+    <button (click)="store.animateTo('close')" *ngIf="close" class="icon-close"></button>
 
   </div>
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
-    <button (click)="left()" *ngIf="!(isFirstImage$ | async) || (hasInfiniteSwipe$ | async)"
+    <button (click)="store.animateTo('left')" *ngIf="!(isFirstImage$ | async) || (hasInfiniteSwipe$ | async)"
             [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-left left"
             [ngStyle]="{display: display}"></button>
 
-    <button (click)="right()" *ngIf="!(isLastImage$ | async) || (hasInfiniteSwipe$ | async)"
+    <button (click)="store.animateTo('right')" *ngIf="!(isLastImage$ | async) || (hasInfiniteSwipe$ | async)"
             [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-right right"
             [ngStyle]="{display: display}"></button>
   </ng-template>

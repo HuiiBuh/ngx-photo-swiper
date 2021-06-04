@@ -19,7 +19,6 @@ import { SliderInformation } from '../../../models/gallery';
 import { HDirection, TAnimation } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
-import { UrlHandlerService } from '../../services/url-handler.service';
 import { ControlsComponent } from '../controls/controls.component';
 import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
 
@@ -46,20 +45,20 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     private renderer2: Renderer2,
     private ngZone: NgZone,
     private cd: ChangeDetectorRef,
-    private _: UrlHandlerService,
     @Inject(DOCUMENT) private document: Document) {
   }
 
   public ngOnInit(): void {
-    this.store.getAnimationRequest$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
-    this.store.getSliderImages$().pipe(takeUntil(this.destroy$)).subscribe(v => this.sliderState = v);
-    this.store.onChanges<boolean>('slider', 'active').subscribe(e => {
-      this.handleAnimationRequest(e ? 'up' : 'down');
-    });
+    this.store.getAnimationRequest$().pipe(takeUntil(this.destroy$))
+      .subscribe(this.handleAnimationRequest.bind(this));
+    this.store.getSliderImages$().pipe(takeUntil(this.destroy$))
+      .subscribe(v => this.sliderState = v);
+    this.store.getSliderActive$().pipe(takeUntil(this.destroy$))
+      .subscribe(active => this.handleAnimationRequest(active ? 'open' : 'close'));
   }
 
   public ngAfterViewInit(): void {
-    this.afterOpenClose();
+    this.resetSlider();
   }
 
   /**
@@ -94,7 +93,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     } else {
       this.ngZone.run(() => {
-        const direction = $event.getDirection() as 'up' | 'down' | 'none';
+        const direction = $event.getDirection() as 'open' | 'close' | 'none';
         if (direction === 'none') {
           // TODO smooth transition back
           this.setTranslate(0, 0);
@@ -109,7 +108,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Reset opacity, translate and the display state
    */
-  public afterOpenClose(): void {
+  public resetSlider(): void {
     this.sliderState.slider.active ? this.setDisplay('block') : this.setDisplay('none');
     this.setTranslate(0, 0);
     this.setOpacity(1);
@@ -156,7 +155,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate back to the center
    */
   private hAnimateCenter(): void {
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center();
+    const currentImage = this.store.getCurrentImage();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center(currentImage!);
+
     if (this.slider) {
       const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
       animation.onfinish = () => {
@@ -169,11 +170,13 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate to the left side
    */
   private hAnimateLeft(): void {
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left();
+    const currentImage = this.store.getCurrentImage();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left(currentImage!);
+
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
+      this.resetSlider();
       this.store.moveImageIndex(-1);
-      this.setTranslate(0, 0);
       this.cd.detectChanges();
     };
   }
@@ -182,33 +185,38 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate to the right side
    */
   private hAnimateRight(): void {
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right();
+    const currentImage = this.store.getCurrentImage();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right(currentImage!);
+
     const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
     animation.onfinish = () => {
+      this.resetSlider();
       this.store.moveImageIndex(1);
-      this.setTranslate(0, 0);
       this.cd.detectChanges();
     };
   }
 
   private vAnimateOpen(): void {
-    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.open();
+    const currentImage = this.store.getCurrentImage();
+    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.open(currentImage!);
+    this.setDisplay('block');
 
-    if (this.slider) {
-      const animation = this.slider.nativeElement.animate(blueprint);
+    if (this.lightboxContainer) {
+      const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
       animation.onfinish = () => {
-        this.afterOpenClose();
+        this.resetSlider();
       };
     }
   }
 
   private vAnimateClosed(): void {
-    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.close();
+    const currentImage = this.store.getCurrentImage();
+    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.close(currentImage!);
 
-    if (this.slider) {
-      const animation = this.slider.nativeElement.animate(blueprint);
+    if (this.lightboxContainer) {
+      const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
       animation.onfinish = () => {
-        this.afterOpenClose();
+        this.resetSlider();
         this.store.closeSlider();
       };
     }
@@ -229,10 +237,10 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       case 'none':
         this.hAnimateCenter();
         break;
-      case 'down':
+      case 'close':
         this.vAnimateClosed();
         break;
-      case 'up':
+      case 'open':
         this.vAnimateOpen();
         break;
       default:

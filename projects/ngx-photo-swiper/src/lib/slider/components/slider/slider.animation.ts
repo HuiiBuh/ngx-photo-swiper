@@ -1,14 +1,16 @@
+import { ResponsiveSliderImage, SliderImage } from '../../../models/gallery';
+
 interface AnimationReturn {
   keyframe: Keyframe[] | PropertyIndexedKeyframes | null;
   options?: (number | KeyframeAnimationOptions);
 }
 
 export interface ImageAnimationFactory {
-  right(): AnimationReturn;
+  right(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 
-  left(): AnimationReturn;
+  left(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 
-  center(): AnimationReturn;
+  center(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 }
 
 const DEFAULT_OPTIONS: KeyframeAnimationOptions = {
@@ -32,11 +34,11 @@ export const DEFAULT_IMAGE_CHANGE_FACTORY: ImageAnimationFactory = {
 };
 
 interface OpenCloseFactory {
-  open(): AnimationReturn;
+  open(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 
-  close(): AnimationReturn;
+  close(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 
-  center(): AnimationReturn;
+  center(image: SliderImage | ResponsiveSliderImage): AnimationReturn;
 }
 
 const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
@@ -46,11 +48,11 @@ const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
 
 export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
   open: () => ({
-    keyframe: [{opacity: 1}],
+    keyframe: [{opacity: 0}, {opacity: 1}],
     options: OPEN_CLOSE_OPTIONS
   }),
   close: () => ({
-    keyframe: [{opacity: 0}],
+    keyframe: [{opacity: 1}, {opacity: 0}],
     options: OPEN_CLOSE_OPTIONS
   }),
   center: () => ({

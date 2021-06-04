@@ -9,6 +9,6 @@ export class AppComponent implements AfterViewChecked {
   public title = 'ngx-photo-swiper-app';
 
   public ngAfterViewChecked(): void {
-    console.log('Checked');
+    // console.log('Checked');
   }
 }

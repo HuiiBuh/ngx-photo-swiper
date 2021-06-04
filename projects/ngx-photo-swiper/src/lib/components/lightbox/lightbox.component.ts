@@ -1,6 +1,7 @@
 import { Component, Input, TemplateRef } from '@angular/core';
 import { ResponsiveSliderImage, SliderImage } from '../../models/gallery';
 import { ControlsComponent } from '../../slider/components/controls/controls.component';
+import { UrlHandlerService } from '../../slider/services/url-handler.service';
 import { LightboxStore } from '../../store/lightbox.store';
 
 @Component({
@@ -14,7 +15,10 @@ export class LightboxComponent {
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
   @Input() public galleryType: 'flex' | 'square' | 'own' = 'own';
 
-  constructor(private store: LightboxStore) {
+  constructor(
+    private store: LightboxStore,
+    private _: UrlHandlerService,
+  ) {
   }
 
   @Input()
