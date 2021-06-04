@@ -34,4 +34,5 @@ export class LightboxComponent {
       images: value,
     });
   }
+
 }

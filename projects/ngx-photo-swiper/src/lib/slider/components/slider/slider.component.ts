@@ -53,8 +53,8 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(this.handleAnimationRequest.bind(this));
     this.store.getSliderImages$().pipe(takeUntil(this.destroy$))
       .subscribe(v => this.sliderState = v);
-    this.store.getSliderActive$().pipe(takeUntil(this.destroy$))
-      .subscribe(active => this.handleAnimationRequest(active ? 'open' : 'close'));
+    // this.store.getSliderActive$().pipe(takeUntil(this.destroy$))
+    //   .subscribe(active => this.handleAnimationRequest(active ? 'open' : 'close'));
   }
 
   public ngAfterViewInit(): void {
@@ -148,7 +148,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param display The display property
    */
   private setDisplay(display: 'none' | 'block'): void {
-    this.renderer2.setStyle(this.lightboxContainer?.nativeElement, 'display', display);
+    if (this.lightboxContainer) {
+      this.renderer2.setStyle(this.lightboxContainer?.nativeElement, 'display', display);
+    }
   }
 
   /**
@@ -160,9 +162,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.slider) {
       const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
-      animation.onfinish = () => {
-        this.setTranslate(0, 0);
-      };
+      animation.onfinish = () => this.resetSlider();
     }
   }
 
@@ -196,10 +196,13 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
+  /**
+   * Animate the slider until he is visible
+   */
   private vAnimateOpen(): void {
+    this.setDisplay('block');
     const currentImage = this.store.getCurrentImage();
     const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.open(currentImage!);
-    this.setDisplay('block');
 
     if (this.lightboxContainer) {
       const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
@@ -209,6 +212,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Animate the slider until he is hidden
+   */
   private vAnimateClosed(): void {
     const currentImage = this.store.getCurrentImage();
     const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.close(currentImage!);
@@ -216,14 +222,15 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.lightboxContainer) {
       const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
       animation.onfinish = () => {
-        this.resetSlider();
         this.store.closeSlider();
+        this.resetSlider();
+        this.setDisplay('none');
       };
     }
   }
 
   /**
-   * Handle animation requests
+   * Handle animation requests and distribute the request to the appropriate animation method
    * @param animation The animation direction
    */
   private handleAnimationRequest(animation: TAnimation): void {

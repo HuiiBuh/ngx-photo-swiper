@@ -1,4 +1,4 @@
-import {TAnimation} from './slider';
+import { TAnimation } from './slider';
 
 export interface SliderImage {
   imageSRC: string;
@@ -34,11 +34,15 @@ export interface GalleryModel {
   infiniteSwipe: boolean;
 }
 
-export type GalleryCollection = Record<string, GalleryModel>;
+type GalleryId = string;
+export type GalleryCollection = Record<GalleryId, GalleryModel>;
 
-export interface SliderModel {
+export interface OpenSliderModel {
   imageIndex: number;
   lightboxID: string;
+}
+
+export interface SliderModel extends OpenSliderModel {
   active: boolean;
   shareVisible: boolean;
 }

@@ -76,7 +76,7 @@ export class UrlHandlerService {
 
     // @ts-ignore
     if (imageIndex !== undefined && gridID !== undefined && !isNaN(imageIndex)) {
-      this.store.updateSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: gridID, active: true});
+      this.store.openSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: gridID});
     } else {
       this.store.closeSlider();
     }

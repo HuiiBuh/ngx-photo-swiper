@@ -8,6 +8,7 @@ import {
   GalleryModel,
   GalleryState,
   ImageWithIndex,
+  OpenSliderModel,
   ResponsiveSliderImage,
   SliderImage,
   SliderInformation,
@@ -171,7 +172,7 @@ export class LightboxStore extends Store<GalleryState> {
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Change state to
+  // Get current state
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public getCurrentImage(): SliderImage | ResponsiveSliderImage | null {
@@ -268,6 +269,18 @@ export class LightboxStore extends Store<GalleryState> {
   }
 
   /**
+   * Replace the slider with a new slider state
+   */
+  public openSlider(slider: OpenSliderModel): void {
+    this.patchState<SliderModel>({
+      ...slider,
+      active: true,
+      shareVisible: false
+    }, 'slider');
+    this.animateTo('open');
+  }
+
+  /**
    * Close the slider
    */
   public closeSlider(): void {
@@ -308,4 +321,5 @@ export class LightboxStore extends Store<GalleryState> {
 
     return newPosition;
   }
+
 }
