@@ -1,5 +1,7 @@
-<div style="display: flex; padding-bottom: 1rem; justify-content: center">
-  <input type="number" #input placeholder="Set image count" [value]="value" (change)="updateCount(input.value)">
+<div style="display: flex; padding-bottom: 1rem; justify-content: center; align-items: center">
+  <label for="image-count">Image count</label>
+  <input type="number" #input placeholder="Set image count" [value]="value" (change)="updateCount(input.value)"
+         id="image-count">
   <input type="checkbox" id="checkbox">
   <label for="checkbox" (change)="infiniteSwipe = !infiniteSwipe">Infinite swipe</label>
 </div>
