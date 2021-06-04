@@ -12,6 +12,7 @@ import {
   Renderer2,
   TemplateRef,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +21,8 @@ import { HDirection, TAnimation } from '../../../models/slider';
 import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { ControlsComponent } from '../controls/controls.component';
-import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
+import { SliderImageComponent } from '../slider-image/slider-image.component';
+import { AnimationProps, DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slider.animation';
 
 // @dynamic
 @Component({
@@ -29,14 +31,14 @@ import { DEFAULT_IMAGE_CHANGE_FACTORY, DEFAULT_OPEN_CLOSE_FACTORY } from './slid
   styleUrls: ['slider.component.scss'],
 })
 export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
-
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
-  public display: 'block' | 'none' = 'none';
   public sliderState!: SliderInformation;
 
-  @ViewChild('slider') private slider: ElementRef | undefined;
-  @ViewChild('lightboxContainer') private lightboxContainer: ElementRef | undefined;
-  @ViewChild('sliderOverlay') private sliderOverlay: ElementRef | undefined;
+  @ViewChild('slider') private slider: ElementRef<HTMLDivElement> | undefined;
+  @ViewChild('lightboxContainer') private lightboxContainer: ElementRef<HTMLDivElement> | undefined;
+  @ViewChild('sliderOverlay') private sliderOverlay: ElementRef<HTMLDivElement> | undefined;
+  @ViewChildren(SliderImageComponent) private sliderImages: SliderImageComponent[] = [];
+
   private inTranslate = false;
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -53,8 +55,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(this.handleAnimationRequest.bind(this));
     this.store.getSliderImages$().pipe(takeUntil(this.destroy$))
       .subscribe(v => this.sliderState = v);
-    // this.store.getSliderActive$().pipe(takeUntil(this.destroy$))
-    //   .subscribe(active => this.handleAnimationRequest(active ? 'open' : 'close'));
   }
 
   public ngAfterViewInit(): void {
@@ -128,6 +128,19 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private getImageElements(): AnimationProps {
+    this.setDisplay('block');
+    const currentImage = this.store.getCurrentImage();
+
+    let galleryImage: HTMLImageElement | null = null;
+    if (currentImage && currentImage.nativeImage) galleryImage = currentImage.nativeImage;
+
+    return {
+      galleryImage,
+      sliderImage: null // TODO create an image which handles the image transitioning
+    };
+  }
+
   /**
    * Set the translate of the slider
    */
@@ -157,11 +170,11 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate back to the center
    */
   private hAnimateCenter(): void {
-    const currentImage = this.store.getCurrentImage();
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center(currentImage!);
+    const animationProps = this.getImageElements();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.center(animationProps!);
 
     if (this.slider) {
-      const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
+      const animation: Animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
       animation.onfinish = () => this.resetSlider();
     }
   }
@@ -170,30 +183,34 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate to the left side
    */
   private hAnimateLeft(): void {
-    const currentImage = this.store.getCurrentImage();
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left(currentImage!);
+    const animationProps = this.getImageElements();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.left(animationProps!);
 
-    const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
-    animation.onfinish = () => {
-      this.resetSlider();
-      this.store.moveImageIndex(-1);
-      this.cd.detectChanges();
-    };
+    if (this.slider) {
+      const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
+      animation.onfinish = () => {
+        this.resetSlider();
+        this.store.moveImageIndex(-1);
+        this.cd.detectChanges();
+      };
+    }
   }
 
   /**
    * Animate to the right side
    */
   private hAnimateRight(): void {
-    const currentImage = this.store.getCurrentImage();
-    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right(currentImage!);
+    const animationProps = this.getImageElements();
+    const blueprint = DEFAULT_IMAGE_CHANGE_FACTORY.right(animationProps!);
+    if (this.slider) {
+      const animation = this.slider.nativeElement.animate(blueprint.keyframe, blueprint.options);
+      animation.onfinish = () => {
+        this.resetSlider();
+        this.store.moveImageIndex(1);
+        this.cd.detectChanges();
+      };
+    }
 
-    const animation = this.slider?.nativeElement.animate(blueprint.keyframe, blueprint.options);
-    animation.onfinish = () => {
-      this.resetSlider();
-      this.store.moveImageIndex(1);
-      this.cd.detectChanges();
-    };
   }
 
   /**
@@ -201,14 +218,16 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private vAnimateOpen(): void {
     this.setDisplay('block');
-    const currentImage = this.store.getCurrentImage();
-    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.open(currentImage!);
+
+    const animationImages = this.getImageElements();
+    const {background, image} = DEFAULT_OPEN_CLOSE_FACTORY.open(animationImages);
 
     if (this.lightboxContainer) {
-      const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
-      animation.onfinish = () => {
-        this.resetSlider();
-      };
+      const animation: Animation = this.lightboxContainer.nativeElement.animate(background.keyframe, background.options);
+      animation.onfinish = () => this.resetSlider();
+    }
+    if (animationImages.sliderImage) {
+      animationImages.sliderImage.animate(image.keyframe, image.options);
     }
   }
 
@@ -216,16 +235,22 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * Animate the slider until he is hidden
    */
   private vAnimateClosed(): void {
-    const currentImage = this.store.getCurrentImage();
-    const blueprint = DEFAULT_OPEN_CLOSE_FACTORY.close(currentImage!);
+    const animationImages = this.getImageElements();
+
+    const {background, image} = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages);
 
     if (this.lightboxContainer) {
-      const animation = this.lightboxContainer.nativeElement.animate(blueprint.keyframe, blueprint.options);
+      const animation: Animation = this.lightboxContainer.nativeElement.animate(background.keyframe, background.options);
       animation.onfinish = () => {
-        this.store.closeSlider();
-        this.resetSlider();
         this.setDisplay('none');
+        this.store.closeSlider();
+        this.setTranslate(0, 0);
+        this.setOpacity(1);
       };
+    }
+
+    if (animationImages.sliderImage) {
+      animationImages.sliderImage.animate(image.keyframe, image.options);
     }
   }
 
@@ -234,6 +259,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param animation The animation direction
    */
   private handleAnimationRequest(animation: TAnimation): void {
+    console.log(animation);
     switch (animation) {
       case 'left':
         this.shouldChangeImage(animation) && this.hAnimateLeft();

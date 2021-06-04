@@ -74,8 +74,12 @@ export class UrlHandlerService {
     const gridID = params.gridID;
     const imageIndex = params.imageIndex;
 
+    const image = this.store.getCurrentImage();
+
     // @ts-ignore
     if (imageIndex !== undefined && gridID !== undefined && !isNaN(imageIndex)) {
+      // Current image is already loaded
+      if (image && image.index === parseInt(imageIndex, 0)) return;
       this.store.openSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: gridID});
     } else {
       this.store.closeSlider();

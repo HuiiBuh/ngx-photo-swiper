@@ -14,9 +14,10 @@
          [src]="currentImage?.imageSRC" [srcset]="currentImage.srcSet"
          [alt]="currentImage.caption || currentImage.smallCaption"
          [ngStyle]="getStretchConfig()"
-         (load)="loadEnd()"
+         (load)="largeImageVisible = true"
          (dragstart)="false"
          draggable="false"
+         #largeImage
     >
   </div>
 </div>

@@ -175,12 +175,15 @@ export class LightboxStore extends Store<GalleryState> {
   // Get current state
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public getCurrentImage(): SliderImage | ResponsiveSliderImage | null {
+  public getCurrentImage(): ImageWithIndex | null {
     if (!this.state.slider.active) return null;
 
     const imageIndex = this.state.slider.imageIndex;
     const lightboxId = this.state.slider.lightboxID;
-    return this.state.gallery[lightboxId].images[imageIndex];
+    return {
+      ...this.state.gallery[lightboxId].images[imageIndex],
+      index: imageIndex
+    };
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

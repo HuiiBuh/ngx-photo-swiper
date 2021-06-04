@@ -99,10 +99,9 @@ export class SliderImageComponent implements OnDestroy, OnInit {
     return `calc(100vh - 44px - ${captionHeight}px - 1rem - .5rem)`;
   }
 
-  public loadEnd(): void {
-    this.largeImageVisible = true;
-  }
-
+  /**
+   * Calculate the stretch config for the images
+   */
   public getStretchConfig(): { width: string; height: string } {
     const image = this.currentImage as ResponsiveSliderImageIndex;
 
@@ -118,6 +117,9 @@ export class SliderImageComponent implements OnDestroy, OnInit {
     return {height: '100%', width: 'auto'};
   }
 
+  /**
+   * Calculate the scrollbar-width and the icon width
+   */
   public getRight(): string {
     const window = this.document.defaultView;
     let scrollbarWidth = 0;
