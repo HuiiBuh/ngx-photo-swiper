@@ -47,41 +47,8 @@ export class LightboxStore extends Store<GalleryState> {
    */
   public getSliderImages$(): Observable<SliderInformation> {
 
-    const toSliderInformation = (slider: SliderModel): SliderInformation => {
-      const imageList: (ImageWithIndex | null)[] = new Array(3);
-
-      const gallery = this.state.gallery[slider.lightboxID];
-
-      if (slider.active) {
-
-        for (const i of [-1, 0, 1]) {
-          if (gallery.images[slider.imageIndex + i]) {
-            imageList[i + 1] = {
-              ...gallery.images[slider.imageIndex + i],
-              index: slider.imageIndex + i,
-            };
-          } else {
-            if (gallery.infiniteSwipe) {
-              const position = this.calculatePosition(i);
-              imageList[i + 1] = {
-                ...gallery.images[position],
-                index: position,
-              };
-            } else {
-              imageList[i + 1] = null;
-            }
-          }
-        }
-      }
-      return {
-        imageRange: imageList,
-        gallerySize: gallery?.images?.length,
-        slider: this.state.slider,
-      };
-    };
-
     return this.getSlider$().pipe(
-      map(slider => toSliderInformation(slider)),
+      map(slider => this.toSliderInformation(slider)),
     );
   }
 
@@ -239,6 +206,11 @@ export class LightboxStore extends Store<GalleryState> {
     return this.state.gallery[lId].images[iIndex];
   }
 
+  public getSliderImages(): SliderInformation {
+    const slider = this.state.slider;
+    return this.toSliderInformation(slider);
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Change state to
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -355,6 +327,43 @@ export class LightboxStore extends Store<GalleryState> {
       ...this.state.slider,
       imageIndex: this.calculatePosition(moveCount),
     }, 'slider');
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Internal
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private toSliderInformation(slider: SliderModel): SliderInformation {
+    const imageList: (ImageWithIndex | null)[] = new Array(3);
+
+    const gallery = this.state.gallery[slider.lightboxID];
+
+    if (slider.active) {
+
+      for (const i of [-1, 0, 1]) {
+        if (gallery.images[slider.imageIndex + i]) {
+          imageList[i + 1] = {
+            ...gallery.images[slider.imageIndex + i],
+            index: slider.imageIndex + i,
+          };
+        } else {
+          if (gallery.infiniteSwipe) {
+            const position = this.calculatePosition(i);
+            imageList[i + 1] = {
+              ...gallery.images[position],
+              index: position,
+            };
+          } else {
+            imageList[i + 1] = null;
+          }
+        }
+      }
+    }
+    return {
+      imageRange: imageList,
+      gallerySize: gallery?.images?.length,
+      slider: this.state.slider,
+    };
   }
 
   /**

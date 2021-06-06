@@ -22,7 +22,11 @@ export type OpenCloseAnimation =
 
 // TODO caption
 export interface OpenCloseFactory {
-  open(prosp: AnimationProps, imageSize: WidthHeight | null, windowSize: WidthHeight | null): OpenCloseAnimation;
+  open(
+    prosp: AnimationProps,
+    imageSize: WidthHeight | null,
+    windowSize: WidthHeight | null,
+    captionHeight: number | null): OpenCloseAnimation;
 
   close(
     prosp: AnimationProps,

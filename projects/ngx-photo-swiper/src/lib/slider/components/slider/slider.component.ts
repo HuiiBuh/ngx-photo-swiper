@@ -178,7 +178,8 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private sliderVisible(sliderVisible: boolean, animationVisible = !sliderVisible): void {
     if (this.sliderWrapper) {
-      this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'display', sliderVisible ? 'block' : 'none');
+      this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'visibility', sliderVisible ? 'visible' : 'hidden');
+      this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'pointer-events', sliderVisible ? 'all' : 'none');
     }
 
     if (this.animationComponents) {
@@ -215,6 +216,10 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  private getCenteredImage(): SliderImageComponent | undefined {
+    return this.sliderImages.find(i => i.getImageIndex() === 1);
+  }
+
   /**
    * Animate to the right side
    */
@@ -237,7 +242,21 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     const imageSize = this.getImageSize();
     const windowSize = this.getWindowSize();
     const animationImages = this.getImageElements();
-    const animation = DEFAULT_OPEN_CLOSE_FACTORY.open(animationImages, imageSize, windowSize);
+
+    const imageRange = this.store.getSliderImages();
+    this.sliderImages.forEach(i => {
+      i.sliderImages = imageRange.imageRange;
+      i.currentImageIndex = imageRange.slider.imageIndex;
+    });
+
+    const centeredImage = this.getCenteredImage();
+    let captionHeight: number | null = null;
+    if (centeredImage) {
+      centeredImage.updateCaptionText();
+      captionHeight = centeredImage.getCaptionHeight();
+    }
+
+    const animation = DEFAULT_OPEN_CLOSE_FACTORY.open(animationImages, imageSize, windowSize, captionHeight);
 
     await this.vAnimate(animation);
 

@@ -1,13 +1,13 @@
-<div (click)="close($event)" *ngIf="currentImage" class="index-{{getImageIndex()}} image-container">
+<div (click)="close($event)" class="index-{{getImageIndex()}} image-container">
 
-  <div [ngStyle]="{bottom: captionHeight, right: getRight()}" class="centered-image" #imageCenter>
+  <div [ngStyle]="{bottom: captionHeight, right: right}" class="centered-image" #imageCenter *ngIf="currentImage">
 
     <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
          [src]="$any(currentImage).smallImage"
          [alt]="currentImage.caption || currentImage.smallCaption"
          [ngStyle]="stretchConfig"
-         draggable="false"
          (dragstart)="false"
+         draggable="false"
     >
 
     <img [style]="'display:' + (largeImageVisible ? 'block': 'none')"
@@ -17,7 +17,15 @@
          (load)="largeImageVisible = true"
          (dragstart)="false"
          draggable="false"
-         #largeImage
     >
   </div>
+
+  <div class="caption-container" #captionWrapper>
+    <div class="caption">
+      <div #caption></div>
+      <small #smallCaption></small>
+    </div>
+  </div>
+
 </div>
+

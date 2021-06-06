@@ -7,7 +7,7 @@ interface Position<T = number> {
   left: T;
 }
 
-const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight, captionHeight: number = 0): Position<string> => {
+const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight, captionHeight: number): Position<string> => {
   //                                               top bar
   const availableHeight = windowSize.height - 44 - captionHeight;
   //                                               right/left icon
@@ -25,10 +25,13 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
     width = imageSize.width * factor;
   }
 
+  console.log(windowSize.height - height);
   return {
     height: `${height}px`,
+    // TODO seems to move
     left: `${(windowSize.width - width) / 2}px`,
-    top: `${(windowSize.height - height) / 2}px`,
+    // TODO something more elegant
+    top: `${44}px`,
     width: `${width}px`
   };
 };
@@ -57,7 +60,7 @@ const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
 };
 
 export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
-  open: ({galleryImage, animationImage}, imageSize, windowSize) => {
+  open: ({galleryImage, animationImage}, imageSize, windowSize, captionHeight) => {
     const backgroundAnimation: AnimationReturn = {
       keyframe: [{opacity: 0}, {opacity: 1}],
       options: OPEN_CLOSE_OPTIONS
@@ -73,7 +76,7 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
       image: {
         keyframe: [
           getImageKeyframes(smallPosition),
-          calculateImagePosition(imageSize, windowSize) as unknown as Keyframe,
+          calculateImagePosition(imageSize, windowSize, captionHeight ? captionHeight : 0) as unknown as Keyframe,
         ],
         options: OPEN_CLOSE_OPTIONS
       },
@@ -102,7 +105,7 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
       background: backgroundAnimation,
       image: {
         keyframe: [
-          calculateImagePosition(imageSize, windowSize) as unknown as Keyframe,
+          calculateImagePosition(imageSize, windowSize, 0) as unknown as Keyframe,
           getImageKeyframes(smallPosition),
         ],
         options: OPEN_CLOSE_OPTIONS

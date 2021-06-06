@@ -1,45 +1,36 @@
 <div class="animation-components" #animationComponents>
-  <img #animationImage>
-  <div class="background-overlay" #animationOverlay></div>
+    <img #animationImage>
+    <div class="background-overlay" #animationOverlay></div>
 </div>
 
-<ng-container *ngIf="sliderState$ | async; let sliderState">
+<!--<ng-container *ngIf="sliderState$ | async; let sliderState">-->
 
-  <div (hSwipe)="horizontalSwipe($event)"
-       (vSwipe)="verticalSwipe($event)"
-       class="lightbox-slider-container"
-       photoTouchmove
-       #sliderWrapper
-  >
+<div (hSwipe)="horizontalSwipe($event)"
+     (vSwipe)="verticalSwipe($event)"
+     class="lightbox-slider-container"
+     photoTouchmove
+     #sliderWrapper
+>
     <div class="background-overlay" #sliderOverlay></div>
 
 
     <div class="slider" #slider>
 
-      <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                     [sliderImages]="sliderState.imageRange" #caption1></photo-caption>
-      <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                          [sliderImages]="sliderState.imageRange"
-                          [caption]="caption1"></photo-slider-image>
+        <photo-slider-image [currentImageIndex]="(sliderState$ | async)?.slider?.imageIndex"
+                            [sliderImages]="(sliderState$ | async)?.imageRange"></photo-slider-image>
 
-      <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                     [sliderImages]="sliderState.imageRange" #caption2></photo-caption>
-      <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                          [sliderImages]="sliderState.imageRange"
-                          [caption]="caption2"></photo-slider-image>
+        <photo-slider-image [currentImageIndex]="(sliderState$ | async)?.slider?.imageIndex"
+                            [sliderImages]="(sliderState$ | async)?.imageRange"></photo-slider-image>
 
-      <photo-caption [currentImageIndex]="sliderState.slider.imageIndex"
-                     [sliderImages]="sliderState.imageRange" #caption3></photo-caption>
-      <photo-slider-image [currentImageIndex]="sliderState.slider.imageIndex"
-                          [sliderImages]="sliderState.imageRange"
-                          [caption]="caption3"></photo-slider-image>
+        <photo-slider-image [currentImageIndex]="(sliderState$ | async)?.slider?.imageIndex"
+                            [sliderImages]="(sliderState$ | async)?.imageRange"></photo-slider-image>
     </div>
 
-    <div *ngIf="controls && sliderState.slider.active" #controlsWrapper class="animate-opacity">
-      <ng-container *ngTemplateOutlet="controls"></ng-container>
+    <div *ngIf="controls && (sliderState$ | async)?.slider?.active" #controlsWrapper class="animate-opacity">
+        <ng-container *ngTemplateOutlet="controls"></ng-container>
     </div>
 
-  </div>
+</div>
 
 
-</ng-container>
+<!--</ng-container>-->

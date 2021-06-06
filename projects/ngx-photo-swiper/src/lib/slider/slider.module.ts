@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { CaptionComponent } from './components/caption/caption.component';
 import { ControlsComponent } from './components/controls/controls.component';
 import { ShareComponent } from './components/share/share.component';
 import { SliderImageComponent } from './components/slider-image/slider-image.component';
@@ -16,7 +15,6 @@ import { TouchmoveDirective } from './directives/touchmove.directive';
     TouchmoveDirective,
     SliderImageComponent,
     SliderDirective,
-    CaptionComponent,
   ],
   imports: [
     CommonModule,

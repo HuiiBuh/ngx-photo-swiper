@@ -1,151 +1,187 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    Inject,
-    Input,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    Renderer2,
-    ViewChild
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { isResponsiveImage } from '../../../helpers';
 import { ImageWithIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
-import { CaptionComponent } from '../caption/caption.component';
 import { WidthHeight } from '../slider/animation.models';
 
 /** @dynamic */
 @Component({
-    selector: 'photo-slider-image[sliderImages][currentImageIndex]',
-    templateUrl: './slider-image.component.html',
-    styleUrls: ['./slider-image.component.scss', '../../image-center-style.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'photo-slider-image[sliderImages][currentImageIndex]',
+  templateUrl: './slider-image.component.html',
+  styleUrls: ['./slider-image.component.scss', '../../image-center-style.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderImageComponent implements OnDestroy, OnInit {
+export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
 
-    private static GLOBAL_ID = 0;
-    private static IMAGES_IN_SLIDER: (SliderImageIndex | null | undefined)[] = new Array(3);
+  private static GLOBAL_ID = 0;
+  private static IMAGES_IN_SLIDER: (SliderImageIndex | null | undefined)[] = new Array(3);
 
-    public currentImage: ImageWithIndex | null = null;
-    public largeImageVisible: boolean = false;
-    public captionHeight: string = '0';
-    public stretchConfig: WidthHeight<string> = {height: 'auto', width: 'auto'};
+  public currentImage: ImageWithIndex | null = null;
+  public largeImageVisible: boolean = false;
+  public captionHeight: string = '0';
+  public stretchConfig: WidthHeight<string> = {height: 'auto', width: 'auto'};
+  public right: string = '';
+  @ViewChild('caption') public caption: ElementRef<HTMLDivElement> | undefined;
+  @ViewChild('smallCaption') public smallCaption: ElementRef<HTMLDivElement> | undefined;
+  @ViewChild('captionWrapper') public captionWrapper: ElementRef<HTMLDivElement> | undefined;
 
-    @Input() public caption!: CaptionComponent;
-    @Input() private currentImageIndex: number = 0;
-    @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
-    private readonly id: number;
-    private captionSubscription!: Subscription;
-    private resizeSubscription!: () => void;
+  @Input() public currentImageIndex: number | undefined = 0;
+  @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
+  private readonly id: number;
+  private resizeSubscription!: () => void;
 
-    constructor(
-        private store: LightboxStore,
-        private cd: ChangeDetectorRef,
-        @Inject(DOCUMENT) private document: Document,
-        private renderer: Renderer2,
-        private ngZone: NgZone
-    ) {
-        this.id = SliderImageComponent.GLOBAL_ID;
-        SliderImageComponent.GLOBAL_ID += 1;
+  constructor(
+    private store: LightboxStore,
+    private cd: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2,
+    private ngZone: NgZone
+  ) {
+    this.id = SliderImageComponent.GLOBAL_ID;
+    SliderImageComponent.GLOBAL_ID += 1;
+  }
+
+  @Input()
+  public set sliderImages(value: (ImageWithIndex | null)[] | undefined) {
+    if (!value) return;
+
+    this.setOrUpdateImage(value);
+    this.updateCaptionText();
+    this.stretchConfig = this.getStretchConfig();
+    this.right = this.getRight();
+  }
+
+  public ngOnInit(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.resizeSubscription = this.renderer.listen('window', 'resize', () => {
+        const newConfig = this.getStretchConfig();
+
+        // Nothing changed
+        if (newConfig.height === this.stretchConfig.height && newConfig.width === this.stretchConfig.width) return;
+
+        // Update stretch config
+        this.stretchConfig = newConfig;
+        this.cd.detectChanges();
+      });
+    });
+
+  }
+
+  public ngAfterViewInit(): void {
+    this.updateCaptionText();
+  }
+
+  public ngOnDestroy(): void {
+    SliderImageComponent.GLOBAL_ID -= 1;
+    this.resizeSubscription();
+  }
+
+  /**
+   * Get the index of the image
+   */
+  public getImageIndex(): number {
+    let returnIndex = 0;
+
+    if (this.currentImage && this.currentImageIndex) {
+      returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
     }
 
-    @Input()
-    private set sliderImages(value: (ImageWithIndex | null)[]) {
-        let image = value.find(i => i?.index === this.currentImage?.index);
-        if (!image && !this.currentImage) {
-            image = value[this.id];
-        } else if (!image) {
-            const indexList = SliderImageComponent.IMAGES_IN_SLIDER.map(i => i?.index);
-            image = value.filter(i => !indexList.includes(i?.index))[0];
-        }
+    return returnIndex;
+  }
 
-        SliderImageComponent.IMAGES_IN_SLIDER[this.id] = image;
-        this.currentImage = image;
-        this.stretchConfig = this.getStretchConfig();
+  /**
+   * Close the slider if you click on the black area
+   */
+  public close(event: MouseEvent): void {
+    if (event.target === event.currentTarget || event.target === this.imageCenter.nativeElement) {
+      this.store.animateTo('close');
+    }
+  }
+
+  /**
+   * Calculate the scrollbar-width and the icon width
+   */
+  private getRight(): string {
+    const window = this.document.defaultView;
+    let scrollbarWidth = 0;
+    if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
+    if (isNaN(scrollbarWidth)) scrollbarWidth = 0;
+    return `calc(5vw + 32px + ${scrollbarWidth}px)`;
+  }
+
+  /**
+   * Calculate the stretch config for the images
+   */
+  private getStretchConfig(): { width: string; height: string } {
+    const image = this.currentImage;
+
+    const window = this.document.defaultView;
+    if (!image || !isResponsiveImage(image) || !window) {
+      return {height: 'auto', width: 'auto'};
     }
 
-    public ngOnInit(): void {
-        this.captionSubscription = this.caption.captionHeight$.subscribe(h => {
-            this.captionHeight = h;
-            // Prevent expressionhaschangedafteritwaschecked error
-            this.cd.detectChanges();
-        });
+    const height = image.height / window.innerHeight;
+    const width = image.width / window.innerWidth;
 
-        this.ngZone.runOutsideAngular(() => {
-            this.resizeSubscription = this.renderer.listen('window', 'resize', () => {
-                const newConfig = this.getStretchConfig();
+    if (height < width) return {height: 'auto', width: '100%'};
+    return {height: '100%', width: 'auto'};
+  }
 
-                // Nothing changed
-                if (newConfig.height === this.stretchConfig.height && newConfig.width === this.stretchConfig.width) return;
-
-                // Update stretch config
-                this.stretchConfig = newConfig;
-                this.cd.detectChanges();
-            });
-        });
-
+  private setOrUpdateImage(value: (ImageWithIndex | null)[]): void {
+    let image = value.find(i => i?.index === this.currentImage?.index);
+    if (!image && !this.currentImage) {
+      image = value[this.id];
+    } else if (!image) {
+      const indexList = SliderImageComponent.IMAGES_IN_SLIDER.map(i => i?.index);
+      image = value.filter(i => !indexList.includes(i?.index))[0];
     }
 
-    public ngOnDestroy(): void {
-        SliderImageComponent.GLOBAL_ID -= 1;
-        this.captionSubscription.unsubscribe();
-        this.resizeSubscription();
+    SliderImageComponent.IMAGES_IN_SLIDER[this.id] = image;
+    this.currentImage = image;
+  }
+
+  public updateCaptionText(): void {
+    if (!this.currentImage?.caption && this.currentImage?.smallCaption && this.captionWrapper) {
+      this.captionWrapper.nativeElement.style.display = 'none';
+      return;
     }
 
-    /**
-     * Get the index of the image
-     */
-    public getImageIndex(): number {
-        let returnIndex = 0;
-
-        if (this.currentImage) {
-            returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
-        }
-
-        return returnIndex;
+    if (this.captionWrapper) {
+      this.captionWrapper.nativeElement.style.display = 'block';
+    }
+    if (this.currentImage?.caption && this.caption) {
+      this.caption.nativeElement.innerText = this.currentImage.caption;
+    }
+    if (this.currentImage?.smallCaption && this.smallCaption) {
+      this.smallCaption.nativeElement.innerText = this.currentImage.smallCaption;
     }
 
-    /**
-     * Close the slider if you click on the black area
-     */
-    public close(event: MouseEvent): void {
-        if (event.target === event.currentTarget || event.target === this.imageCenter.nativeElement) {
-            this.store.animateTo('close');
-        }
-    }
+    // Give the elements time to adjust
+    setTimeout(() => {
+      const height = this.getCaptionHeight();
 
-    /**
-     * Calculate the stretch config for the images
-     */
-    public getStretchConfig(): { width: string; height: string } {
-        const image = this.currentImage;
+      if (this.imageCenter) {
+        this.imageCenter.nativeElement.style.bottom = `${height}px`;
+      }
+    }, 0);
+  }
 
-        const window = this.document.defaultView;
-        if (!image || !isResponsiveImage(image) || !window) {
-            return {height: 'auto', width: 'auto'};
-        }
-
-        const height = image.height / window.innerHeight;
-        const width = image.width / window.innerWidth;
-
-        if (height < width) return {height: 'auto', width: '100%'};
-        return {height: '100%', width: 'auto'};
-    }
-
-    /**
-     * Calculate the scrollbar-width and the icon width
-     */
-    public getRight(): string {
-        const window = this.document.defaultView;
-        let scrollbarWidth = 0;
-        if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
-        if (isNaN(scrollbarWidth)) scrollbarWidth = 0;
-        return `calc(5vw + 32px + ${scrollbarWidth}px)`;
-    }
-
+  public getCaptionHeight(): number {
+    if (!this.captionWrapper) return 0;
+    return this.captionWrapper.nativeElement.clientHeight;
+  }
 }
