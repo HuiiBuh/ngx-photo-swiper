@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
 import {
   AnimationModel,
   GalleryCollection,
@@ -169,6 +169,40 @@ export class LightboxStore extends Store<GalleryState> {
    */
   public getShareVisible$(): Observable<boolean> {
     return this.onChanges<boolean>('slider', 'shareVisible');
+  }
+
+  public getOnOpen$(): Observable<null> {
+    return this.onChanges<boolean>('slider', 'active').pipe(
+      pairwise(),
+      filter(([previous, current]) => previous !== current && current),
+      map(() => null)
+    );
+  }
+
+  public getOnClose$(): Observable<null> {
+    return this.onChanges<boolean>('slider', 'active').pipe(
+      pairwise(),
+      filter(([previous, current]) => previous !== current && !current),
+      map(() => null)
+    );
+  }
+
+  public getOnNext$(): Observable<null> {
+    return this.onChanges<SliderModel>('slider').pipe(
+      pairwise(),
+      filter(([previous, current]) => previous.lightboxID === current.lightboxID),
+      filter(([previous, current]) => previous.imageIndex < current.imageIndex),
+      map(() => null)
+    );
+  }
+
+  public getOnPrevious$(): Observable<null> {
+    return this.onChanges<SliderModel>('slider').pipe(
+      pairwise(),
+      filter(([previous, current]) => previous.lightboxID === current.lightboxID),
+      filter(([previous, current]) => previous.imageIndex < current.imageIndex),
+      map(() => null)
+    );
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
