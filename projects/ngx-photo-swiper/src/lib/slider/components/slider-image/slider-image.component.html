@@ -5,7 +5,7 @@
     <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
          [src]="$any(currentImage).smallImage"
          [alt]="currentImage.caption || currentImage.smallCaption"
-         [ngStyle]="getStretchConfig()"
+         [ngStyle]="stretchConfig"
          draggable="false"
          (dragstart)="false"
     >
@@ -13,7 +13,7 @@
     <img [style]="'display:' + (largeImageVisible ? 'block': 'none')"
          [src]="currentImage?.imageSRC" [srcset]="currentImage.srcSet"
          [alt]="currentImage.caption || currentImage.smallCaption"
-         [ngStyle]="getStretchConfig()"
+         [ngStyle]="stretchConfig"
          (load)="largeImageVisible = true"
          (dragstart)="false"
          draggable="false"
