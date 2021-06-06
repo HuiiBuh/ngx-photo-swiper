@@ -30,11 +30,12 @@ export class SliderImageComponent implements OnDestroy, OnInit {
   public currentImage: ImageWithIndex | null | undefined = null;
   public largeImageVisible: boolean = false;
   public captionHeight: string = '0';
+
   @Input() public caption!: CaptionComponent;
-  private readonly id: number;
   @Input() private currentImageIndex: number = 0;
-  private captionSubscription!: Subscription;
   @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
+  private readonly id: number;
+  private captionSubscription!: Subscription;
 
   constructor(
     private store: LightboxStore,
@@ -94,11 +95,6 @@ export class SliderImageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public getHeight(captionHeight: number): string {
-    //                   top                    caption top   caption bottom
-    return `calc(100vh - 44px - ${captionHeight}px - 1rem - .5rem)`;
-  }
-
   /**
    * Calculate the stretch config for the images
    */
@@ -124,6 +120,7 @@ export class SliderImageComponent implements OnDestroy, OnInit {
     const window = this.document.defaultView;
     let scrollbarWidth = 0;
     if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
+    if (isNaN(scrollbarWidth)) scrollbarWidth = 0;
     return `calc(5vw + 32px + ${scrollbarWidth}px)`;
   }
 

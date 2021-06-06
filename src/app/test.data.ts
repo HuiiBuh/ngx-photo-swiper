@@ -3,6 +3,8 @@ import { ResponsiveSliderImage, SliderImage } from '../../projects/ngx-photo-swi
 export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
   caption: 'Test caption 1',
   imageSRC: 'http://via.placeholder.com/100x50',
+  height: 100,
+  width: 200,
   srcSet: `http://via.placeholder.com/200x100 600w,
            http://via.placeholder.com/400x200 900w,
            http://via.placeholder.com/600x300 1200w,
@@ -14,8 +16,11 @@ export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
   width: 1000,
   height: 2000,
   imageSRC: 'http://via.placeholder.com/2500x5000',
+  galleryImage: 'http://via.placeholder.com/500x1000'
 }, {
   caption: 'Test caption 3',
+  height: 1066,
+  width: 1600,
   smallCaption: 'A smaller caption',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
 }, {

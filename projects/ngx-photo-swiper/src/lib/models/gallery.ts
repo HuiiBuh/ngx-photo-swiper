@@ -6,21 +6,17 @@ export interface SliderImage {
   caption?: string;
   smallCaption?: string;
   nativeImage?: HTMLImageElement;
+  galleryImage?: string;
+}
+
+export interface ResponsiveSliderImage extends SliderImage {
+  smallImage: string;
+  width: number;
+  height: number;
 }
 
 export interface SliderImageIndex extends SliderImage {
   index: number;
-}
-
-export interface ResponsiveSliderImage {
-  imageSRC: string;
-  smallImage: string;
-  width: number;
-  height: number;
-  srcSet?: string;
-  caption?: string;
-  smallCaption?: string;
-  nativeImage?: HTMLImageElement;
 }
 
 export interface ResponsiveSliderImageIndex extends ResponsiveSliderImage {

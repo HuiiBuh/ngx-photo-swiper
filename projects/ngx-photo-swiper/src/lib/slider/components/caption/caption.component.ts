@@ -30,9 +30,9 @@ export class CaptionComponent implements OnDestroy, AfterViewInit {
   public captionHeight$ = new Subject<string>();
 
   private readonly id: number;
-  @ViewChild('caption') private caption: ElementRef | undefined;
-  @ViewChild('smallCaption') private smallCaption: ElementRef | undefined;
-  @ViewChild('captionContainer') private captionContainer: ElementRef | undefined;
+  @ViewChild('caption', {static: true}) private caption: ElementRef | undefined;
+  @ViewChild('smallCaption', {static: true}) private smallCaption: ElementRef | undefined;
+  @ViewChild('captionContainer', {static: true}) private captionContainer: ElementRef | undefined;
   @Input() private currentImageIndex: number = 0;
 
   constructor(
@@ -96,7 +96,7 @@ export class CaptionComponent implements OnDestroy, AfterViewInit {
 
     // Give the elements time to "find" their height
     setTimeout(() => {
-      if (this.captionContainer) {
+      if (this.captionContainer && this.captionContainer.nativeElement.clientHeight) {
         this.captionHeight$.next(`calc(${this.captionContainer.nativeElement.clientHeight}px + .5rem + 1rem)`);
       }
     });

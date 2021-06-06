@@ -1,8 +1,19 @@
 <div class="square-wrapper">
   <div class="square-image-wrapper" *ngFor="let image of imageList$ | async; index as i">
     <div class="fill-square">
-      <img [src]="image.imageSRC" [srcset]="image.srcSet" [alt]="image.caption || image.smallCaption"
-           photoSlider [imageIndex]="i" [lightboxID]="lightboxID" loading="lazy">
+
+      <ng-template *ngIf="image.galleryImage; then galleryImage; else noGalleryImage"></ng-template>
+
+      <ng-template #galleryImage>
+        <img [src]="image.galleryImage" [alt]="image.caption || image.smallCaption"
+             loading="lazy" photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
+      </ng-template>
+
+      <ng-template #noGalleryImage>
+        <img [src]="image.imageSRC" [srcset]="image.srcSet" [alt]="image.caption || image.smallCaption"
+             loading="lazy" photoSlider [imageIndex]="i" [lightboxID]="lightboxID">
+      </ng-template>
+
     </div>
   </div>
 </div>

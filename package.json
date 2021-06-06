@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run ngx-photo-swiper-app:serve-ssr",
+    "dev:ssr": "ng run ngx-photo-swiper-app:serve-ssr --port 4201",
     "serve:ssr": "node dist/ngx-photo-swiper-app/server/main.js",
     "build:ssr": "ng build --prod && ng run ngx-photo-swiper-app:server:production",
     "prerender": "ng run ngx-photo-swiper-app:prerender"

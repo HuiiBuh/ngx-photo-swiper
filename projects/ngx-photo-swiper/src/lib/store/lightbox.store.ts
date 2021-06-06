@@ -88,7 +88,7 @@ export class LightboxStore extends Store<GalleryState> {
   /**
    * Returns the active state of the slider
    */
-  public getSliderActive$(): Observable<boolean> {
+  public getIsActive$(): Observable<boolean> {
     return this.onChanges('slider', 'active');
   }
 
@@ -186,6 +186,25 @@ export class LightboxStore extends Store<GalleryState> {
     };
   }
 
+  public getIsActive(): boolean {
+    return this.state.slider.active;
+  }
+
+  public getImageIndex(): number {
+    return this.state.slider.imageIndex;
+  }
+
+  public getSliderGallerySize(): number {
+    return this.state.gallery[this.state.slider.lightboxID].images.length;
+  }
+
+  public getCenterImage(): SliderImage | ResponsiveSliderImage | null {
+    const iIndex = this.state.slider.imageIndex;
+    const lId = this.state.slider.lightboxID;
+    if (!lId) return null;
+    return this.state.gallery[lId].images[iIndex];
+  }
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Change state to
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,7 +237,7 @@ export class LightboxStore extends Store<GalleryState> {
    * @param index The image index in the lightbox
    * @param nativeImage The image element
    */
-  public addNativeImageElementToSlider(lightboxId: string, index: number, nativeImage: HTMLImageElement): void {
+  public addNativeImageElementToSlider(lightboxId: string, index: number, nativeImage: HTMLImageElement | undefined): void {
     const images = [...this.state.gallery[lightboxId].images];
     const currentImage = images[index];
     images.splice(index, 1, {...currentImage, nativeImage});
@@ -280,7 +299,6 @@ export class LightboxStore extends Store<GalleryState> {
       active: true,
       shareVisible: false
     }, 'slider');
-    this.animateTo('open');
   }
 
   /**

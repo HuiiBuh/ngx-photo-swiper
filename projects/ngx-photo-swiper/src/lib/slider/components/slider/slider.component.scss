@@ -1,4 +1,5 @@
 .lightbox-slider-container {
+  display    : none;
   position   : fixed;
   z-index    : 1000;
   top        : 0;
@@ -19,7 +20,6 @@
 }
 
 .slider {
-  will-change           : transition;
   display               : inline-grid;
 
   grid-template-columns : repeat(3, 110vw);
@@ -31,4 +31,22 @@
   left                  : -115vw;
   top                   : 0;
   bottom                : 0;
+}
+
+.animation-image {
+  position : absolute;
+
+  > img {
+    position : fixed;
+  }
+}
+
+.animation-components {
+  display : none;
+}
+
+.animate-opacity {
+  opacity     : 1;
+  will-change : opacity;
+  transition  : opacity .1s;
 }

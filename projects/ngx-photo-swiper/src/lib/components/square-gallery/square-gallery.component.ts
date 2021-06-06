@@ -22,6 +22,6 @@ export class SquareGalleryComponent implements OnInit {
 
   public ngOnInit(): void {
     this.imageList$ = this.store.getGallery$(this.lightboxID).pipe(map(gallery => gallery.images));
-    this.sliderActive$ = this.store.getSliderActive$();
+    this.sliderActive$ = this.store.getIsActive$();
   }
 }

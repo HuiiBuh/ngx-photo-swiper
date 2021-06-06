@@ -83,7 +83,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.imageIndex$ = this.store.getImageIndex$();
     this.sliderLength$ = this.store.getSliderLength$();
-    this.active$ = this.store.getSliderActive$();
+    this.active$ = this.store.getIsActive$();
     this.isLastImage$ = this.store.getIsLastImage$();
     this.isFirstImage$ = this.store.getIsFirstImage$();
     this.hasInfiniteSwipe$ = this.store.getHasInfiniteSwipe$();

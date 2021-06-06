@@ -39,15 +39,24 @@ export class UrlHandlerService {
    * Save the parameters which allow the restoration of the slider in the url
    */
   private async saveSliderStateToURL(slider: SliderModel): Promise<void> {
+
+    const params = this.route.snapshot.queryParams;
+
+    let replace = false;
+
+    // Don't save every image change in the history
+    if ('lightboxId' in params && params.lightboxId === slider.lightboxID) replace = true;
+
     await this.ngZone.run(() =>
       this.router.navigate([], {
         relativeTo: this.route,
         queryParams: {
           imageIndex: String(slider.imageIndex),
-          gridID: String(slider.lightboxID),
+          lightboxId: String(slider.lightboxID),
         },
         queryParamsHandling: 'merge',
         skipLocationChange: false,
+        replaceUrl: replace
       }));
   }
 
@@ -56,7 +65,7 @@ export class UrlHandlerService {
    */
   private async removeSliderStateFromURL(): Promise<void> {
     const params = {...this.route.snapshot.queryParams};
-    delete params.gridID;
+    delete params.lightboxId;
     delete params.imageIndex;
 
     await this.ngZone.run(() =>
@@ -71,18 +80,22 @@ export class UrlHandlerService {
    * @param params URL parameters as json object
    */
   private loadSliderStateFromURL(params: Params): void {
-    const gridID = params.gridID;
+    const lightboxId = params.lightboxId;
     const imageIndex = params.imageIndex;
 
     const image = this.store.getCurrentImage();
 
     // @ts-ignore
-    if (imageIndex !== undefined && gridID !== undefined && !isNaN(imageIndex)) {
+    if (imageIndex !== undefined && lightboxId !== undefined && !isNaN(imageIndex)) {
       // Current image is already loaded
       if (image && image.index === parseInt(imageIndex, 0)) return;
-      this.store.openSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: gridID});
+      this.store.openSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: lightboxId});
+      this.store.animateTo('open');
+      console.log('open');
     } else {
-      this.store.closeSlider();
+      // Dont try to animate to closed if the lightbox is already closed
+      if (!image) return;
+      this.store.animateTo('close');
     }
   }
 }

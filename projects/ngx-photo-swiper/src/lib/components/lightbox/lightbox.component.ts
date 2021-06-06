@@ -23,16 +23,12 @@ export class LightboxComponent {
 
   @Input()
   public set infiniteSwipe(value: boolean) {
-    this.store.editOrAddGallery(this.lightboxID, {
-      infiniteSwipe: value,
-    });
+    this.store.editOrAddGallery(this.lightboxID, {infiniteSwipe: value});
   }
 
   @Input()
   public set imageList(value: (SliderImage | ResponsiveSliderImage)[]) {
-    this.store.editOrAddGallery(this.lightboxID, {
-      images: value,
-    });
+    this.store.editOrAddGallery(this.lightboxID, {images: value});
   }
 
 }
