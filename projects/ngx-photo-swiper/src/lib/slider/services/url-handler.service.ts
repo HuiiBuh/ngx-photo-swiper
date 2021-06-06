@@ -91,7 +91,6 @@ export class UrlHandlerService {
       if (image && image.index === parseInt(imageIndex, 0)) return;
       this.store.openSlider({imageIndex: parseInt(imageIndex, 0), lightboxID: lightboxId});
       this.store.animateTo('open');
-      console.log('open');
     } else {
       // Dont try to animate to closed if the lightbox is already closed
       if (!image) return;

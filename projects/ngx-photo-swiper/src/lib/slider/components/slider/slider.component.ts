@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -32,6 +33,7 @@ import { DEFAULT_OPEN_CLOSE_FACTORY } from './open-animation';
   selector: 'photo-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() public controls: TemplateRef<ControlsComponent> | null = null;
@@ -334,7 +336,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private getCurrentOpacity(): number {
     if (this.sliderOverlay) {
-      console.log(this.sliderOverlay.nativeElement.style.opacity);
       return parseInt(this.sliderOverlay.nativeElement.style.opacity, 0);
     }
     return 1;

@@ -1,4 +1,4 @@
-import { Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ResponsiveSliderImage, SliderImage } from '../../models/gallery';
 import { ControlsComponent } from '../../slider/components/controls/controls.component';
 import { UrlHandlerService } from '../../slider/services/url-handler.service';
@@ -8,6 +8,7 @@ import { LightboxStore } from '../../store/lightbox.store';
   selector: 'photo-lightbox[lightboxID][imageList]',
   templateUrl: './lightbox.component.html',
   styleUrls: ['./lightbox.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LightboxComponent {
 
