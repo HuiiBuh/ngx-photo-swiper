@@ -40,11 +40,14 @@ export class SliderDirective implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    this.store.addNativeImageElementToSlider(this.lightboxID!, this.imageIndex!, undefined);
+
     if (this.clickSubscription) this.clickSubscription();
     if (this.enterSubscription) this.enterSubscription();
   }
 
   private showSlider(): void {
     this.store.openSlider({imageIndex: this.imageIndex!, lightboxID: this.lightboxID!});
+    this.store.animateTo('open');
   }
 }
