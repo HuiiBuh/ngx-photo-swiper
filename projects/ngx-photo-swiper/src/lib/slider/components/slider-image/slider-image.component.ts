@@ -63,8 +63,6 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
     this.updateCaptionText();
     this.stretchConfig = this.getStretchConfig();
     this.right = this.getRight();
-
-    // console.log(this.currentImage, this.getImageIndex());
   }
 
   public ngOnInit(): void {

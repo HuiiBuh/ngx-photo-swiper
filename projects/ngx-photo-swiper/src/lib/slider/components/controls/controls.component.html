@@ -18,7 +18,7 @@
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
 
     <ng-container *ngIf="currentImage$ | async; let currentImage">
-      <a style="display:inline-block;" *ngIf="download" target="_blank" download [href]="currentImage"
+      <a *ngIf="download" target="_blank" download [href]="currentImage"
          class="icon-download"></a>
     </ng-container>
 

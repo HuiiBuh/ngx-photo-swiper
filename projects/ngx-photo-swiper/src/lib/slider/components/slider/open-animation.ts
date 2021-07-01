@@ -20,8 +20,6 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
     width = Math.round(imageSize.width * factor);
   }
 
-  console.log(captionHeight);
-
   return {
     height: `${height}px`,
     left: `${Math.round((availableWidth - width) / 2) + 32}px`,
@@ -49,7 +47,7 @@ const getImageKeyframes = (position: Position) => ({
 });
 
 const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
-  duration: 300,
+  duration: 3000,
   easing: 'cubic-bezier(.19,.75,.53,.9)'
 };
 
