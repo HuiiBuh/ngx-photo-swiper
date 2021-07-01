@@ -11,50 +11,34 @@
   width            : 44px;
   height           : 44px;
   background-color : transparent;
+  //transform        : scale(1.4) translate(-1.4%);
 
   &:before {
-    content         : "";
-
-    background      : var(--lib-icons);
-
-    background-size : 264px 88px;
-    width           : 44px;
-    height          : 44px;
-
-    float           : right;
-
-    cursor          : pointer;
+    content    : "";
+    background : var(--lib-icons);
+    width      : 44px;
+    height     : 44px;
+    float      : right;
+    cursor     : pointer;
   }
 }
 
 .icon-right {
   @extend %icons;
 
-  height : 30px;
-  width  : 32px;
-
   &:before {
     background-color    : var(--lib-arrow-background-color);
-    background-position : -94px -44px;
-
-    height              : 30px;
-    width               : 32px;
+    background-position : -88px -44px;
   }
 }
 
 .icon-left {
   @extend %icons;
 
-  height : 30px;
-  width  : 32px;
-
   &:before {
     background-color    : var(--lib-arrow-background-color);
-    background-position : -138px -44px;
+    background-position : -132px -44px;
     float               : left;
-
-    height              : 30px;
-    width               : 32px;
   }
 }
 
@@ -63,6 +47,14 @@
 
   &:before {
     background-position : 0 -44px;
+  }
+}
+
+.icon-download {
+  @extend %icons;
+
+  &:before {
+    background-position : -176px -44px;
   }
 }
 
@@ -90,7 +82,7 @@
   }
 }
 
-.icon-zoom {
+.icon-zoom-in {
   @extend %icons;
 
   &:before {

@@ -46,10 +46,11 @@ export class ControlsComponent implements OnInit, OnDestroy {
   @Input() public share = true;
   @Input() public close = true;
   @Input() public arrows = true;
+  @Input() public download = true;
   @Input() public shareOptionList: TemplateRef<HTMLAnchorElement[]> | undefined;
-  @Input() public fadeoutTime: number = 3000;
-  @Input() public showOnMobile: boolean = true;
-  @Input() public disableFadeout: boolean = false;
+  @Input() public fadeoutTime = 3000;
+  @Input() public showOnMobile = true;
+  @Input() public disableFadeout = false;
 
   // Should the controls be visible
   public controlsVisible: boolean = true;
@@ -59,6 +60,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   public isLastImage$!: Observable<boolean>;
   public isFirstImage$!: Observable<boolean>;
   public hasInfiniteSwipe$!: Observable<boolean>;
+  public currentImage$!: Observable<string>;
 
   // Is the website in fullscreen mode
   public fullscreenEnabled: boolean = false;
@@ -83,6 +85,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.imageIndex$ = this.store.getImageIndex$();
     this.sliderLength$ = this.store.getSliderLength$();
+    this.currentImage$ = this.store.largestSrcOfImage$();
     this.active$ = this.store.getIsActive$();
     this.isLastImage$ = this.store.getIsLastImage$();
     this.isFirstImage$ = this.store.getIsFirstImage$();
@@ -183,5 +186,4 @@ export class ControlsComponent implements OnInit, OnDestroy {
       }, this.fadeoutTime) as unknown as number;
     }
   }
-
 }

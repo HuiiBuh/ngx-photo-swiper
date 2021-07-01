@@ -27,7 +27,12 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "*",
+                "input": "projects/ngx-photo-swiper/assets",
+                "output": "assets/photo-swiper/"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -220,6 +225,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "ngx-photo-swiper-app"
 }

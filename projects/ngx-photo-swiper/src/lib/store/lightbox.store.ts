@@ -46,9 +46,27 @@ export class LightboxStore extends Store<GalleryState> {
    * Get currently active slider images 3
    */
   public getSliderImages$(): Observable<SliderInformation> {
-
     return this.getSlider$().pipe(
       map(slider => this.toSliderInformation(slider)),
+    );
+  }
+
+  /**
+   * Get the currently active image
+   */
+  public getCurrentImage$(): Observable<ImageWithIndex | null> {
+    return this.state$.pipe(
+      map(state => this.getCurrentImage(state))
+    );
+  }
+
+  public largestSrcOfImage$(): Observable<string> {
+    return this.getCurrentImage$().pipe(
+      // @ts-ignore
+      filter(i => !!i),
+      map((i: ImageWithIndex) => {
+        return i.imageSRC;
+      })
     );
   }
 
@@ -176,13 +194,13 @@ export class LightboxStore extends Store<GalleryState> {
   // Get current state
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public getCurrentImage(): ImageWithIndex | null {
-    if (!this.state.slider.active) return null;
+  public getCurrentImage(state = this.state): ImageWithIndex | null {
+    if (!state.slider.active) return null;
 
-    const imageIndex = this.state.slider.imageIndex;
-    const lightboxId = this.state.slider.lightboxID;
+    const imageIndex = state.slider.imageIndex;
+    const lightboxId = state.slider.lightboxID;
     return {
-      ...this.state.gallery[lightboxId].images[imageIndex],
+      ...state.gallery[lightboxId].images[imageIndex],
       index: imageIndex
     };
   }

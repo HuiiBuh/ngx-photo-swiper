@@ -12,10 +12,15 @@
       / {{ sliderLength$ | async }}
     </div>
 
-    <button *ngIf="zoom" class="icon-zoom"></button>
+    <button *ngIf="zoom" class="icon-zoom-in"></button>
 
     <button (click)="toggleFullscreen()" *ngIf="fullscreen"
             [class]="fullscreenEnabled ? 'icon-exit-fullscreen':'icon-fullscreen'"></button>
+
+    <ng-container *ngIf="currentImage$ | async; let currentImage">
+      <a style="display:inline-block;" *ngIf="download" target="_blank" download [href]="currentImage"
+         class="icon-download"></a>
+    </ng-container>
 
     <button (click)="store.toggleShare()" *ngIf="share && shareOptionList"
             class="icon-social-share" style="z-index: 100"></button>
