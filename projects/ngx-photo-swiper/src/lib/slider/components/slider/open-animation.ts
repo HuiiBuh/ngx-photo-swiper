@@ -20,6 +20,8 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
     width = Math.round(imageSize.width * factor);
   }
 
+  console.log(captionHeight);
+
   return {
     height: `${height}px`,
     left: `${Math.round((availableWidth - width) / 2) + 32}px`,

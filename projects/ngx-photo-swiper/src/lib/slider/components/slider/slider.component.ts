@@ -178,7 +178,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private sliderVisible(sliderVisible: boolean, animationVisible = !sliderVisible): void {
     if (this.sliderWrapper) {
-      this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'display', sliderVisible ? 'block' : 'none');
+      this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'visibility', sliderVisible ? 'visible' : 'hidden');
       this.renderer2.setStyle(this.sliderWrapper.nativeElement, 'pointer-events', sliderVisible ? 'all' : 'none');
     }
 
