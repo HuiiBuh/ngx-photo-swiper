@@ -113,6 +113,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Toggle fullscreen of the gallery
    */
   public async toggleFullscreen(): Promise<void> {
+    console.log('click');
     if (!this.fullscreenEnabled) {
       await this.document.body.requestFullscreen();
     } else {

@@ -3,7 +3,8 @@
 .top-control {
   background-color : var(--lib-overlay-backgound-color);
 
-  position         : absolute;
+  z-index          : 1001;
+  position         : fixed;
   left             : 0;
   top              : 0;
   height           : 44px;

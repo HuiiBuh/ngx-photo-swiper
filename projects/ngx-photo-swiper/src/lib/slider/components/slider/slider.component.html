@@ -6,11 +6,12 @@
 
 <ng-container *ngIf="sliderState$ | async; let sliderState">
 
-  <div (hSwipe)="horizontalSwipe($event)"
-       (vSwipe)="verticalSwipe($event)"
-       class="lightbox-slider-container"
-       photoTouchmove
-       #sliderWrapper
+  <div
+    (hSwipe)="horizontalSwipe($event)"
+    (vSwipe)="verticalSwipe($event)"
+    photoTouchmove
+    class="lightbox-slider-container"
+    #sliderWrapper
   >
     <div class="background-overlay" #sliderOverlay></div>
 
@@ -27,11 +28,10 @@
                           [sliderImages]="sliderState.imageRange"></photo-slider-image>
     </div>
 
-    <div *ngIf="controls && sliderState.slider.active" #controlsWrapper class="animate-opacity">
-      <ng-container *ngTemplateOutlet="controls"></ng-container>
-    </div>
-
   </div>
 
+  <div *ngIf="controls && sliderState.slider.active" #controlsWrapper>
+    <ng-container *ngTemplateOutlet="controls"></ng-container>
+  </div>
 
 </ng-container>

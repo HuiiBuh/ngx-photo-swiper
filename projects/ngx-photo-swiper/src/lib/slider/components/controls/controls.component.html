@@ -22,8 +22,7 @@
          class="icon-download"></a>
     </ng-container>
 
-    <button (click)="store.toggleShare()" *ngIf="share && shareOptionList"
-            class="icon-social-share" style="z-index: 100"></button>
+    <button (click)="store.toggleShare()" *ngIf="share && shareOptionList" class="icon-social-share"></button>
 
     <photo-share [shareOptionList]="shareOptionList"></photo-share>
 
