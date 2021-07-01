@@ -1,11 +1,4 @@
-import { AnimationReturn, OpenCloseFactory, WidthHeight } from './animation.models';
-
-interface Position<T = number> {
-  height: T;
-  width: T;
-  top: T;
-  left: T;
-}
+import { AnimationReturn, OpenCloseFactory, Position, WidthHeight } from './animation.models';
 
 const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight, captionHeight: number): Position<string> => {
   //                                               top bar
@@ -15,23 +8,22 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
 
   let height: number;
   let width: number;
+
+  // Check if the image should be full width or full height
   if (availableWidth / imageSize.width < availableHeight / imageSize.height) {
     const factor = availableWidth / imageSize.width;
-    height = imageSize.height * factor;
+    height = Math.round(imageSize.height * factor);
     width = availableWidth;
   } else {
     const factor = availableHeight / imageSize.height;
     height = availableHeight;
-    width = imageSize.width * factor;
+    width = Math.round(imageSize.width * factor);
   }
 
-  console.log(windowSize.height - height);
   return {
     height: `${height}px`,
-    // TODO seems to move
-    left: `${(windowSize.width - width) / 2}px`,
-    // TODO something more elegant
-    top: `${44}px`,
+    left: `${Math.round((availableWidth - width) / 2) + 32}px`,
+    top: `${Math.round((availableHeight - height) / 2) + 44}px`,
     width: `${width}px`
   };
 };
@@ -39,7 +31,7 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
 const prepareAnimationImage = (element: HTMLImageElement, position: Position, src: string) => {
   element.style.height = `${position.height}px`;
   element.style.width = `${position.width}px`;
-  element.style.top = `var(--top-height)`;
+  element.style.top = `${position.top}`;
   element.style.left = `${position.left}px`;
   element.style.position = 'fixed';
   element.style.objectFit = 'cover';
@@ -83,13 +75,13 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
       canAnimateImage: true
     };
   },
-  close: ({galleryImage, animationImage}, imageSize, windowSize, backgroundOpacity) => {
+  close: ({galleryImage, animationImage}, imageSize, windowSize, captionHeight, backgroundOpacity) => {
     const backgroundAnimation: AnimationReturn = {
       keyframe: [{opacity: backgroundOpacity}, {opacity: 0}],
       options: OPEN_CLOSE_OPTIONS
     };
 
-    if (!galleryImage || !animationImage || !imageSize || !windowSize) {
+    if (!galleryImage || !animationImage || !imageSize || !windowSize || !captionHeight) {
       return {
         background: backgroundAnimation,
         canAnimateImage: false
@@ -105,7 +97,7 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
       background: backgroundAnimation,
       image: {
         keyframe: [
-          calculateImagePosition(imageSize, windowSize, 0) as unknown as Keyframe,
+          calculateImagePosition(imageSize, windowSize, captionHeight) as unknown as Keyframe,
           getImageKeyframes(smallPosition),
         ],
         options: OPEN_CLOSE_OPTIONS

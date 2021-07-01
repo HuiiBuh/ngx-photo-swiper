@@ -32,7 +32,8 @@ export interface OpenCloseFactory {
     prosp: AnimationProps,
     imageSize: WidthHeight | null,
     windowSize: WidthHeight | null,
-    backgroundOpacity: number
+    captionHeight: number | null,
+    backgroundOpacity: number,
   ): OpenCloseAnimation;
 
   center(prosp: AnimationProps, imageSize: WidthHeight | null, windowSize: WidthHeight | null): AnimationReturn;
@@ -41,4 +42,11 @@ export interface OpenCloseFactory {
 export interface WidthHeight<T = number> {
   width: T;
   height: T;
+}
+
+export interface Position<T = number> {
+  height: T;
+  width: T;
+  top: T;
+  left: T;
 }

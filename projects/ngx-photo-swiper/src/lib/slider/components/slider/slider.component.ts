@@ -272,7 +272,14 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     const windowSize = this.getWindowSize();
     const animationImages = this.getImageElements();
     const opacity = this.getCurrentOpacity();
-    const animation = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages, imageSize, windowSize, opacity);
+
+    const centeredImage = this.getCenteredImage();
+    let captionHeight: number | null = null;
+    if (centeredImage) {
+      captionHeight = centeredImage.getCaptionHeight();
+    }
+
+    const animation = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages, imageSize, windowSize, captionHeight, opacity);
 
     await this.vAnimate(animation);
 
@@ -318,8 +325,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
     const window = this.document.defaultView;
     if (!window) return null;
 
+    const scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
     return {
-      width: window.innerWidth,
+      width: window.innerWidth - scrollbarWidth,
       height: window.innerHeight
     };
   }
@@ -355,7 +363,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   private getCurrentOpacity(): number {
     if (this.sliderOverlay) {
-      return parseInt(this.sliderOverlay.nativeElement.style.opacity, 0);
+      const tmp = parseInt(this.sliderOverlay.nativeElement.style.opacity, 0);
+      if (isNaN(tmp)) return 1;
+      return tmp;
     }
     return 1;
   }
