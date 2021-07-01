@@ -1,3 +1,7 @@
+:host {
+  display : contents;
+}
+
 .center {
   display         : flex;
   align-items     : center;
@@ -40,4 +44,30 @@ img {
   min-width  : 30vw;
   max-width  : 70vw;
   text-align : left;
+}
+
+.image-container {
+  display         : flex;
+  align-content   : center;
+  align-items     : center;
+  justify-content : center;
+
+  position        : absolute;
+  top             : 0;
+  left            : 0;
+  right           : 0;
+  bottom          : 0;
+  padding         : 0 5vw;
+}
+
+.index-0 {
+  grid-area : first;
+}
+
+.index-1 {
+  grid-area : second;
+}
+
+.index-2 {
+  grid-area : third;
 }

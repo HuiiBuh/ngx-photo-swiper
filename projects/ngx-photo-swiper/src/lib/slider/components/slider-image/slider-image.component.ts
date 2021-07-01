@@ -22,7 +22,7 @@ import { WidthHeight } from '../slider/animation.models';
 @Component({
   selector: 'photo-slider-image[sliderImages][currentImageIndex]',
   templateUrl: './slider-image.component.html',
-  styleUrls: ['./slider-image.component.scss', '../../image-center-style.scss'],
+  styleUrls: ['./slider-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
@@ -39,7 +39,7 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('smallCaption') public smallCaption: ElementRef<HTMLDivElement> | undefined;
   @ViewChild('captionWrapper') public captionWrapper: ElementRef<HTMLDivElement> | undefined;
 
-  @Input() public currentImageIndex: number | undefined = 0;
+  @Input() public currentImageIndex: number | undefined;
   @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
   private readonly id: number;
   private resizeSubscription!: () => void;
@@ -63,6 +63,8 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
     this.updateCaptionText();
     this.stretchConfig = this.getStretchConfig();
     this.right = this.getRight();
+
+    // console.log(this.currentImage, this.getImageIndex());
   }
 
   public ngOnInit(): void {
@@ -96,8 +98,11 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
   public getImageIndex(): number {
     let returnIndex = 0;
 
-    if (this.currentImage && this.currentImageIndex) {
+    if (this.currentImage && this.currentImageIndex !== undefined) {
       returnIndex = ((this.currentImage.index - (this.currentImageIndex % 3) + 1) % 3);
+      if (returnIndex < 0) {
+        returnIndex += 3;
+      }
     }
 
     return returnIndex;
