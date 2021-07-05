@@ -16,7 +16,7 @@ import {
 import { isResponsiveImage } from '../../../helpers';
 import { ImageWithIndex, SliderImageIndex } from '../../../models/gallery';
 import { LightboxStore } from '../../../store/lightbox.store';
-import { WidthHeight } from '../slider/animation.models';
+import { Position, WidthHeight } from '../slider/animation.models';
 
 /** @dynamic */
 @Component({
@@ -38,6 +38,7 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('caption') public caption: ElementRef<HTMLDivElement> | undefined;
   @ViewChild('smallCaption') public smallCaption: ElementRef<HTMLDivElement> | undefined;
   @ViewChild('captionWrapper') public captionWrapper: ElementRef<HTMLDivElement> | undefined;
+  @ViewChild('largeImage') public largeImage: ElementRef<HTMLImageElement> | undefined;
 
   @Input() public currentImageIndex: number | undefined;
   @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
@@ -186,5 +187,11 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
   public getCaptionHeight(): number {
     if (!this.captionWrapper) return 0;
     return this.captionWrapper.nativeElement.clientHeight;
+  }
+
+  public getImagePosition(): Position<number> | null {
+    if (!this.largeImage) return null;
+
+    return this.largeImage.nativeElement.getBoundingClientRect();
   }
 }

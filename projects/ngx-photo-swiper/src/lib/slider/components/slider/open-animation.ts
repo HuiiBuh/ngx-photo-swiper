@@ -47,7 +47,7 @@ const getImageKeyframes = (position: Position) => ({
 });
 
 const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
-  duration: 300,
+  duration: 3000,
   easing: 'cubic-bezier(.19,.75,.53,.9)'
 };
 
@@ -75,29 +75,28 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
       canAnimateImage: true
     };
   },
-  close: ({galleryImage, animationImage}, imageSize, windowSize, captionHeight, backgroundOpacity) => {
+  close: ({galleryImage, animationImage}, imageSize, sliderImagePosition, windowSize, captionHeight, backgroundOpacity) => {
     const backgroundAnimation: AnimationReturn = {
       keyframe: [{opacity: backgroundOpacity}, {opacity: 0}],
       options: OPEN_CLOSE_OPTIONS
     };
 
-    if (!galleryImage || !animationImage || !imageSize || !windowSize || !captionHeight) {
+    if (!galleryImage || !animationImage || !imageSize || !windowSize || !captionHeight || !sliderImagePosition) {
       return {
         background: backgroundAnimation,
         canAnimateImage: false
       };
     }
 
-    const largePosition = animationImage.getBoundingClientRect();
-    prepareAnimationImage(animationImage, largePosition, galleryImage.src);
-
+    prepareAnimationImage(animationImage, sliderImagePosition, galleryImage.src);
+    console.log(sliderImagePosition);
     const smallPosition = galleryImage.getBoundingClientRect();
 
     return {
       background: backgroundAnimation,
       image: {
         keyframe: [
-          calculateImagePosition(imageSize, windowSize, captionHeight) as unknown as Keyframe,
+          getImageKeyframes(sliderImagePosition),
           getImageKeyframes(smallPosition),
         ],
         options: OPEN_CLOSE_OPTIONS

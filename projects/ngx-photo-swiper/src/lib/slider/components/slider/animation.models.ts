@@ -31,6 +31,7 @@ export interface OpenCloseFactory {
   close(
     prosp: AnimationProps,
     imageSize: WidthHeight | null,
+    sliderImagePosition: Position<number> | null,
     windowSize: WidthHeight | null,
     captionHeight: number | null,
     backgroundOpacity: number,

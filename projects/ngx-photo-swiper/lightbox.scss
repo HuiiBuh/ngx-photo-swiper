@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /* Lightbox ***********************************************************************************************************/
 $-backdrop-color         : #000;
 $-overlay-color          : rgba(0, 0, 0, 0.3);
@@ -85,7 +87,7 @@ $-breakpoints            : $-very-small $-small $-medium $-large $-very-large;
     $width             : map-get($size, "width");
     $horizontal-gap    : map-get($size, "horizontal-gap");
     $vertical-gap      : map-get($size, "vertical-gap");
-    $column-percentage : (100 / $columns);
+    $column-percentage : math.div(100, $columns);
 
     @media screen and (min-width : $width) {
       .square-wrapper {

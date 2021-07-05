@@ -24,7 +24,7 @@ import { LightboxStore } from '../../../store/lightbox.store';
 import { TouchMove } from '../../directives/touchmove.directive.event';
 import { ControlsComponent } from '../controls/controls.component';
 import { SliderImageComponent } from '../slider-image/slider-image.component';
-import { AnimationProps, OpenCloseAnimation, WidthHeight } from './animation.models';
+import { AnimationProps, OpenCloseAnimation, Position, WidthHeight } from './animation.models';
 import { DEFAULT_IMAGE_CHANGE_FACTORY } from './change-animation';
 import { DEFAULT_OPEN_CLOSE_FACTORY } from './open-animation';
 
@@ -275,11 +275,13 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const centeredImage = this.getCenteredImage();
     let captionHeight: number | null = null;
+    let sliderImagePosition: Position<number> | null = null;
     if (centeredImage) {
       captionHeight = centeredImage.getCaptionHeight();
+      sliderImagePosition = centeredImage.getImagePosition();
     }
 
-    const animation = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages, imageSize, windowSize, captionHeight, opacity);
+    const animation = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages, imageSize, sliderImagePosition, windowSize, captionHeight, opacity);
 
     await this.vAnimate(animation);
 
