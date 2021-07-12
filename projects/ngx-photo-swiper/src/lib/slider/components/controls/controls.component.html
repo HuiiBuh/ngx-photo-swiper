@@ -1,5 +1,5 @@
 <ng-template [ngIf]="active$ | async">
-  <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control"
+  <div [@fadeInOut]="controlsVisible ? 'visible': 'hidden'" class="top-control to-front"
        [ngStyle]="{display: display}"
        (@fadeInOut.start)="display = 'block'"
        (@fadeInOut.done)="display = controlsVisible ? 'block' : 'none'"
@@ -32,11 +32,11 @@
 
   <ng-template [ngIf]="arrows && !isMobile() || arrows && showOnMobile">
     <button (click)="store.animateTo('left')" *ngIf="!(isFirstImage$ | async) || (hasInfiniteSwipe$ | async)"
-            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-left left"
+            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-left left to-front"
             [ngStyle]="{display: display}"></button>
 
     <button (click)="store.animateTo('right')" *ngIf="!(isLastImage$ | async) || (hasInfiniteSwipe$ | async)"
-            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-right right"
+            [@fadeInOut]="controlsVisible ? 'visible' : 'hidden'" class="icon-right right to-front"
             [ngStyle]="{display: display}"></button>
   </ng-template>
 </ng-template>

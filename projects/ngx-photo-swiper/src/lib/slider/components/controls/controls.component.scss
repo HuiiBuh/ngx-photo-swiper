@@ -3,7 +3,6 @@
 .top-control {
   background-color : var(--lib-overlay-backgound-color);
 
-  z-index          : 1001;
   position         : fixed;
   left             : 0;
   top              : 0;
@@ -20,6 +19,10 @@
     color       : var(--lib-overlay-text-color);
     padding     : 0 10px;
   }
+}
+
+.to-front {
+  z-index : 1001;
 }
 
 .right, .left {

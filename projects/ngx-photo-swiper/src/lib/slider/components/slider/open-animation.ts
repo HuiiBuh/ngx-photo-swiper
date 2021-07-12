@@ -47,7 +47,7 @@ const getImageKeyframes = (position: Position) => ({
 });
 
 const OPEN_CLOSE_OPTIONS: KeyframeAnimationOptions = {
-  duration: 3000,
+  duration: 300,
   easing: 'cubic-bezier(.19,.75,.53,.9)'
 };
 
