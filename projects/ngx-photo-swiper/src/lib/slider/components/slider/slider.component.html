@@ -30,8 +30,10 @@
 
   </div>
 
-  <div *ngIf="controls && sliderState.slider.active" #controlsWrapper>
-    <ng-container *ngTemplateOutlet="controls"></ng-container>
+  <div #controlsWrapper class="fade-out">
+    <ng-container *ngIf="controls && sliderState.slider.active">
+      <ng-container *ngTemplateOutlet="controls"></ng-container>
+    </ng-container>
   </div>
 
 </ng-container>

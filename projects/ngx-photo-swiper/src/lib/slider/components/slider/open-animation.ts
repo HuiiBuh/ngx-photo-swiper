@@ -89,7 +89,6 @@ export const DEFAULT_OPEN_CLOSE_FACTORY: OpenCloseFactory = {
     }
 
     prepareAnimationImage(animationImage, sliderImagePosition, galleryImage.src);
-    console.log(sliderImagePosition);
     const smallPosition = galleryImage.getBoundingClientRect();
 
     return {

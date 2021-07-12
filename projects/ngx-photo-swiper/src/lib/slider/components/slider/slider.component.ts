@@ -49,6 +49,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren(SliderImageComponent) private sliderImages: SliderImageComponent[] = [];
 
   private inTranslate = false;
+  private firstLoad = true;
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
@@ -65,7 +66,12 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.store.getAnimationRequest$().pipe(takeUntil(this.destroy$)).subscribe(this.handleAnimationRequest.bind(this));
+    this.store.getAnimationRequest$().pipe(
+      takeUntil(this.destroy$),
+    ).subscribe((value => {
+      this.handleAnimationRequest(value, this.firstLoad);
+      this.firstLoad = false;
+    }));
     this.sliderVisible(this.store.getIsActive(), false);
   }
 
@@ -238,7 +244,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Animate the slider until he is visible
    */
-  private async vAnimateOpen(): Promise<void> {
+  private async vAnimateOpen(disableAnimation: boolean): Promise<void> {
     const imageSize = this.getImageSize();
     const windowSize = this.getWindowSize();
     const animationImages = this.getImageElements();
@@ -258,7 +264,11 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const animation = DEFAULT_OPEN_CLOSE_FACTORY.open(animationImages, imageSize, windowSize, captionHeight);
 
-    await this.vAnimate(animation);
+    if (!disableAnimation) {
+      await this.vAnimate(animation);
+      this.controlsWrapper?.nativeElement.classList.add('fade-in');
+    }
+    this.controlsWrapper?.nativeElement.classList.remove('fade-out');
 
     this.sliderVisible(true);
     this.resetSlider();
@@ -283,6 +293,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const animation = DEFAULT_OPEN_CLOSE_FACTORY.close(animationImages, imageSize, sliderImagePosition, windowSize, captionHeight, opacity);
 
+    this.controlsWrapper?.nativeElement.classList.add('fade-out');
     await this.vAnimate(animation);
 
     this.sliderVisible(false, false);
@@ -337,8 +348,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Handle animation requests and distribute the request to the appropriate animation method
    * @param animation The animation direction
+   * @param disableOpenAnimation Should the open animation be skipped
    */
-  private async handleAnimationRequest(animation: TAnimation): Promise<void> {
+  private async handleAnimationRequest(animation: TAnimation, disableOpenAnimation: boolean = true): Promise<void> {
     switch (animation) {
       case 'left':
         this.shouldChangeImage(animation) && await this.hAnimateLeft();
@@ -353,7 +365,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
         await this.vAnimateClosed();
         break;
       case 'open':
-        await this.vAnimateOpen();
+        await this.vAnimateOpen(disableOpenAnimation);
         break;
       default:
         console.error(`${animation} was not found`);

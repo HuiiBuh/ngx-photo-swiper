@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -37,7 +38,7 @@ import { LightboxStore } from '../../../store/lightbox.store';
     ]),
   ],
 })
-export class ControlsComponent implements OnInit, OnDestroy {
+export class ControlsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() public position = true;
   // TODO implement zoom
@@ -98,6 +99,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
         .subscribe(this.handleComponentVisibility.bind(this));
     });
     this.handleComponentVisibility();
+  }
+
+  public ngAfterViewInit(): void {
     this.addListeners();
   }
 
@@ -113,7 +117,6 @@ export class ControlsComponent implements OnInit, OnDestroy {
    * Toggle fullscreen of the gallery
    */
   public async toggleFullscreen(): Promise<void> {
-    console.log('click');
     if (!this.fullscreenEnabled) {
       await this.document.body.requestFullscreen();
     } else {
