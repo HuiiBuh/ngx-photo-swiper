@@ -1,0 +1,107 @@
+.flex {
+  display : flex;
+}
+
+.space-between {
+  @extend .flex;
+  justify-content : space-between;
+}
+
+
+.space-around {
+  @extend .flex;
+  justify-content : space-around;
+}
+
+.center {
+  @extend .flex;
+  align-items : center;
+}
+
+.header {
+  box-shadow : 0 2px 1px -1px rgba(0, 0, 0, .2), 0 1px 1px 0 rgba(0, 0, 0, .14), 0 1px 3px 0 rgba(0, 0, 0, .12);
+  padding    : 0 1rem;
+  height     : 4rem;
+  position   : relative;
+}
+
+.nav-right {
+  flex-grow   : 1;
+  align-items : center;
+
+
+  a {
+    color            : black;
+    padding          : 1.5rem 1rem;
+    text-decoration  : none;
+    transition       : background-color ease .3s;
+    background-color : transparent;
+
+    &:hover {
+      background-color : rgba(0, 0, 0, .1);
+    }
+  }
+}
+
+.active {
+  background-color : rgba(0, 0, 0, .1) !important
+}
+
+.github-icon {
+  color           : rgba(0, 0, 0, .5);
+  fill            : rgba(0, 0, 0, .5);
+  transition      : color, fill .2s;
+  background      : white;
+
+  text-decoration : none;
+
+  display         : flex;
+  align-items     : center;
+
+  &:hover {
+    color : rgba(38, 38, 38, 1);
+    fill  : rgba(38, 38, 38, 1);
+  }
+}
+
+
+#hamburger {
+  display : none;
+}
+
+@media only screen and (min-width : 600px) {
+  .nav-right {
+    display : flex !important;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  .nav-right {
+    max-width     : 160px;
+    background    : white;
+    z-index       : 1;
+    box-shadow    : 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+    border-radius : 4px;
+    display       : none;
+    position      : absolute;
+    right         : 22px;
+    top           : 54px;
+    flex-wrap     : wrap;
+
+    a {
+      flex-grow  : 1;
+      flex-basis : 100%;
+    }
+  }
+
+  #hamburger {
+    display : flex;
+  }
+
+  .github-icon {
+    position  : absolute;
+    left      : 50%;
+    transform : translateX(-50%);
+    top       : 19px;
+  }
+}

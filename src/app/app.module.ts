@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CustomGalleryComponent } from './custom-gallery/custom-gallery.component';
 import { FewImagesGalleryComponent } from './few-images-gallery/few-images-gallery.component';
 import { FlexGalleryComponent } from './flex-gallery/flex-gallery.component';
+import { NavComponent } from './nav/nav.component';
 import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component';
 
 @NgModule({
@@ -15,7 +16,8 @@ import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component
     FlexGalleryComponent,
     SquareGalleryComponent,
     CustomGalleryComponent,
-    FewImagesGalleryComponent
+    FewImagesGalleryComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'serverApp'}),
