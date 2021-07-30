@@ -5,9 +5,9 @@ import { AppComponent } from './app-component/app.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CustomGalleryComponent } from './custom-gallery/custom-gallery.component';
-import { FewImagesGalleryComponent } from './few-images-gallery/few-images-gallery.component';
 import { FlexGalleryComponent } from './flex-gallery/flex-gallery.component';
 import { NavComponent } from './nav/nav.component';
+import { PlaygroundGalleryComponent } from './playground/playground-gallery.component';
 import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component';
 
 @NgModule({
@@ -16,7 +16,7 @@ import { SquareGalleryComponent } from './sqare-gallery/square-gallery.component
     FlexGalleryComponent,
     SquareGalleryComponent,
     CustomGalleryComponent,
-    FewImagesGalleryComponent,
+    PlaygroundGalleryComponent,
     NavComponent
   ],
   imports: [

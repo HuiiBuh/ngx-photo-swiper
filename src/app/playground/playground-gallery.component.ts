@@ -3,14 +3,14 @@ import { ResponsiveSliderImage, SliderImage } from '../../../projects/ngx-photo-
 import { testData } from '../test.data';
 
 @Component({
-  selector: 'app-few-images',
-  templateUrl: './few-images-gallery.component.html',
-  styleUrls: ['./few-images-gallery.component.scss'],
+  selector: 'app-playground',
+  templateUrl: './playground-gallery.component.html',
+  styleUrls: ['./playground-gallery.component.scss'],
 })
-export class FewImagesGalleryComponent implements OnInit {
+export class PlaygroundGalleryComponent implements OnInit {
   public value = '3';
   public data: (SliderImage | ResponsiveSliderImage)[] = [];
-  public infiniteSwipe = true;
+  public infiniteSwipe = false;
 
   public updateCount(value: string): void {
     this.value = value;
