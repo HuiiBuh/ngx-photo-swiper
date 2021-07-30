@@ -44,6 +44,7 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('imageCenter') private imageCenter!: ElementRef<HTMLDivElement>;
   private readonly id: number;
   private resizeSubscription!: () => void;
+  public mouseDownStart: number = 0;
 
   constructor(
     private store: LightboxStore,
@@ -111,6 +112,7 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
    * Close the slider if you click on the black area
    */
   public close(event: MouseEvent): void {
+    if (event.timeStamp - this.mouseDownStart > 100) return;
     if (event.target === event.currentTarget || event.target === this.imageCenter.nativeElement) {
       this.store.animateTo('close');
     }

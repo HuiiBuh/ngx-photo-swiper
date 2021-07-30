@@ -1,4 +1,6 @@
-<div (click)="close($event)" class="index-{{getImageIndex()}} image-container">
+<div (mousedown)="mouseDownStart = $event.timeStamp"
+     (mouseup)="close($event)"
+     class="index-{{getImageIndex()}} image-container">
 
   <div [ngStyle]="{bottom: captionHeight, right: right}" class="centered-image" #imageCenter *ngIf="currentImage">
 
