@@ -106,11 +106,9 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ngZone.run(() => {
         const direction = $event.getDirection() as 'open' | 'close' | 'none';
         if (direction === 'none') {
-          // TODO smooth transition back
-          this.setTranslate(0, 0);
-          this.setOpacity(1);
+          this.handleAnimationRequest('none');
         } else {
-          this.handleAnimationRequest(direction);
+          this.handleAnimationRequest('close');
         }
       });
     }
@@ -351,24 +349,16 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param disableOpenAnimation Should the open animation be skipped
    */
   private async handleAnimationRequest(animation: TAnimation, disableOpenAnimation: boolean = true): Promise<void> {
-    switch (animation) {
-      case 'left':
-        this.shouldChangeImage(animation) && await this.hAnimateLeft();
-        break;
-      case 'right':
-        this.shouldChangeImage(animation) && await this.hAnimateRight();
-        break;
-      case 'none':
-        this.hAnimateCenter();
-        break;
-      case 'close':
-        await this.vAnimateClosed();
-        break;
-      case 'open':
-        await this.vAnimateOpen(disableOpenAnimation);
-        break;
-      default:
-        console.error(`${animation} was not found`);
+    if (animation === 'left' && this.shouldChangeImage(animation)) {
+      this.shouldChangeImage(animation) && await this.hAnimateLeft();
+    } else if (animation === 'right' && this.shouldChangeImage(animation)) {
+      this.shouldChangeImage(animation) && await this.hAnimateRight();
+    } else if (animation === 'close') {
+      await this.vAnimateClosed();
+    } else if (animation === 'open') {
+      await this.vAnimateOpen(disableOpenAnimation);
+    } else {
+      this.hAnimateCenter();
     }
   }
 

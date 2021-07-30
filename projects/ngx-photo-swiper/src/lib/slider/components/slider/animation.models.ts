@@ -20,7 +20,6 @@ export type OpenCloseAnimation =
   { image: AnimationReturn; background: AnimationReturn; canAnimateImage: true }
   | { background: AnimationReturn; canAnimateImage: false };
 
-// TODO caption
 export interface OpenCloseFactory {
   open(
     prosp: AnimationProps,
