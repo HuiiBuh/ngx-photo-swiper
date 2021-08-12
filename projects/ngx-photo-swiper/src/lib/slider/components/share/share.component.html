@@ -1,4 +1,4 @@
-<span (@openClose.done)="store.state.slider.shareVisible ? display = 'block': display = 'none'"
+<span (@openClose.done)="updateDisplayValue()"
       (@openClose.start)="display = 'block'"
       [@openClose]="(visible$ | async) ? 'open': 'closed'"
       [ngStyle]="{display:display}"

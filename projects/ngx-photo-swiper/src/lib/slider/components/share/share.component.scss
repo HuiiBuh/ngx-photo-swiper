@@ -1,5 +1,6 @@
-::ng-deep photo-share {
+@use "sass:math";
 
+::ng-deep photo-share {
   .gallery-share-options {
     a {
       text-align      : left;
@@ -7,9 +8,6 @@
       padding         : 8px 12px;
       color           : #000;
       text-decoration : none;
-      font-size       : 14px;
-      line-height     : 18px;
-
 
       &:first-child {
         border-radius : 2px 2px 0 0;
@@ -26,6 +24,9 @@
 
   }
 }
+
+$triangle-width : 6px;
+
 
 .gallery-share-popup {
   will-change      : opacity, transition;
@@ -45,8 +46,9 @@
     height              : 0;
     position            : absolute;
     top                 : -12px;
-    right               : 15px;
-    border              : 6px solid transparent;
+    right               : math.div(44px, 2);
+    transform           : translateX(50%);
+    border              : $triangle-width solid transparent;
     border-bottom-color : #fff;
     pointer-events      : none;
   }
