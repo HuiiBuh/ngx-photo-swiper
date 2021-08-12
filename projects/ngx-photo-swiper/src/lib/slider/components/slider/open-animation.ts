@@ -4,7 +4,7 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
   //                                               top bar
   const availableHeight = windowSize.height - 44 - captionHeight;
   //                                               right/left icon
-  const availableWidth = windowSize.width - 32 * 2;
+  const availableWidth = windowSize.width - 44 * 2;
 
   let height: number;
   let width: number;
@@ -22,7 +22,7 @@ const calculateImagePosition = (imageSize: WidthHeight, windowSize: WidthHeight,
 
   return {
     height: `${height}px`,
-    left: `${Math.round((availableWidth - width) / 2) + 32}px`,
+    left: `${Math.round((availableWidth - width) / 2) + 44}px`,
     top: `${Math.round((availableHeight - height) / 2) + 44}px`,
     width: `${width}px`
   };
