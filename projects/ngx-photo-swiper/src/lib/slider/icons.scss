@@ -29,10 +29,8 @@
   padding : 0;
 
   &:before {
-    width               : 32px;
-    height              : 32px;
-    background-size     : 250px 80px;
-
+    width               : 44px;
+    height              : 44px;
     background-color    : var(--lib-arrow-background-color);
     background-position : -88px -44px;
   }
@@ -43,10 +41,8 @@
   padding : 0;
 
   &:before {
-    width               : 32px;
-    height              : 32px;
-    background-size     : 260px 80px;
-
+    width               : 44px;
+    height              : 44px;
     background-color    : var(--lib-arrow-background-color);
     background-position : -132px -44px;
     float               : left;

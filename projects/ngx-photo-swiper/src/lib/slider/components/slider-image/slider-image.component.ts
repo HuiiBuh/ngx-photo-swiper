@@ -126,7 +126,7 @@ export class SliderImageComponent implements OnDestroy, OnInit, AfterViewInit {
     let scrollbarWidth = 0;
     if (window) scrollbarWidth = window.innerWidth - this.document.body.clientWidth;
     if (isNaN(scrollbarWidth)) scrollbarWidth = 0;
-    return `calc(5vw + 32px + ${scrollbarWidth}px)`;
+    return `calc(5vw + 44px + ${scrollbarWidth}px)`;
   }
 
   /**
