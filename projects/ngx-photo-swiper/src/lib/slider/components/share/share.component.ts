@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LightboxStore } from '../../../store/lightbox.store';
 
@@ -30,7 +30,15 @@ export class ShareComponent {
   public display: 'block' | 'none' = 'none';
   public visible$: Observable<boolean>;
 
-  constructor(public store: LightboxStore) {
+  constructor(
+    public store: LightboxStore,
+    private cd: ChangeDetectorRef
+  ) {
     this.visible$ = this.store.getShareVisible$();
+  }
+
+  public updateDisplayValue(): void {
+    this.display = this.store.state.slider.shareVisible ? 'block' : 'none';
+    this.cd.detectChanges();
   }
 }
