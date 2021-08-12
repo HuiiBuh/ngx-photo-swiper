@@ -4,7 +4,7 @@
 
   <div [ngStyle]="{bottom: captionHeight, right: right}" class="centered-image" #imageCenter *ngIf="currentImage">
 
-    <img [style]="'display:' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
+    <img [style]="'display: ' + (!largeImageVisible && $any(currentImage).smallImage ? 'block': 'none')"
          [src]="$any(currentImage).smallImage"
          [alt]="currentImage.caption || currentImage.smallCaption"
          [ngStyle]="stretchConfig"

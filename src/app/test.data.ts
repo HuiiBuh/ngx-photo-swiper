@@ -22,6 +22,7 @@ export const testData: (ResponsiveSliderImage | SliderImage)[] = [{
   height: 1066,
   width: 1600,
   smallCaption: 'A smaller caption',
+  smallImage: 'https://farm4.staticflickr.com/3920/15008465772_383e697089_m.jpg',
   imageSRC: 'https://farm4.staticflickr.com/3920/15008465772_d50c8f0531_h.jpg',
 }, {
   caption: 'Test caption 4',
