@@ -1,5 +1,3 @@
-@use "sass:math";
-
 ::ng-deep photo-share {
   .gallery-share-options {
     a {
@@ -46,7 +44,7 @@ $triangle-width : 6px;
     height              : 0;
     position            : absolute;
     top                 : -12px;
-    right               : math.div(44px, 2);
+    right               : calc(44px / 2);
     transform           : translateX(50%);
     border              : $triangle-width solid transparent;
     border-bottom-color : #fff;
